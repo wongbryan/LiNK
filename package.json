@@ -1,0 +1,23 @@
+{
+  "name": "link-project",
+  "version": "1.0.0",
+  "description": "Charity project for LiNK",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "gulp watch",
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "gulp-order": "^1.1.1",
+    "three": "^0.89.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
+    "gulp-uglify": "^3.0.0"
+  }
+}
