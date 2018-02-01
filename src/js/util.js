@@ -1,3 +1,14 @@
+/* WORLD RELATED DATA */
+
+const COLORS = {
+    'black': new THREE.Color(0x0b0202)
+}
+
+const PLANE_WIDTH = 250;
+const PLANE_HEIGHT = 750;
+
+/* TOOLS */
+
 const initializeRenderer = () => {
 
   const container = document.getElementById( 'container' )
@@ -6,7 +17,7 @@ const initializeRenderer = () => {
   renderer.shadowMap.type = THREE.PCSoftShadowMap
   renderer.setPixelRatio( window.devicePixelRatio )
   renderer.setSize( window.innerWidth, window.innerHeight)
-  renderer.setClearColor(0xbfe7ff)
+  renderer.setClearColor(COLORS.black)
 
   container.appendChild( renderer.domElement )
 
@@ -17,7 +28,7 @@ const initializeRenderer = () => {
 const initializeCamera = () => {
   //Set camera to requested position
   let camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 )
-  camera.position.set(0, 0, 10)
+  camera.position.set(0, 5, 10)
   //Similar to above
   return camera
 }
@@ -28,6 +39,8 @@ const initializeControls = ( camera, renderer) => {
   controls.rotateSpeed = 2.0
   controls.panSpeed = 0.8
   controls.zoomSpeed = 1.5
+
+  return controls;
 }
 
 //Resize camera on window update
@@ -36,6 +49,3 @@ const resize = (camera, renderer) => {
     camera.updateProjectionMatrix()
     renderer.setSize( window.innerWidth, window.innerHeight )
 }
-
-const PLANE_WIDTH = 250;
-const PLANE_HEIGHT = 750;

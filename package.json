@@ -5,11 +5,15 @@
   "main": "webpack.config.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "gulp watch",
+    "dev": "gulp watch"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "gulp-babel": "^7.0.1",
+    "gulp-connect": "^5.2.0",
     "gulp-order": "^1.1.1",
     "three": "^0.89.0"
   },

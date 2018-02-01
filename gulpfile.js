@@ -1,13 +1,21 @@
 const gulp = require('gulp');
+const gutil = require('gulp-util')
 const uglify = require('gulp-uglify');
 const concat = require('gulp-concat');
 const sass = require('gulp-sass');
 const rename = require('gulp-rename');
+const connect = require('gulp-connect');
+const babel = require('gulp-babel');
 
 gulp.task('js', function(){
 	return gulp.src([
+		'src/js/data.js',
+		'src/js/util.js',
 		'src/js/main.js',
 	])
+	.pipe(babel({
+      presets: ['es2015']
+    }))
 	.pipe(concat('app.js'))
 	.pipe(uglify())
 	.on('error', function (err) {
@@ -39,3 +47,11 @@ gulp.task('watch', function() {
     gulp.watch('src/js/**', ['js']);
     gulp.watch('src/scss/**', ['css']);
 });
+
+gulp.task('webserver', function() {
+  connect.server({
+    livereload: true
+  });
+});
+
+gulp.task('dev', ['css', 'lib', 'js', 'webserver', 'watch'])

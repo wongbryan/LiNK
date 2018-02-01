@@ -1,42 +1,15 @@
-var camera, scene, renderer, test;
-var time = 0;
-var plane;
-var spotLight;
 
-const COLORS = {
-    'black': new THREE.Color(0x0b0202)
-}
+//Main Script
 
-const WIDTH = 250;
-const HEIGHT = 750;
+var renderer, camera, scene, controls, spotLight;
+var clock;
+var plane, testMesh;
 
-function resize(){
-
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize( window.innerWidth, window.innerHeight );
-
-}
-
-function init() {
-
-    var container = document.getElementById( 'container' );
-    renderer = new THREE.WebGLRenderer({antialias: true});
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCSoftShadowMap;
-    renderer.setPixelRatio( window.devicePixelRatio );
-    renderer.setSize( window.innerWidth, window.innerHeight);
-    renderer.setClearColor(COLORS.black);
-    container.appendChild( renderer.domElement );
-    
-    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
-    camera.position.set(0, 5, 10);
-    controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.rotateSpeed = 2.0;
-    controls.panSpeed = 0.8;
-    controls.zoomSpeed = 1.5;
-
+const init = () => {
     scene = new THREE.Scene();
+    renderer = initializeRenderer();
+    camera = initializeCamera();
+    controls = initializeControls(camera, renderer);
 
     spotLight = new THREE.SpotLight();
     spotLight.intensity = .6;
@@ -59,45 +32,137 @@ function init() {
     spotLight.position.set(-10, 30, 0);
     scene.add(spotLight);
 
-    var planeGeom = new THREE.PlaneGeometry(WIDTH, HEIGHT),
-    planeMat = new THREE.MeshPhongMaterial();
+    let planeGeom = new THREE.PlaneGeometry(PLANE_WIDTH, PLANE_HEIGHT);
+    let planeMat = new THREE.MeshPhongMaterial();
+
     plane = new THREE.Mesh(planeGeom, planeMat);
     plane.rotation.x = -Math.PI/2;
     plane.receiveShadow = true;
     scene.add(plane);
 
-    test = new THREE.Mesh(
+    testMesh = new THREE.Mesh(
         new THREE.SphereGeometry( 1, 32, 32 ),
         new THREE.MeshStandardMaterial({
             color: 0xffffff,
             emissive: 0x000000
         })
     );
-    test.castShadow = true;
-    test.position.set(0, 5, 0);
-    spotLight.target = test;
-    test.add(spotLight);
-    scene.add(test);
+    testMesh.castShadow = true;
+    testMesh.position.set(0, 5, 0);
+    spotLight.target = testMesh;
+    testMesh.add(spotLight);
+    scene.add(testMesh);
+
+    //Sets elapsed time to 0
+    //Used primarily for our animation
+    clock = new THREE.Clock();
+    clock.start();
 
     window.addEventListener('resize', resize);
 
 }
 
-function update(){
+//Move along curve returns a function to be
+//passed to animate with an object that has a position
+//Time to move should be passed in as
+const genMoveAlongCurve = (curve, timeToMove, startTime) => {
 
-    time += .005;
-    test.position.z = 50*Math.sin(time);
-    
+  const endTime = startTime + timeToMove
+  return (time) => {
+    //If time for animation
+    if(time >= startTime && time <= endTime) {
+
+      //Calculate the parametric parameter along curve
+      //using current time
+      const timeInAnim = time - startTime
+      const currentPropOfCurve = (timeInAnim / timeToMove)
+
+      //In case you wanna see it as we go
+      //console.log("Current Proportion of curve: " + currentPropOfCurve)
+
+      //Return the point on the curve
+      return curve.getPoint(currentPropOfCurve)
+    }
+    //Otherwise return curve endpoints
+    else if (time < startTime){
+      return curve.getPoint(0)
+    } else if (time > endTime){
+      return curve.getPoint(1)
+    }
+  }
+}
+
+const getLineFromCurve = (curve, numPointsOnCurve=50, colorCurve=0xff0000) => {
+  let points = curve.getPoints( numPointsOnCurve );
+  let geometry = new THREE.BufferGeometry().setFromPoints( points );
+  let material = new THREE.LineBasicMaterial( { color : colorCurve } );
+  let curveLine = new THREE.Line( geometry, material );
+
+  return curveLine
 
 }
 
-function animate(){
+//Some example curves to test curve movement
+//Pulled from THREEJS Docs : https://threejs.org/docs/#api/extras/curves/EllipseCurve
+const ellipseCurve = new THREE.EllipseCurve(
+	0,  0,            // ax, aY
+	20, 20,           // xRadius, yRadius
+	0,  2 * Math.PI,  // aStartAngle, aEndAngle
+	false,            // aClockwise
+	0                 // aRotation
+);
 
-    update();
-    renderer.render(scene, camera);
-    window.requestAnimationFrame(animate);
+const cubicBezier = new THREE.CubicBezierCurve(
+	new THREE.Vector2( -10, 0 ),
+	new THREE.Vector2( -5, 15 ),
+	new THREE.Vector2( 20, 15 ),
+	new THREE.Vector2( 10, 0 )
+);
 
+const quadBezier = new THREE.QuadraticBezierCurve(
+	new THREE.Vector2( -10, 0 ),
+	new THREE.Vector2( 20, 15 ),
+	new THREE.Vector2( 10, 0 )
+);
+
+// Create a sine-like wave
+const spline = new THREE.SplineCurve( [
+	new THREE.Vector2( -10, 0 ),
+	new THREE.Vector2( -5, 5 ),
+	new THREE.Vector2( 0, 0 ),
+	new THREE.Vector2( 5, -5 ),
+	new THREE.Vector2( 10, 0 )
+] );
+
+//Draw curve on scene so we can see it
+// scene.add(getLineFromCurve(spline))
+
+// testMesh.movementFunc = genMoveAlongCurve(spline, 5, 1)
+
+
+const update = (globalTime) => {
+  // console.log("Time:" + globalTime)
+  // const elipsePathPoint = testMesh.movementFunc(globalTime)
+  // testMesh.position.x = elipsePathPoint.x
+  // testMesh.position.y = elipsePathPoint.y
+  controls.update();
 }
+
+const animate = () => {
+    //Get the elapsed time from our starting of the clock.
+    //We check every frame
+    const globalTime = clock.getElapsedTime()
+    update(globalTime)
+
+    //Animation should be extracted into its own function
+    //but you get the point for now.
+
+    //Render the frame
+    renderer.render(scene, camera)
+    window.requestAnimationFrame(animate)
+}
+//Run the update call for the first time, registering
+//it for every animation frame.
 
 init();
 animate();
