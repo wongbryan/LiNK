@@ -33,32 +33,40 @@ const init = () => {
     scene.add(spotLight);
 
     let planeGeom = new THREE.PlaneGeometry(PLANE_WIDTH, PLANE_HEIGHT);
-    let planeMat = new THREE.MeshPhongMaterial();
+    let planeMat = new THREE.MeshPhongMaterial({
+        emissive: COLORS.black, 
+        specular: COLORS.black,
+    });
 
     plane = new THREE.Mesh(planeGeom, planeMat);
     plane.rotation.x = -Math.PI/2;
     plane.receiveShadow = true;
     scene.add(plane);
 
-    testMesh = new THREE.Mesh(
-        new THREE.SphereGeometry( 1, 32, 32 ),
-        new THREE.MeshStandardMaterial({
-            color: 0xffffff,
-            emissive: 0x000000
-        })
-    );
-    testMesh.castShadow = true;
-    testMesh.position.set(0, 5, 0);
-    spotLight.target = testMesh;
-    testMesh.add(spotLight);
+    // testMesh = new THREE.Mesh(
+    //     new THREE.SphereGeometry( 1, 32, 32 ),
+    //     new THREE.MeshStandardMaterial({
+    //         color: 0xffffff,
+    //         emissive: 0x000000
+    //     })
+    // );
+    // testMesh.castShadow = true;
+    // testMesh.position.set(0, 5, 0);
+    // spotLight.target = testMesh;
+    // testMesh.add(spotLight);
+    // scene.add(testMesh);
+
+    testMesh = new Avatar(RIG_DATA['test-anim']);
+    let s = .05;
+    testMesh.scale.set(s, s, s);
     scene.add(testMesh);
 
-    //Sets elapsed time to 0
-    //Used primarily for our animation
     clock = new THREE.Clock();
     clock.start();
 
     window.addEventListener('resize', resize);
+
+    animate();
 
 }
 
@@ -145,6 +153,7 @@ const update = (globalTime) => {
   // const elipsePathPoint = testMesh.movementFunc(globalTime)
   // testMesh.position.x = elipsePathPoint.x
   // testMesh.position.y = elipsePathPoint.y
+  testMesh.position.z = 10*Math.sin(globalTime);
   controls.update();
 }
 
@@ -153,6 +162,8 @@ const animate = () => {
     //We check every frame
     const globalTime = clock.getElapsedTime()
     update(globalTime)
+
+    testMesh.mixer.update(clock.getDelta());
 
     //Animation should be extracted into its own function
     //but you get the point for now.
@@ -163,6 +174,3 @@ const animate = () => {
 }
 //Run the update call for the first time, registering
 //it for every animation frame.
-
-init();
-animate();

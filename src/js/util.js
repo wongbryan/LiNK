@@ -1,13 +1,13 @@
 /* WORLD RELATED DATA */
 
 const COLORS = {
-    'black': new THREE.Color(0x0b0202)
+    'black': new THREE.Color(0x0f0f0f)
 }
 
 const PLANE_WIDTH = 250;
 const PLANE_HEIGHT = 750;
 
-/* TOOLS */
+/* SETUP TOOLS */
 
 const initializeRenderer = () => {
 
@@ -44,7 +44,7 @@ const initializeControls = ( camera, renderer) => {
 }
 
 //Resize camera on window update
-const resize = (camera, renderer) => {
+const resize = () => {
     camera.aspect = window.innerWidth / window.innerHeight
     camera.updateProjectionMatrix()
     renderer.setSize( window.innerWidth, window.innerHeight )
