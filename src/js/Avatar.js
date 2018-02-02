@@ -1,36 +1,47 @@
-const Avatar = (rig, parts) => {
-	let mesh = rig;
-	let bones = rig.skeleton.bones;
+var Avatar = function(rig, parts){
+	var mesh = rig;
+	var bones = rig.skeleton.bones;
 
-	for (var i=0; i<bones.length; i++){
-		var ball = new THREE.Mesh(new THREE.SphereGeometry(1), new THREE.MeshBasicMaterial({color: 0xff0000}));
-		bones[i].add(ball);
-	}
+	/* TODO: ADD PARTS TO EACH BONE */
+	let ball = new THREE.Mesh(new THREE.SphereGeometry(1), new THREE.MeshBasicMaterial({color: 0xff0000}));
+	bones.forEach((bone) => {
+		let b = ball.clone();
+		bone.add(b);
+	});
 
-	let anims = rig.geometry.animations,
-	actions = {};
-
-	let mixer = new THREE.AnimationMixer( mesh );
+	var anims = rig.geometry.animations;
+	var actions = {};
+	var mixer = new THREE.AnimationMixer( mesh );
 	mixer.timeScale = 1;
 
-	anims.forEach( ( anim ) => {
-		let name = anim.name;
+	anims.forEach((anim) => {
+		var name = anim.name;
 		actions[name] = mixer.clipAction(name);
-	})
+	});
 
-	// for(var i=0; i<anims.length; i++){
-	// 	console.log(anims[i]);
-	// 	let name = anims[i].name;
-	// 	actions[name] = mixer.clipAction(name);
-	// }
+	function setWeight( action, weight ) {
+		action.enabled = true;
+		action.setEffectiveTimeScale( 1 );
+		action.setEffectiveWeight( weight );
+	}
 
-	this.mixer = mixer;
-	this._animations = anims;
-	this._actions = actions;
+	function enableAction(name){
+		var action = actions[name];
+		setWeight(action, 1);
+		action.play();
+	}
+
+	function update(d){
+		mixer.update(d);
+	}
+
+	this.update = update;
+	this.enableAction = enableAction;
 	this.__proto__ = mesh;
 }
 
-class Avatar {
+/* ES6 Implementation */
+class Avatar2 {
 	constructor(rig, parts){
 		let mesh = rig;
 		let bones = rig.skeleton.bones;
@@ -50,12 +61,6 @@ class Avatar {
 			let name = anim.name;
 			actions[name] = mixer.clipAction(name);
 		})
-
-		// for(var i=0; i<anims.length; i++){
-		// 	console.log(anims[i]);
-		// 	let name = anims[i].name;
-		// 	actions[name] = mixer.clipAction(name);
-		// }
 
 		this.mixer = mixer;
 		this._animations = anims;

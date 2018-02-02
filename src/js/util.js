@@ -7,6 +7,78 @@ const COLORS = {
 const PLANE_WIDTH = 250;
 const PLANE_HEIGHT = 750;
 
+//Some example curves to test curve movement
+//Pulled from THREEJS Docs : https://threejs.org/docs/#api/extras/curves/EllipseCurve
+const ellipseCurve = new THREE.EllipseCurve(
+  0,  0,            // ax, aY
+  20, 20,           // xRadius, yRadius
+  0,  2 * Math.PI,  // aStartAngle, aEndAngle
+  false,            // aClockwise
+  0                 // aRotation
+);
+
+const cubicBezier = new THREE.CubicBezierCurve(
+  new THREE.Vector2( -10, 0 ),
+  new THREE.Vector2( -5, 15 ),
+  new THREE.Vector2( 20, 15 ),
+  new THREE.Vector2( 10, 0 )
+);
+
+const quadBezier = new THREE.QuadraticBezierCurve(
+  new THREE.Vector2( -10, 0 ),
+  new THREE.Vector2( 20, 15 ),
+  new THREE.Vector2( 10, 0 )
+);
+
+// Create a sine-like wave
+const spline = new THREE.SplineCurve( [
+  new THREE.Vector2( -10, 0 ),
+  new THREE.Vector2( -5, 5 ),
+  new THREE.Vector2( 0, 0 ),
+  new THREE.Vector2( 5, -5 ),
+  new THREE.Vector2( 10, 0 )
+] );
+
+const getLineFromCurve = (curve, numPointsOnCurve=50, colorCurve=0xff0000) => {
+  let points = curve.getPoints( numPointsOnCurve );
+  let geometry = new THREE.BufferGeometry().setFromPoints( points );
+  let material = new THREE.LineBasicMaterial( { color : colorCurve } );
+  let curveLine = new THREE.Line( geometry, material );
+
+  return curveLine
+
+}
+
+//Move along curve returns a function to be
+//passed to animate with an object that has a position
+//Time to move should be passed in as
+const genMoveAlongCurve = (curve, timeToMove, startTime) => {
+
+  const endTime = startTime + timeToMove
+  return (time) => {
+    //If time for animation
+    if(time >= startTime && time <= endTime) {
+
+      //Calculate the parametric parameter along curve
+      //using current time
+      const timeInAnim = time - startTime
+      const currentPropOfCurve = (timeInAnim / timeToMove)
+
+      //In case you wanna see it as we go
+      //console.log("Current Proportion of curve: " + currentPropOfCurve)
+
+      //Return the point on the curve
+      return curve.getPoint(currentPropOfCurve)
+    }
+    //Otherwise return curve endpoints
+    else if (time < startTime){
+      return curve.getPoint(0)
+    } else if (time > endTime){
+      return curve.getPoint(1)
+    }
+  }
+}
+
 /* SETUP TOOLS */
 
 const initializeRenderer = () => {

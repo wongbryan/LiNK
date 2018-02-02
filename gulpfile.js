@@ -6,18 +6,22 @@ const sass = require('gulp-sass');
 const rename = require('gulp-rename');
 const connect = require('gulp-connect');
 const babel = require('gulp-babel');
+const order = require("gulp-order");
 
 gulp.task('js', function(){
-	return gulp.src([
+	return gulp.src('src/js/*.js')
+	.pipe(order([
 		'src/js/data.js',
+		'src/js/Loader.js',
+		'src/js/Avatar.js',
 		'src/js/util.js',
 		'src/js/main.js',
-	])
+	]))
 	.pipe(babel({
       presets: ['es2015']
     }))
 	.pipe(concat('app.js'))
-	.pipe(uglify())
+	// .pipe(uglify())
 	.on('error', function (err) {
         gutil.log(gutil.colors.red('[Error]'), err.toString());
     })

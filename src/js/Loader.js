@@ -18,6 +18,7 @@ var Loader = (function () {
         // init();
     };
 
+
     this.loadRig = function(file) {
 
         var path = MODELS_PATH + file + '.json';
