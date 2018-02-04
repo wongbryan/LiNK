@@ -4,8 +4,7 @@ const COLORS = {
     'black': new THREE.Color(0x0f0f0f)
 }
 
-const PLANE_WIDTH = 250;
-const PLANE_HEIGHT = 750;
+const WORLD_RADIUS = 500;
 
 //Some example curves to test curve movement
 //Pulled from THREEJS Docs : https://threejs.org/docs/#api/extras/curves/EllipseCurve

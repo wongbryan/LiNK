@@ -2,7 +2,7 @@
 
 var renderer, camera, scene, controls, spotLight;
 var clock;
-var plane, testMesh;
+var globe, testMesh;
 
 const init = () => {
     scene = new THREE.Scene();
@@ -31,16 +31,16 @@ const init = () => {
     spotLight.position.set(-10, 30, 0);
     scene.add(spotLight);
 
-    let planeGeom = new THREE.PlaneGeometry(PLANE_WIDTH, PLANE_HEIGHT);
-    let planeMat = new THREE.MeshPhongMaterial({
+    let sphereGeom = new THREE.SphereGeometry(WORLD_RADIUS, 32, 32);
+    let sphereMat = new THREE.MeshPhongMaterial({
         emissive: COLORS.black, 
         specular: COLORS.black,
     });
 
-    plane = new THREE.Mesh(planeGeom, planeMat);
-    plane.rotation.x = -Math.PI/2;
-    plane.receiveShadow = true;
-    scene.add(plane);
+    globe = new THREE.Mesh(sphereGeom, sphereMat);
+    globe.position.y = -WORLD_RADIUS;
+    globe.receiveShadow = true;
+    scene.add(globe);
 
     testMesh = new Avatar(RIG_DATA['test-anim']);
     let s = .05;
@@ -65,10 +65,13 @@ const init = () => {
 
 const update = () => {
   // console.log("Time:" + globalTime)
-  // const elipsePathPoint = testMesh.movementFunc(globalTime)
-  // testMesh.position.x = elipsePathPoint.x
-  // testMesh.position.y = elipsePathPoint.y
-  // testMesh.position.z = 10*Math.sin(globalTime);
+  let globalTime = clock.elapsedTime;
+  
+  const elipsePathPoint = testMesh.movementFunc(globalTime)
+  testMesh.position.x = elipsePathPoint.x
+  testMesh.position.y = elipsePathPoint.y
+  testMesh.position.z = 10*Math.sin(globalTime);
+  testMesh.position.z -= .05;
   testMesh.update(clock.getDelta());
   controls.update();
 }

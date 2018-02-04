@@ -11,8 +11,8 @@ var Avatar = function Avatar(rig, parts) {
 	/* TODO: ADD PARTS TO EACH BONE */
 	var ball = new THREE.Mesh(new THREE.SphereGeometry(1), new THREE.MeshBasicMaterial({ color: 0xff0000 }));
 	bones.forEach(function (bone) {
-		ball.clone();
-		bone.add(ball);
+		var b = ball.clone();
+		bone.add(b);
 	});
 
 	var anims = rig.geometry.animations;
@@ -179,7 +179,7 @@ for (var obj in RIG_DATA) {
 
 var renderer, camera, scene, controls, spotLight;
 var clock;
-var plane, testMesh;
+var globe, testMesh;
 
 var init = function init() {
     scene = new THREE.Scene();
@@ -208,16 +208,16 @@ var init = function init() {
     spotLight.position.set(-10, 30, 0);
     scene.add(spotLight);
 
-    var planeGeom = new THREE.PlaneGeometry(PLANE_WIDTH, PLANE_HEIGHT);
-    var planeMat = new THREE.MeshPhongMaterial({
+    var sphereGeom = new THREE.SphereGeometry(WORLD_RADIUS, 32, 32);
+    var sphereMat = new THREE.MeshPhongMaterial({
         emissive: COLORS.black,
         specular: COLORS.black
     });
 
-    plane = new THREE.Mesh(planeGeom, planeMat);
-    plane.rotation.x = -Math.PI / 2;
-    plane.receiveShadow = true;
-    scene.add(plane);
+    globe = new THREE.Mesh(sphereGeom, sphereMat);
+    globe.position.y = -WORLD_RADIUS;
+    globe.receiveShadow = true;
+    scene.add(globe);
 
     testMesh = new Avatar(RIG_DATA['test-anim']);
     var s = .05;
@@ -241,10 +241,13 @@ var init = function init() {
 
 var update = function update() {
     // console.log("Time:" + globalTime)
-    // const elipsePathPoint = testMesh.movementFunc(globalTime)
-    // testMesh.position.x = elipsePathPoint.x
-    // testMesh.position.y = elipsePathPoint.y
-    // testMesh.position.z = 10*Math.sin(globalTime);
+    var globalTime = clock.elapsedTime;
+
+    var elipsePathPoint = testMesh.movementFunc(globalTime);
+    testMesh.position.x = elipsePathPoint.x;
+    testMesh.position.y = elipsePathPoint.y;
+    testMesh.position.z = 10 * Math.sin(globalTime);
+    testMesh.position.z -= .05;
     testMesh.update(clock.getDelta());
     controls.update();
 };
@@ -270,8 +273,7 @@ var COLORS = {
   'black': new THREE.Color(0x0f0f0f)
 };
 
-var PLANE_WIDTH = 250;
-var PLANE_HEIGHT = 750;
+var WORLD_RADIUS = 500;
 
 //Some example curves to test curve movement
 //Pulled from THREEJS Docs : https://threejs.org/docs/#api/extras/curves/EllipseCurve
