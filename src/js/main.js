@@ -66,11 +66,10 @@ const init = () => {
 
     var pointStart = new THREE.Vector3(x, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
     var pointEnd = new THREE.Vector3(x-.0001, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
-    curve = setArc3D(pointStart, pointEnd, 1000, "lime", true);
+    curve = setArc3D(pointStart, pointEnd, 3000, "lime", true);
     scene.add(curve);
-    // curve.position.y -= GLOBE_RADIUS;
 
-    testMesh.movementFunc = genMoveAlongCurve(curve, 100, clock.elapsedTime);
+    testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
 
     // let a = new THREE.AmbientLight();
     // scene.add(a);
@@ -86,15 +85,13 @@ const update = () => {
 
     let elipsePathPoint = testMesh.movementFunc(globalTime)
 
-    camera.lookAt(testMesh);
+    // camera.lookAt(testMesh);
     testMesh.position.x = elipsePathPoint.x
     testMesh.position.y = elipsePathPoint.y
     testMesh.position.z = elipsePathPoint.z;
 
-    camera.position.copy(testMesh.position);
-    camera.position.z += 25;
-    camera.position.x += 25;
-    camera.position.y += 25;
+    // camera.position.copy(testMesh.position);
+    // camera.position.z = 5;
     // testMesh.update(d);
     controls.update();
 }
