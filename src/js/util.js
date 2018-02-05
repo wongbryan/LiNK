@@ -4,8 +4,6 @@ const COLORS = {
     'black': new THREE.Color(0x0f0f0f)
 }
 
-const WORLD_RADIUS = 500;
-
 //Some example curves to test curve movement
 //Pulled from THREEJS Docs : https://threejs.org/docs/#api/extras/curves/EllipseCurve
 const ellipseCurve = new THREE.EllipseCurve(
@@ -54,6 +52,7 @@ const getLineFromCurve = (curve, numPointsOnCurve=50, colorCurve=0xff0000) => {
 const genMoveAlongCurve = (curve, timeToMove, startTime) => {
 
   const endTime = startTime + timeToMove
+  var vertices = curve.geometry.vertices;
   return (time) => {
     //If time for animation
     if(time >= startTime && time <= endTime) {
@@ -62,18 +61,19 @@ const genMoveAlongCurve = (curve, timeToMove, startTime) => {
       //using current time
       const timeInAnim = time - startTime
       const currentPropOfCurve = (timeInAnim / timeToMove)
+      let index = Math.floor( currentPropOfCurve * vertices.length );
 
       //In case you wanna see it as we go
       //console.log("Current Proportion of curve: " + currentPropOfCurve)
 
       //Return the point on the curve
-      return curve.getPoint(currentPropOfCurve)
+      return vertices[index];
     }
     //Otherwise return curve endpoints
     else if (time < startTime){
-      return curve.getPoint(0)
+      return vertices[0];
     } else if (time > endTime){
-      return curve.getPoint(1)
+      return vertices[vertices.length-1];
     }
   }
 }
@@ -99,7 +99,7 @@ const initializeRenderer = () => {
 const initializeCamera = () => {
   //Set camera to requested position
   let camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 )
-  camera.position.set(0, 5, 10)
+  camera.position.set(25, GLOBE_RADIUS + 5, 25)
   //Similar to above
   return camera
 }

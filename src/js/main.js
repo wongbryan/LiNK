@@ -31,18 +31,21 @@ const init = () => {
     spotLight.position.set(-10, 30, 0);
     scene.add(spotLight);
 
-    let sphereGeom = new THREE.SphereGeometry(WORLD_RADIUS, 32, 32);
+    let sphereGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 16, 16);
     let sphereMat = new THREE.MeshPhongMaterial({
         emissive: COLORS.black, 
         specular: COLORS.black,
+        shininess: 0
     });
 
     globe = new THREE.Mesh(sphereGeom, sphereMat);
-    globe.position.y = -WORLD_RADIUS;
+    // globe.position.y = -GLOBE_RADIUS;
     globe.receiveShadow = true;
     scene.add(globe);
 
+    // testMesh = new THREE.Mesh(new THREE.SphereGeometry(100, 32, 32), new THREE.MeshBasicMaterial({color: 0xff0000}));
     testMesh = new Avatar(RIG_DATA['test-anim']);
+    testMesh.position.y += GLOBE_RADIUS + 5;
     let s = .05;
     testMesh.scale.multiplyScalar(s);
 
@@ -53,27 +56,47 @@ const init = () => {
     testMesh.add(container);
     scene.add(testMesh);
 
-    testMesh.enableAction('walk');
+    // testMesh.enableAction('walk');
 
     clock = new THREE.Clock();
 
     window.addEventListener('resize', resize);
 
+    let x = 0, y = 1, z = 0;
+
+    var pointStart = new THREE.Vector3(x, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
+    var pointEnd = new THREE.Vector3(x-.0001, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
+    curve = setArc3D(pointStart, pointEnd, 1000, "lime", true);
+    scene.add(curve);
+    // curve.position.y -= GLOBE_RADIUS;
+
+    testMesh.movementFunc = genMoveAlongCurve(curve, 100, clock.elapsedTime);
+
+    // let a = new THREE.AmbientLight();
+    // scene.add(a);
+
+    clock.start();
     animate();
 
 }
 
 const update = () => {
-  // console.log("Time:" + globalTime)
-  let globalTime = clock.elapsedTime;
-  
-  const elipsePathPoint = testMesh.movementFunc(globalTime)
-  testMesh.position.x = elipsePathPoint.x
-  testMesh.position.y = elipsePathPoint.y
-  testMesh.position.z = 10*Math.sin(globalTime);
-  testMesh.position.z -= .05;
-  testMesh.update(clock.getDelta());
-  controls.update();
+    var d = clock.getDelta();
+    let globalTime = clock.elapsedTime;
+
+    let elipsePathPoint = testMesh.movementFunc(globalTime)
+
+    camera.lookAt(testMesh);
+    testMesh.position.x = elipsePathPoint.x
+    testMesh.position.y = elipsePathPoint.y
+    testMesh.position.z = elipsePathPoint.z;
+
+    camera.position.copy(testMesh.position);
+    camera.position.z += 25;
+    camera.position.x += 25;
+    camera.position.y += 25;
+    // testMesh.update(d);
+    controls.update();
 }
 
 const animate = () => {
