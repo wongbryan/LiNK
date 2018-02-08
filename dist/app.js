@@ -11,8 +11,8 @@ var Avatar = function Avatar(rig, parts) {
 	/* TODO: ADD PARTS TO EACH BONE */
 	var ball = new THREE.Mesh(new THREE.SphereGeometry(1), new THREE.MeshBasicMaterial({ color: 0xff0000 }));
 	bones.forEach(function (bone) {
-		ball.clone();
-		bone.add(ball);
+		var b = ball.clone();
+		bone.add(b);
 	});
 
 	var anims = rig.geometry.animations;
@@ -262,6 +262,51 @@ var animate = function animate() {
 };
 //Run the update call for the first time, registering
 //it for every animation frame.
+'use strict';
+
+var UIController = function () {
+
+	var title = document.getElementById('title'),
+	    prompt = document.getElementById('prompt'),
+	    answer = document.getElementById('answer');
+
+	var quoteBoxMain = document.getElementById('quoteBoxMain'),
+	    quoteAnswer = document.getElementById('quoteAnswer'),
+	    quoteClose = quoteBoxMain.getElementsByClassName('close')[0];
+
+	function onAnswerSubmit(e) {
+
+		e.preventDefault();
+		var ans = answer.value;
+
+		title.classList.add('fadeOut');
+
+		return false;
+	}
+
+	function showQuoteMain(data) {
+
+		var otherAns = quoteBoxMain.getElementsByClassName('quoteAnswer')[0],
+		    username = quoteBoxMain.getElementsByClassName('username')[0];
+
+		otherAns.innerHTML = data.quote;
+		username.innerHTML = "-" + data.username;
+
+		quoteBoxMain.classList.add('fadeIn');
+	}
+
+	function hideQuoteMain() {
+		quoteBoxMain.classList.remove('fadeIn');
+		quoteBoxMain.classList.add('fadeOut');
+	}
+
+	prompt.addEventListener('submit', onAnswerSubmit);
+	quoteClose.addEventListener('mousedown', hideQuoteMain);
+
+	return {
+		showQuoteMain: showQuoteMain
+	};
+}();
 'use strict';
 
 /* WORLD RELATED DATA */

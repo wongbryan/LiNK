@@ -1,2 +1,62 @@
 body {
   margin: 0; }
+
+#title, #quoteBoxMain {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: black;
+  color: white; }
+
+#title {
+  z-index: 3; }
+  #title .main {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white; }
+    #title .main form input {
+      display: block;
+      margin: auto;
+      margin-bottom: 10px; }
+
+#quoteBoxMain {
+  z-index: 2;
+  visibility: hidden;
+  opacity: 0; }
+  #quoteBoxMain .main {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center; }
+  #quoteBoxMain .close {
+    margin: auto; }
+    #quoteBoxMain .close:hover {
+      cursor: pointer; }
+
+.fadeOut {
+  animation: fadeOut 1s 1 forwards; }
+
+.fadeIn {
+  animation: fadeIn 1s 1 forwards; }
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1; }
+  99% {
+    opacity: 0;
+    visibility: visible; }
+  100% {
+    opacity: 0;
+    visibility: hidden; } }
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    visibility: visible; }
+  100% {
+    opacity: 1;
+    visibility: visible; } }
