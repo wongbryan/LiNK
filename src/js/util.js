@@ -99,7 +99,7 @@ const initializeRenderer = () => {
 const initializeCamera = () => {
   //Set camera to requested position
   let camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 )
-  camera.position.set(25, GLOBE_RADIUS + 5, 25)
+  camera.position.set( 0, 5, 10 );
   //Similar to above
   return camera
 }

@@ -39,13 +39,12 @@ const init = () => {
     });
 
     globe = new THREE.Mesh(sphereGeom, sphereMat);
-    // globe.position.y = -GLOBE_RADIUS;
+    globe.position.y = -GLOBE_RADIUS;
     globe.receiveShadow = true;
     scene.add(globe);
 
     // testMesh = new THREE.Mesh(new THREE.SphereGeometry(100, 32, 32), new THREE.MeshBasicMaterial({color: 0xff0000}));
     testMesh = new Avatar(RIG_DATA['test-anim']);
-    testMesh.position.y += GLOBE_RADIUS + 5;
     let s = .05;
     testMesh.scale.multiplyScalar(s);
 
@@ -62,18 +61,6 @@ const init = () => {
 
     window.addEventListener('resize', resize);
 
-    let x = 0, y = 1, z = 0;
-
-    var pointStart = new THREE.Vector3(x, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
-    var pointEnd = new THREE.Vector3(x-.0001, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
-    curve = setArc3D(pointStart, pointEnd, 3000, "lime", true);
-    scene.add(curve);
-
-    testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
-
-    // let a = new THREE.AmbientLight();
-    // scene.add(a);
-
     clock.start();
     animate();
 
@@ -81,18 +68,6 @@ const init = () => {
 
 const update = () => {
     var d = clock.getDelta();
-    let globalTime = clock.elapsedTime;
-
-    let elipsePathPoint = testMesh.movementFunc(globalTime)
-
-    // camera.lookAt(testMesh);
-    testMesh.position.x = elipsePathPoint.x
-    testMesh.position.y = elipsePathPoint.y
-    testMesh.position.z = elipsePathPoint.z;
-
-    // camera.position.copy(testMesh.position);
-    // camera.position.z = 5;
-    // testMesh.update(d);
     controls.update();
 }
 
