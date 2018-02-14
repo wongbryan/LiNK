@@ -1,26 +1,118 @@
 body {
   margin: 0; }
 
-#title, #quoteBoxMain {
+h1, h2, header, p, a, span {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+#title, #quoteBoxMain, #quoteInput {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: black;
-  color: white; }
+  background: #00010c;
+  color: #f9fafc; }
 
 #title {
-  z-index: 3; }
+  z-index: 4;
+  visibility: hidden; }
   #title .main {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    color: white; }
+    color: #f9fafc; }
+    #title .main h1 {
+      font-family: "CaslonGraphiqueEF";
+      color: #f9fafc;
+      font-weight: lighter;
+      font-size: 5rem;
+      margin: 0;
+      text-shadow: 0 0 20px white; }
+    #title .main h2 {
+      font-family: "Brandon Text";
+      font-weight: lighter;
+      font-size: 1.4rem;
+      margin: 0;
+      margin-bottom: 10px; }
     #title .main form input {
       display: block;
       margin: auto;
       margin-bottom: 10px; }
+
+#quoteInput {
+  z-index: 3; }
+  #quoteInput .main {
+    width: 600px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center; }
+    #quoteInput .main h1 {
+      font-family: "CaslonGraphiqueEF";
+      color: #f9fafc;
+      font-weight: lighter;
+      font-size: 2rem;
+      margin: 0;
+      margin-bottom: 25px; }
+    #quoteInput .main #prompt {
+      position: relative; }
+      #quoteInput .main #prompt .textinput {
+        position: relative;
+        background: none;
+        color: #929598;
+        border: none;
+        text-align: center;
+        resize: none;
+        font-family: "Brandon Text";
+        font-weight: lighter;
+        font-size: 20px;
+        transition: all .5s;
+        padding: 0;
+        line-height: 22px;
+        margin-bottom: 30px;
+        width: 100%; }
+        #quoteInput .main #prompt .textinput:focus + i {
+          display: none; }
+        #quoteInput .main #prompt .textinput:focus {
+          outline: none; }
+    #quoteInput .main .remaining {
+      font-family: "Brandon Text";
+      font-weight: lighter;
+      font-size: 15px;
+      color: #808285;
+      margin-bottom: 20px; }
+    #quoteInput .main #userSubmitQuote {
+      display: block;
+      margin: auto;
+      position: relative;
+      font-family: 'Open Sans', sans-serif;
+      height: 30px;
+      width: 30px;
+      border-radius: 50%;
+      border: 1px solid #929598;
+      cursor: pointer;
+      transition: box-shadow .25s ease;
+      box-shadow: 0px 0px 10px white; }
+      #quoteInput .main #userSubmitQuote:before {
+        content: ">";
+        position: absolute;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%); }
+      #quoteInput .main #userSubmitQuote:hover {
+        border: 1px solid #f9fafc;
+        animation: none;
+        box-shadow: 0px 0px 40px white; }
+
+@keyframes blinkGlow {
+  0% {
+    box-shadow: 0px 0px 5px white; }
+  100% {
+    box-shadow: 0px 0px 15px white; } }
 
 #quoteBoxMain {
   z-index: 2;

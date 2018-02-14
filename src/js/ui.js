@@ -2,7 +2,10 @@ const UIController = (function(){
 
 	var title = document.getElementById('title'),
 	prompt = document.getElementById('prompt'),
-	answer = document.getElementById('answer');
+	answer = document.getElementById('userAnswer'),
+	userSubmitQuote = document.getElementById('userSubmitQuote'),
+	remaining = document.getElementById('userAnswerRemaining'),
+	answerMax = 250;
 
 	var quoteBoxMain = document.getElementById('quoteBoxMain'),
 	quoteAnswer = document.getElementById('quoteAnswer'),
@@ -10,9 +13,12 @@ const UIController = (function(){
 
 	function onAnswerSubmit(e){
 
-		e.preventDefault();
+		if(e)
+			e.preventDefault();
+
 		let ans = answer.value;
-		
+		console.log(ans);
+
 		title.classList.add('fadeOut');
 
 		return false;
@@ -35,11 +41,33 @@ const UIController = (function(){
 		quoteBoxMain.classList.add('fadeOut');
 	}
 
-	prompt.addEventListener('submit', onAnswerSubmit);
+	function ansKeyDown(e){
+
+		if(e.which == 13) {
+            e.preventDefault();
+            onAnswerSubmit();
+        }
+
+        let el = e.target;
+    	el.style.height = el.scrollHeight + 'px';
+
+    	let amt = answerMax - el.value.length;
+    	remaining.innerHTML = amt;
+
+	}
+
+	function keepBlur(){
+		var el = this;
+		el.focus();
+	}
+
+	userSubmitQuote.addEventListener('mousedown', onAnswerSubmit);
 	quoteClose.addEventListener('mousedown', hideQuoteMain);
+	answer.addEventListener('keydown', ansKeyDown);
+	answer.addEventListener('blur', keepBlur);
 
 	return{
-		showQuoteMain: showQuoteMain
+		showQuoteMain: showQuoteMain,
 	}
 
 })();

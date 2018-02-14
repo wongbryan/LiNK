@@ -58,4 +58,4 @@ gulp.task('webserver', function() {
   });
 });
 
-gulp.task('dev', ['css', 'lib', 'js', 'webserver', 'watch'])
+gulp.task('dev', ['css', 'lib', 'js', 'watch'])

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<link rel="stylesheet" type="text/css" href="assets/fonts/caslon-web/stylesheet.css"/>
+	<link rel="stylesheet" type="text/css" href="assets/fonts/brandon-text-web/stylesheet.css"/>
 	<link rel="stylesheet" type="text/css" href="css/style.css"/>
 	<title>LiNK (dev page)</title>
 </head>
@@ -8,11 +10,17 @@
 	<div id="title">
 		<div class="main">
 			<h1>home</h1>
-			<h2>What does home mean to you?</h2>
+			<h2>a charity project for Liberty in North Korea.</h2>
+		</div>
+	</div>
+	<div id="quoteInput">
+		<div class="main">
+			<h1>What is home?</h1>
 			<form id="prompt">
-				<input type="text" id="answer"></input>
-				<input type="submit"></input>
+				<textarea maxlength="250" rows="3" spellcheck="false" id="userAnswer" class="textinput" type="text" id="answer" autofocus autocomplete="off"></textarea>
 			</form>
+			<div class="remaining"><span id="userAnswerRemaining">250</span> characters remaining</div>
+			<div id="userSubmitQuote"></div>
 		</div>
 	</div>
 	<div id="quoteBoxMain">

@@ -1,7 +1,7 @@
 /* WORLD RELATED DATA */
 
 const COLORS = {
-    'black': new THREE.Color(0x0f0f0f)
+    'black': new THREE.Color(0x00010c)
 }
 
 const PLANE_WIDTH = 250;

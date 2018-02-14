@@ -53,7 +53,7 @@ const init = () => {
     testMesh.add(container);
     scene.add(testMesh);
 
-    testMesh.enableAction('walk');
+    // testMesh.enableAction('walk');
 
     clock = new THREE.Clock();
 

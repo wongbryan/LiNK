@@ -230,7 +230,7 @@ var init = function init() {
     testMesh.add(container);
     scene.add(testMesh);
 
-    testMesh.enableAction('walk');
+    // testMesh.enableAction('walk');
 
     clock = new THREE.Clock();
 
@@ -268,7 +268,10 @@ var UIController = function () {
 
 	var title = document.getElementById('title'),
 	    prompt = document.getElementById('prompt'),
-	    answer = document.getElementById('answer');
+	    answer = document.getElementById('userAnswer'),
+	    userSubmitQuote = document.getElementById('userSubmitQuote'),
+	    remaining = document.getElementById('userAnswerRemaining'),
+	    answerMax = 250;
 
 	var quoteBoxMain = document.getElementById('quoteBoxMain'),
 	    quoteAnswer = document.getElementById('quoteAnswer'),
@@ -276,8 +279,10 @@ var UIController = function () {
 
 	function onAnswerSubmit(e) {
 
-		e.preventDefault();
+		if (e) e.preventDefault();
+
 		var ans = answer.value;
+		console.log(ans);
 
 		title.classList.add('fadeOut');
 
@@ -300,8 +305,29 @@ var UIController = function () {
 		quoteBoxMain.classList.add('fadeOut');
 	}
 
-	prompt.addEventListener('submit', onAnswerSubmit);
+	function ansKeyDown(e) {
+
+		if (e.which == 13) {
+			e.preventDefault();
+			onAnswerSubmit();
+		}
+
+		var el = e.target;
+		el.style.height = el.scrollHeight + 'px';
+
+		var amt = answerMax - el.value.length;
+		remaining.innerHTML = amt;
+	}
+
+	function keepBlur() {
+		var el = this;
+		el.focus();
+	}
+
+	userSubmitQuote.addEventListener('mousedown', onAnswerSubmit);
 	quoteClose.addEventListener('mousedown', hideQuoteMain);
+	answer.addEventListener('keydown', ansKeyDown);
+	answer.addEventListener('blur', keepBlur);
 
 	return {
 		showQuoteMain: showQuoteMain
@@ -312,7 +338,7 @@ var UIController = function () {
 /* WORLD RELATED DATA */
 
 var COLORS = {
-  'black': new THREE.Color(0x0f0f0f)
+  'black': new THREE.Color(0x00010c)
 };
 
 var PLANE_WIDTH = 250;
