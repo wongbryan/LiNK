@@ -1,43 +1,11 @@
-var Avatar = function(rig, parts){
-	var mesh = rig;
-	var bones = rig.skeleton.bones;
-
-	/* TODO: ADD PARTS TO EACH BONE */
-	let ball = new THREE.Mesh(new THREE.SphereGeometry(1), new THREE.MeshBasicMaterial({color: 0xff0000}));
-	bones.forEach((bone) => {
-		let b = ball.clone();
-		bone.add(b);
-	});
-
-	var anims = rig.geometry.animations;
-	var actions = {};
-	var mixer = new THREE.AnimationMixer( mesh );
-	mixer.timeScale = 1;
-
-	anims.forEach((anim) => {
-		var name = anim.name;
-		actions[name] = mixer.clipAction(name);
-	});
-
-	function setWeight( action, weight ) {
-		action.enabled = true;
-		action.setEffectiveTimeScale( 1 );
-		action.setEffectiveWeight( weight );
-	}
-
-	function enableAction(name){
-		var action = actions[name];
-		setWeight(action, 1);
-		action.play();
-	}
-
+var Avatar = function(obj, materials){
+		
 	function update(d){
-		mixer.update(d);
+		
 	}
 
 	this.update = update;
-	this.enableAction = enableAction;
-	this.__proto__ = mesh;
+	this.__proto__ = obj;
 }
 
 /* ES6 Implementation */

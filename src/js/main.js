@@ -42,8 +42,9 @@ const init = () => {
     plane.receiveShadow = true;
     scene.add(plane);
 
-    testMesh = new Avatar(RIG_DATA['test-anim']);
-    let s = .05;
+    testMesh = new Avatar(MODEL_DATA['star'].mesh);
+    testMesh.castShadow = true;
+    let s = .5;
     testMesh.scale.multiplyScalar(s);
 
     spotLight.target = testMesh;
@@ -52,8 +53,6 @@ const init = () => {
     container.scale.divideScalar(s);
     testMesh.add(container);
     scene.add(testMesh);
-
-    testMesh.enableAction('walk');
 
     clock = new THREE.Clock();
 

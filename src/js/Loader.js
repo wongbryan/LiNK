@@ -6,6 +6,7 @@ var Loader = (function () {
     const fontLoader = new THREE.FontLoader(manager);
     const textureLoader = new THREE.TextureLoader(manager);
     const audioLoader = new THREE.AudioLoader(manager);
+    const jsonLoader = new THREE.JSONLoader(manager);
     // const $progress = document.getElementById('progress');
 
     var reduceableModels = ['banana', 'raspberry', 'pumpkin'];
@@ -19,7 +20,7 @@ var Loader = (function () {
     };
 
 
-    this.loadRig = function(file) {
+    this.loadSkinnedMesh = function(file) {
 
         var path = MODELS_PATH + file + '.json';
 
@@ -58,6 +59,73 @@ var Loader = (function () {
 
     };
 
+    this.loadModel = function(file){
+        var path = MODELS_PATH + file + '.json';
+
+        objLoader.load( 
+            path,
+
+            (obj)=>{
+
+                var mesh;
+                var group = new THREE.Group();
+                var meshCount = 0;
+
+                var matData = MODEL_DATA[file].materials;
+                var mats = [];
+
+                matData.map( name => {
+
+                    mats.push(MAT_DATA[name]);
+
+                })
+
+                obj.traverse( function ( child ) {
+
+                    if ( child instanceof THREE.Mesh ){
+
+                        console.log(child);
+
+                        if ( mesh == undefined ){
+
+                            var mat = mats[meshCount].clone();
+                            child.material = mat;
+                            mesh = child;
+                            group.add(mesh.clone());
+
+                        }
+
+                        else if ( mesh instanceof THREE.Mesh && child instanceof THREE.Mesh ){
+                            
+                            var mat = mats[meshCount].clone();
+                            child.material = mat;
+                            group.add(child);
+
+
+                        }
+
+                        meshCount++;
+
+                    }
+
+                } );
+
+                if (mesh == undefined){
+                    console.log('No mesh found in scene.');
+                    return;
+                }
+                
+                if (meshCount > 1){
+                    MODEL_DATA[file].mesh = group;
+                }
+                else{
+                    MODEL_DATA[file].mesh = mesh;
+                }   
+
+            },
+        );
+    }
+
     this.loadTexture = function(file){
         textureLoader.load(
             TEXTURE_ASSETS_PATH + file + '.png',
@@ -92,5 +160,9 @@ var Loader = (function () {
 }());
 
 for (var obj in RIG_DATA) {
-    Loader.loadRig(obj);
+    Loader.loadSkinnedMesh(obj);
+}
+
+for (var obj in MODEL_DATA) {
+    Loader.loadModel(obj);
 }
