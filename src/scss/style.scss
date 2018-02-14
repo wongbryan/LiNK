@@ -33,7 +33,6 @@ h1, h2, header, p, a, span{
 
 #title{
 	z-index: 4;
-	visibility: hidden;
 	.main{
 		h1{
 			font-family: $Caslon;
@@ -46,8 +45,9 @@ h1, h2, header, p, a, span{
 		h2{
 			font-family: $Brandon;
 			font-weight: lighter;
-			font-size: 1.4rem;
+			font-size: 1.3rem;
 			margin: 0;
+			color: $lightgray;
 			margin-bottom: 10px;
 		}
 		@include absolute-center;
@@ -66,6 +66,7 @@ h1, h2, header, p, a, span{
 
 #quoteInput{
 	z-index: 3;
+	visibility: hidden;
 	.main{
 		width: 600px; //bad
 		@include absolute-center;
