@@ -4,11 +4,13 @@ var renderer, camera, scene, controls, spotLight;
 var clock;
 var globe, testMesh;
 
+var target, scene2, camera2, b;
+
 const init = () => {
     scene = new THREE.Scene();
     renderer = initializeRenderer();
     camera = initializeCamera();
-    controls = initializeControls(camera, renderer);
+    // controls = initializeControls(camera, renderer);
 
     spotLight = new THREE.SpotLight();
     spotLight.intensity = .6;
@@ -69,6 +71,22 @@ const init = () => {
 
     testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
 
+    var width = window.innerWidth,
+    height = window.innerHeight;
+
+    scene2 = new THREE.Scene();
+    camera2 = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 1, 1000 );
+    scene2.add( camera2 );
+    scene2.add( new THREE.AmbientLight() );
+    b = new THREE.Mesh(new THREE.SphereGeometry(15, 32, 32), new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide}));
+    scene2.add(b);
+    camera2.position.set(0, 0, 15);
+    controls = new THREE.OrbitControls(camera2, renderer.domElement)
+    controls.rotateSpeed = 2.0
+    controls.panSpeed = 0.8
+    controls.zoomSpeed = 1.5
+
+
     // let a = new THREE.AmbientLight();
     // scene.add(a);
 
@@ -103,7 +121,7 @@ const animate = () => {
     //but you get the point for now.
 
     //Render the frame
-    renderer.render(scene, camera)
+    renderer.render(scene2, camera2)
 }
 //Run the update call for the first time, registering
 //it for every animation frame.
