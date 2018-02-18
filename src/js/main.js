@@ -4,13 +4,13 @@ var renderer, camera, scene, controls, spotLight;
 var clock;
 var globe, testMesh;
 
-var target, scene2, camera2, b;
+var target, scene2, camera2, b, glows = [];
 
 const init = () => {
     scene = new THREE.Scene();
     renderer = initializeRenderer();
     camera = initializeCamera();
-    // controls = initializeControls(camera, renderer);
+    controls = initializeControls(camera, renderer);
 
     spotLight = new THREE.SpotLight();
     spotLight.intensity = .6;
@@ -33,11 +33,20 @@ const init = () => {
     spotLight.position.set(-10, 30, 0);
     scene.add(spotLight);
 
+    target = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight );
+    // target.wrapS = target.wrapT = THREE.RepeatWrapping;
+    // target.depthBuffer = false;
+    // target.stencilBuffer = false;
+
+    let text = new THREE.TextureLoader().load('assets/image.png');
+
     let sphereGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 16, 16);
     let sphereMat = new THREE.MeshPhongMaterial({
         emissive: COLORS.black, 
         specular: COLORS.black,
-        shininess: 0
+        shininess: 0,
+        map: target.texture,
+        lights: true
     });
 
     globe = new THREE.Mesh(sphereGeom, sphereMat);
@@ -75,20 +84,44 @@ const init = () => {
     height = window.innerHeight;
 
     scene2 = new THREE.Scene();
-    camera2 = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 1, 1000 );
+    camera2 = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
     scene2.add( camera2 );
     scene2.add( new THREE.AmbientLight() );
     b = new THREE.Mesh(new THREE.SphereGeometry(15, 32, 32), new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide}));
-    scene2.add(b);
-    camera2.position.set(0, 0, 15);
-    controls = new THREE.OrbitControls(camera2, renderer.domElement)
-    controls.rotateSpeed = 2.0
-    controls.panSpeed = 0.8
-    controls.zoomSpeed = 1.5
+    // scene2.add(b);
+    camera2.position.set(0, 0, 20);
+    // controls = new THREE.OrbitControls(camera2, renderer.domElement)
+    // controls.rotateSpeed = 2.0
+    // controls.panSpeed = 0.8
+    // controls.zoomSpeed = 1.5
 
+    var numGlows = 50;
+    var sa = 1;
+    var l = .5;
+    var r = .2;
+    var g = new THREE.SphereGeometry(r, 64, 64);
 
-    // let a = new THREE.AmbientLight();
-    // scene.add(a);
+    for(var i=0; i<numGlows; i++){
+
+        var c = new THREE.Color();
+        var h = .09 + Math.random()*.05;
+        c.setHSL(h, sa, l);
+
+        var m = new GlowMesh(g, c);
+        m.scale.multiplyScalar(Math.random() * 5 + 1);
+
+        var p = new THREE.Vector3(2 * Math.random() - 1, 2 * Math.random() - 1, 0).normalize();
+        // var p = new THREE.Vector3(0, 0, 0);
+        // var p = new THREE.Vector3((i-numGlows/2) * 2, (i-numGlows/2) * 2, 0);
+        p.multiplyScalar(Math.random() * 20);
+        m.position.set(p.x, p.y, p.z);
+
+        glows.push(m);
+        scene2.add(m);
+    }
+
+    let a = new THREE.AmbientLight();
+    scene.add(a);
 
     clock.start();
     animate();
@@ -109,7 +142,7 @@ const update = () => {
     // camera.position.copy(testMesh.position);
     // camera.position.z = 5;
     // testMesh.update(d);
-    controls.update();
+    // controls.update();
 }
 
 const animate = () => {
@@ -121,7 +154,11 @@ const animate = () => {
     //but you get the point for now.
 
     //Render the frame
-    renderer.render(scene2, camera2)
+    renderer.render(scene2, camera2, target);
+    renderer.render(scene, camera)
+
+    //render texture for testing
+    // renderer.render(scene2, camera2);
 }
 //Run the update call for the first time, registering
 //it for every animation frame.
