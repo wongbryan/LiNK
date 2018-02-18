@@ -134,6 +134,11 @@ const update = () => {
 
     let elipsePathPoint = testMesh.movementFunc(globalTime)
 
+    glows.forEach(glow => {
+        glow.position
+        glow.material.uniforms.time.value += d;
+    })
+
     // camera.lookAt(testMesh);
     // testMesh.position.x = elipsePathPoint.x
     // testMesh.position.y = elipsePathPoint.y

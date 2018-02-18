@@ -5,7 +5,9 @@ var GlowMesh = function(geom, color){
             'viewVector': { value: camera2.position },
             'glowColor': { value: color },
             'c': { value: 0 },
-            'p': { value: 5 } 
+            'p': { value: 5 },
+            'time': { value: Math.random() * 360. },
+            'level': { value: Math.random() * 1 + 1}
         },
         blending: THREE.AdditiveBlending,
         transparent: true,
