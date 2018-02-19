@@ -4,12 +4,15 @@ var renderer, camera, scene, controls, spotLight;
 var clock;
 var globe, testMesh;
 
+var camController;
+
 const init = () => {
     scene = new THREE.Scene();
     renderer = initializeRenderer();
     camera = initializeCamera();
-    controls = initializeControls(camera, renderer);
+    //controls = initializeControls(camera, renderer);
 
+    
     spotLight = new THREE.SpotLight();
     spotLight.intensity = .6;
     spotLight.distance = 85;
@@ -67,12 +70,19 @@ const init = () => {
     curve = setArc3D(pointStart, pointEnd, 3000, "lime", true);
     scene.add(curve);
 
-    testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
+    console.log("Showing globe");
+    console.log(globe)
 
-    // let a = new THREE.AmbientLight();
-    // scene.add(a);
+    
+    camController = new CameraController(20, 20, globe.position, 0.5, 0.5);
+    camController.init(testMesh, camera);
+
+//     let a = new THREE.AmbientLight();
+//     scene.add(a);
 
     clock.start();
+    testMesh.movementFunc = genMoveAlongCurve(curve, 200, clock.elapsedTime);
+    
     animate();
 
 }
@@ -83,15 +93,22 @@ const update = () => {
 
     let elipsePathPoint = testMesh.movementFunc(globalTime)
 
-    // camera.lookAt(testMesh);
-    // testMesh.position.x = elipsePathPoint.x
-    // testMesh.position.y = elipsePathPoint.y
-    // testMesh.position.z = elipsePathPoint.z;
+    //camera.lookAt(testMesh);
+    let movementVec = new THREE.Vector3().sub(elipsePathPoint - testMesh.position);
+    
+testMesh.position.x = elipsePathPoint.x
+testMesh.position.y = elipsePathPoint.y
+testMesh.position.z = elipsePathPoint.z;
 
-    // camera.position.copy(testMesh.position);
-    // camera.position.z = 5;
-    // testMesh.update(d);
-    controls.update();
+    camController.update(0, testMesh, 0, camera)
+    
+//    camera.position.copy(testMesh.position);
+  //  camera.position.y += 3;
+    //camera.position.z += 3;
+    //camera.lookAt(testMesh);
+
+    //testMesh.update(d);
+    //controls.update();
 }
 
 const animate = () => {
