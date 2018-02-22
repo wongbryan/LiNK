@@ -43,7 +43,7 @@ const init = () => {
     globe.receiveShadow = true;
     scene.add(globe);
 
-    testMesh = new Avatar(MODEL_DATA['star'].mesh);
+    testMesh = new Avatar();
     testMesh.castShadow = true;
     testMesh.position.y = GLOBE_RADIUS;
     let s = .5;

@@ -1,48 +1,37 @@
-var Avatar = function(obj, materials){
-		
-	function update(d){
-		
-	}
+var Avatar = function(materials){
 
-	this.update = update;
-	this.__proto__ = obj;
-}
+	var mat = MAT_DATA['star'];
 
-/* ES6 Implementation */
-class Avatar2 {
-	constructor(rig, parts){
-		let mesh = rig;
-		let bones = rig.skeleton.bones;
+	var geometries = {
+		head: new THREE.BoxGeometry(1, 1, 1),
+		torso: new THREE.BoxGeometry(3.5, 3.5, 3.5),
+		arm: new THREE.BoxGeometry(1, 5, 1),
+		leg: new THREE.BoxGeometry(1, 7, 1),
+	};
 
-		for (var i=0; i<bones.length; i++){
-			var ball = new THREE.Mesh(new THREE.SphereGeometry(1), new THREE.MeshBasicMaterial({color: 0xff0000}));
-			bones[i].add(ball);
-		}
+	geometries['arm'].translate(0, 2.5, 0);
 
-		let anims = rig.geometry.animations,
-		actions = {};
+	var head = new THREE.Mesh(geometries['head'], mat.clone());
+	var torso = new THREE.Mesh(geometries['torso'], mat.clone());
+	var armLeft = new THREE.Mesh(geometries['arm'].clone(), mat.clone());
+	var armRight = new THREE.Mesh(geometries['arm'].clone(), mat.clone());
+	var legLeft = new THREE.Mesh(geometries['leg'].clone(), mat.clone());
+	var legRight = new THREE.Mesh(geometries['leg'].clone(), mat.clone());
 
-		let mixer = new THREE.AnimationMixer( mesh );
-		mixer.timeScale = 1;
+	head.position.set(0, 2.75, 0);
+	torso.position.set(0, 0, 0);
+	armLeft.position.set(-2.5, 0, 0);
+	armRight.position.set(2.5, 0, 0);
+	legLeft.position.set(-1, -6, 0);
+	legRight.position.set(1, -6, 0);
 
-		anims.forEach( ( anim ) => {
-			let name = anim.name;
-			actions[name] = mixer.clipAction(name);
-		})
+	var g = new THREE.Group();
+	g.add(head);
+	g.add(torso);
+	g.add(armLeft);
+	g.add(armRight);
+	g.add(legLeft);
+	g.add(legRight);
 
-		this.mixer = mixer;
-		this._animations = anims;
-		this._actions = actions;
-		this.__proto__ = mesh;
-	}
-
-	enableAction(name){
-		let action = this.actions[name];
-
-		action.enabled = true;
-		action.setEffectiveTimeScale( 1 );
-		action.setEffectiveWeight( weight );
-
-		action.play();
-	}
+	this.__proto__ = g;
 }
