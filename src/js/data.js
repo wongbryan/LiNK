@@ -3,9 +3,16 @@ const RIG_DATA = {
 }
 
 const MODEL_DATA = {
-	'star': {
-		mesh: null,
-		materials: ['star', 'halo']
+	'latin2': {
+		'poncho': {
+			mesh: null,
+		},
+		'mustache_latin':{
+			mesh: null,
+		},
+		'hat_latin': {
+			mesh: null
+		}
 	}
 }
 

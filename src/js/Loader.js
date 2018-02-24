@@ -16,114 +16,39 @@ var Loader = (function () {
     };
 
     manager.onLoad = function () {
-        // init();
+        init();
     };
 
 
-    this.loadSkinnedMesh = function(file) {
+    this.loadObj = file => {
 
-        var path = MODELS_PATH + file + '.json';
+        objLoader.load(
 
-        objLoader.load( 
-            path,
+            MODELS_PATH + file + '.json',
 
-            (loadedObject)=>{
+            obj => {
 
-                let mesh;
+                obj.children.forEach( c => {
 
-                loadedObject.traverse( function ( child ) {
+                    if (c instanceof THREE.Mesh){
 
-                if ( child instanceof THREE.SkinnedMesh ) {
+                        c.position.set(0, 0, 0); //reset any position changes, position them later
+                        c.rotation.set(0, 0, 0);
+                        let n = c.name
+                        
+                        if ( n in MODEL_DATA[file] ){
 
-                    mesh = child;
-                    child.material.transparent = true;
-                    child.material.opacity = 0;
-                    RIG_DATA[file] = mesh;
-
-                    console.log('load rig');
-                    init();
-
-                }
-
-                } );
-
-                if ( mesh === undefined ) {
-
-                    alert( 'Unable to find a SkinnedMesh in this place:\n\n' + url + '\n\n' );
-                    return;
-
-                }
-
-            },
-        );
-
-    };
-
-    this.loadModel = function(file){
-        var path = MODELS_PATH + file + '.json';
-
-        objLoader.load( 
-            path,
-
-            (obj)=>{
-
-                var mesh;
-                var group = new THREE.Group();
-                var meshCount = 0;
-
-                var matData = MODEL_DATA[file].materials;
-                var mats = [];
-
-                matData.map( name => {
-
-                    mats.push(MAT_DATA[name]);
-
-                })
-
-                obj.traverse( function ( child ) {
-
-                    if ( child instanceof THREE.Mesh ){
-
-                        console.log(child);
-
-                        if ( mesh == undefined ){
-
-                            var mat = mats[meshCount].clone();
-                            child.material = mat;
-                            mesh = child;
-                            group.add(mesh.clone());
+                            MODEL_DATA[file][n].mesh = c.clone();
 
                         }
-
-                        else if ( mesh instanceof THREE.Mesh && child instanceof THREE.Mesh ){
-                            
-                            var mat = mats[meshCount].clone();
-                            child.material = mat;
-                            group.add(child);
-
-
-                        }
-
-                        meshCount++;
 
                     }
 
-                } );
+                });
 
-                if (mesh == undefined){
-                    console.log('No mesh found in scene.');
-                    return;
-                }
-                
-                if (meshCount > 1){
-                    MODEL_DATA[file].mesh = group;
-                }
-                else{
-                    MODEL_DATA[file].mesh = mesh;
-                }   
+            }
+        )
 
-            },
-        );
     }
 
     this.loadTexture = function(file){
@@ -159,10 +84,6 @@ var Loader = (function () {
     return this;
 }());
 
-for (var obj in RIG_DATA) {
-    Loader.loadSkinnedMesh(obj);
-}
-
-for (var obj in MODEL_DATA) {
-    Loader.loadModel(obj);
+for (let file in MODEL_DATA) {
+    Loader.loadObj(file);
 }

@@ -56,6 +56,8 @@ const init = () => {
     testMesh.add(container);
     scene.add(testMesh);
 
+    testMesh.position.y += 5;
+
     clock = new THREE.Clock();
 
     window.addEventListener('resize', resize);
