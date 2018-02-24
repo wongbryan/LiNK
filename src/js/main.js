@@ -54,9 +54,16 @@ const init = () => {
     container.add(spotLight);
     container.scale.divideScalar(s);
     testMesh.add(container);
-    scene.add(testMesh);
+    // scene.add(testMesh);
 
-    testMesh.position.y += 5;
+    let sp = spotLight = new THREE.SpotLight();
+    sp.intensity = .6;
+    sp.distance = 85;
+    sp.penumbra = 1;
+    sp.angle = .8;
+    sp.decay = 1.5;
+    sp.position.y = GLOBE_RADIUS + 5;
+    scene.add(sp);
 
     clock = new THREE.Clock();
 
@@ -67,7 +74,7 @@ const init = () => {
     var pointStart = new THREE.Vector3(x, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
     var pointEnd = new THREE.Vector3(x-.0001, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
     curve = setArc3D(pointStart, pointEnd, 3000, "lime", true);
-    scene.add(curve);
+    // scene.add(curve);
 
     testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
 
