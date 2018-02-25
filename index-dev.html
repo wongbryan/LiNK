@@ -56,7 +56,7 @@
 	    opacity = (maxDist - distance(mPosition.xyz, avatarPos)) / maxDist;
 	    opacity = clamp(opacity, 0., 1.);
 
-	    float appear = step( 1.-appearAmt, rand(dist) );
+	    float appear = step( 1.-appearAmt, rand(scale) );
 	    opacity *= appear;
 
 	    testColor = (viewMatrix * mPosition).xyz;

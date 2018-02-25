@@ -79,8 +79,8 @@ const init = () => {
 
     testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
 
-    let a = new THREE.AmbientLight();
-    scene.add(a);
+    // let a = new THREE.AmbientLight();
+    // scene.add(a);
 
     clock.start();
     animate();
