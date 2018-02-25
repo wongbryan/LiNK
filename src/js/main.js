@@ -94,6 +94,7 @@ const update = () => {
     // camera.position.z = 5;
     // testMesh.update(d);
 
+    globe.frustumCulled = false;
     globe.rotation.x += .0005;
     controls.update();
 }
