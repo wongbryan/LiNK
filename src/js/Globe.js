@@ -31,7 +31,8 @@ var Globe = function(radius, color, avatarPos){
             'glowColor': { value: color },
             'c': { value: 0 },
             'p': { value: 5 },
-            'avatarPos': { value: avatarPos }
+            'avatarPos': { value: avatarPos },
+            'appearAmt': { value: .5}
         },
         blending: THREE.AdditiveBlending,
         transparent: true,

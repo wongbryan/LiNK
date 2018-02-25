@@ -102,7 +102,7 @@ const update = () => {
     // camera.position.z = 5;
     // testMesh.update(d);
 
-    globe.rotation.x += .005;
+    globe.rotation.x += .0005;
     controls.update();
 }
 
