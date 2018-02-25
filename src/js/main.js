@@ -49,18 +49,14 @@ const init = () => {
     // globe.receiveShadow = true;
     scene.add(globe);
 
-    let sGeom = new THREE.SphereGeometry(2, 64, 64);
-    let sMat = new THREE.Mesh
+    let sGeom = new THREE.SphereGeometry(GLOBE_RADIUS);
+    let sMat = new THREE.MeshPhongMaterial({
+        emissive: COLORS.black, 
+        specular: COLORS.black,
+        shininess: 0
+    });
     let innerGlobe = new THREE.Mesh(sGeom, sMat);
-
-    let sp = spotLight = new THREE.SpotLight();
-    sp.intensity = .6;
-    sp.distance = 85;
-    sp.penumbra = 1;
-    sp.angle = .8;
-    sp.decay = 1.5;
-    sp.position.y = GLOBE_RADIUS + 5;
-    scene.add(sp);
+    scene.add(innerGlobe);
 
     clock = new THREE.Clock();
 
