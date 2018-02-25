@@ -31,18 +31,6 @@ const init = () => {
     spotLight.position.set(-10, 30, 0);
     scene.add(spotLight);
 
-    let sphereGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 16, 16);
-    let sphereMat = new THREE.MeshPhongMaterial({
-        emissive: COLORS.black, 
-        specular: COLORS.black,
-        shininess: 0
-    });
-
-    globe = new THREE.Mesh(sphereGeom, sphereMat);
-    // globe.position.y = -GLOBE_RADIUS;
-    globe.receiveShadow = true;
-    scene.add(globe);
-
     testMesh = new Avatar();
     testMesh.castShadow = true;
     testMesh.position.y = GLOBE_RADIUS;
@@ -54,7 +42,20 @@ const init = () => {
     container.add(spotLight);
     container.scale.divideScalar(s);
     testMesh.add(container);
-    // scene.add(testMesh);
+    scene.add(testMesh);
+
+    globe = new Globe(GLOBE_RADIUS, new THREE.Color(0xffe877), testMesh.position);
+    // globe.position.y = -GLOBE_RADIUS;
+    // globe.receiveShadow = true;
+    scene.add(globe);
+
+    let sGeom = new THREE.SphereGeometry(2, 64, 64);
+    let cGeom = new THREE.BoxGeometry(2, 2, 2);
+    let c = new THREE.Color(0xffe877);
+    glow = new GlowMesh(sGeom, c);
+    glow.position.y = GLOBE_RADIUS + 5;
+    // glow.material.uniforms['viewVector'].value = new THREE.Vector3(0, 0, 1);
+    scene.add(glow);
 
     let sp = spotLight = new THREE.SpotLight();
     sp.intensity = .6;
@@ -78,8 +79,8 @@ const init = () => {
 
     testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
 
-    // let a = new THREE.AmbientLight();
-    // scene.add(a);
+    let a = new THREE.AmbientLight();
+    scene.add(a);
 
     clock.start();
     animate();
@@ -100,6 +101,8 @@ const update = () => {
     // camera.position.copy(testMesh.position);
     // camera.position.z = 5;
     // testMesh.update(d);
+
+    globe.rotation.x += .005;
     controls.update();
 }
 
