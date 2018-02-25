@@ -50,12 +50,8 @@ const init = () => {
     scene.add(globe);
 
     let sGeom = new THREE.SphereGeometry(2, 64, 64);
-    let cGeom = new THREE.BoxGeometry(2, 2, 2);
-    let c = new THREE.Color(0xffe877);
-    glow = new GlowMesh(sGeom, c);
-    glow.position.y = GLOBE_RADIUS + 5;
-    // glow.material.uniforms['viewVector'].value = new THREE.Vector3(0, 0, 1);
-    scene.add(glow);
+    let sMat = new THREE.Mesh
+    let innerGlobe = new THREE.Mesh(sGeom, sMat);
 
     let sp = spotLight = new THREE.SpotLight();
     sp.intensity = .6;

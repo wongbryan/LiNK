@@ -35,23 +35,21 @@
 
 	uniform vec3 avatarPos;
 	uniform float appearAmt; //0->1 how many meshes appear around avatar
+	uniform float maxDist;
 
 	attribute vec3 vOffset;
 
 	varying vec3 testColor;
-	varying vec3 vNormal;
 	varying float opacity;
 
 	float rand(float n){return fract(sin(n) * 43758.5453123);}
 
 	void main() 
 	{
-	    vNormal = normalize( normalMatrix * normal );
 	    vec4 mPosition = modelMatrix * vec4(vOffset, 1.);
 	    float scale = rand(vOffset.x);
 	    mPosition.xyz += position * 3.*scale;
 
-	    float maxDist = 200.;
 	    float dist = distance(mPosition.xyz, avatarPos);
 	    opacity = (maxDist - distance(mPosition.xyz, avatarPos)) / maxDist;
 	    opacity = clamp(opacity, 0., 1.);
@@ -70,7 +68,6 @@
 	uniform vec3 avatarPos;
 
 	varying vec3 testColor;
-	varying vec3 vNormal;
 	varying float opacity;
 
 	void main() 

@@ -28,17 +28,15 @@ var Globe = function(radius, color, avatarPos){
 
   let mat = new THREE.ShaderMaterial({
         uniforms: {
-            'glowColor': { value: color },
-            'c': { value: 0 },
-            'p': { value: 5 },
             'avatarPos': { value: avatarPos },
-            'appearAmt': { value: .5}
+            'appearAmt': { value: .5},
+            'maxDist': { value: 200. }
         },
         blending: THREE.AdditiveBlending,
         transparent: true,
         vertexShader: document.getElementById('globeVertex').textContent,
         fragmentShader: document.getElementById('globeFragment').textContent,
-        side: THREE.DoubleSide
+        side: THREE.DoubleSide,
   });
 
   let p = new THREE.Mesh(geom, mat);
