@@ -1,45 +1,78 @@
+
+/* Constructs a mesh given a root Object3D and model data w/ nested parts*/
+
+function buildParts(parent, nodeData, parentNodeData){
+
+	let geom = nodeData.geom;
+	let mat = MAT_DATA['halo'];
+	let mesh = new THREE.Mesh(geom, mat);
+
+	parent.add(mesh);
+
+	console.log(parent);
+
+	if(parentNodeData){
+
+		let parentGeom;
+		let max;
+		let min;
+		let magnitude;
+		if(parentNodeData.hasOwnProperty('part')){
+
+			parentGeom = parentNodeData['geom'];
+
+		}
+		else{ //if parent is not a part, its 'parent' is just the model data entry. use torso geom as magnitude ref
+
+			parentGeom = parentNodeData['torso'].geom;
+
+		}
+
+		parentGeom.computeBoundingBox();
+		max = parentGeom.boundingBox.max;
+		min = parentGeom.boundingBox.min;
+		magnitude = max.sub(min);
+		let offset = nodeData.offset;
+		offset = offset.multiply(magnitude);
+
+		mesh.position.add(offset);
+	}
+
+	for(let key in nodeData){
+		let child = nodeData[key];
+		if(typeof child === 'object' && child.hasOwnProperty('part')){
+			parent.add(buildParts(mesh, child, nodeData));
+		}
+	}
+
+	return parent;
+
+}
+
 var Avatar = function(materials){
 
-	var mat = MAT_DATA['star'];
-
-	var armLength = 1.75, 
-	legLength = 1.5, 
-	torsoLength = 2.5, 
-	torsoWidth = 3,
-	torsoHeight = 3,
-	headSize = 3.5;
-
-	var geometries = {
-		head: new THREE.BoxGeometry(headSize, headSize, headSize),
-		torso: new THREE.CylinderGeometry(1.25, torsoWidth, torsoHeight, 4),
-		arm: new THREE.BoxGeometry(1, armLength, 1),
-		leg: new THREE.BoxGeometry(1, legLength, 1),
-	};
-
-	var head = new THREE.Mesh(geometries['head'], mat.clone());
-	var torso = new THREE.Mesh(geometries['torso'], mat.clone());
-	var armLeft = new THREE.Mesh(geometries['arm'].clone(), mat.clone());
-	var armRight = new THREE.Mesh(geometries['arm'].clone(), mat.clone());
-	var legLeft = new THREE.Mesh(geometries['leg'].clone(), mat.clone());
-	var legRight = new THREE.Mesh(geometries['leg'].clone(), mat.clone());
-
-	head.position.set(0, 2.75, 0);
-	torso.position.set(0, 0, 0);
-	torso.rotation.y = Math.PI/4;
-	armLeft.position.set(-(torsoWidth/2), 0, 0);
-	armRight.position.set((torsoWidth/2), 0, 0);
-	legLeft.position.set(-.75, -(legLength+.5), 0);
-	legRight.position.set(.75, -(legLength+.5), 0);
-
-	torso.scale.multiplyScalar(.75);
-
 	var g = new THREE.Group();
-	g.add(head);
-	g.add(torso);
-	g.add(armLeft);
-	g.add(armRight);
-	g.add(legLeft);
-	g.add(legRight);
+	var data = ROBOT_DATA['lbp'];
+	g = buildParts(g, data);
+	// console.log(buildParts(g, data));
+	var mat = MAT_DATA['halo'];
+
+	// var torsoGeom = data.torso.geom;
+	// torsoGeom.computeBoundingBox();
+	// var max = torsoGeom.boundingBox.max;
+	// var min = torsoGeom.boundingBox.min;
+	// var magnitude = max.sub(min);
+
+	// for(var key in data){	
+	// 	var offset = data[key].offset;
+	// 	offset = offset.multiply(magnitude);
+	// 	var geom = data[key].geom;
+
+	// 	var mesh = new THREE.Mesh(geom, mat);
+	// 	mesh.position.add(offset);
+
+	// 	g.add(mesh);
+	// }
 
 	this.__proto__ = g;
 }
