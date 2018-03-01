@@ -44,6 +44,7 @@ const init = () => {
     scene.add(globe);
 
     testMesh = new Avatar();
+
     testMesh.castShadow = true;
     testMesh.position.y = GLOBE_RADIUS;
     let s = .5;
@@ -57,6 +58,10 @@ const init = () => {
     scene.add(testMesh);
 
     testMesh.position.y += 5;
+
+    testMesh.animations.bodyPosAnim({x:10, y:0, z:10}).start()
+
+    testMesh.animations.bodyRotAnim(new THREE.Vector3(1,0,1)).start()
 
     clock = new THREE.Clock();
 
@@ -94,6 +99,9 @@ const update = () => {
     // camera.position.z = 5;
     // testMesh.update(d);
     controls.update();
+
+    TWEEN.update();
+    
 }
 
 const animate = () => {
