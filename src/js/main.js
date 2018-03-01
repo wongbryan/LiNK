@@ -3,12 +3,13 @@
 var renderer, camera, scene, controls, spotLight;
 var clock;
 var globe, testMesh;
+var curve, cc;
 
 const init = () => {
     scene = new THREE.Scene();
     renderer = initializeRenderer();
     camera = initializeCamera();
-    controls = initializeControls(camera, renderer);
+    //controls = initializeControls(camera, renderer);
 
     spotLight = new THREE.SpotLight();
     spotLight.intensity = .6;
@@ -31,6 +32,7 @@ const init = () => {
     spotLight.position.set(-10, 30, 0);
     scene.add(spotLight);
 
+
     let sphereGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 16, 16);
     let sphereMat = new THREE.MeshPhongMaterial({
         emissive: COLORS.black, 
@@ -42,6 +44,10 @@ const init = () => {
     // globe.position.y = -GLOBE_RADIUS;
     globe.receiveShadow = true;
     scene.add(globe);
+
+
+    //Initialize the avatars position
+    
 
     testMesh = new Avatar();
 
@@ -67,18 +73,28 @@ const init = () => {
 
     window.addEventListener('resize', resize);
 
-    let x = 0, y = 1, z = 0;
-
+    let x = 0,
+	y = 1,
+	z = 0
+    
     var pointStart = new THREE.Vector3(x, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
     var pointEnd = new THREE.Vector3(x-.0001, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
-    curve = setArc3D(pointStart, pointEnd, 3000, "lime", true);
-    scene.add(curve);
 
-    testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
+    let arc = setArc3D(pointStart, pointEnd, 3000, "lime", true);
 
-    // let a = new THREE.AmbientLight();
-    // scene.add(a);
+    curve = new THREE.SplineCurve3(arc.geometry.vertices)
 
+    let movement = moveAlongCurve(testMesh, curve, {easing:TWEEN.Easing.Quadratic.Out, duration:600000, delay:0})
+
+    cc = new CameraController(10, 10, new THREE.Vector3(0,0,0), 20, 20)
+
+    cc.init(testMesh, camera)
+
+    
+    movement.start()
+    
+    scene.add(arc);
+    
     clock.start();
     animate();
 
@@ -88,32 +104,22 @@ const update = () => {
     var d = clock.getDelta();
     let globalTime = clock.elapsedTime;
 
-    let elipsePathPoint = testMesh.movementFunc(globalTime)
-
-    // camera.lookAt(testMesh);
-    // testMesh.position.x = elipsePathPoint.x
-    // testMesh.position.y = elipsePathPoint.y
-    // testMesh.position.z = elipsePathPoint.z;
-
-    // camera.position.copy(testMesh.position);
-    // camera.position.z = 5;
-    // testMesh.update(d);
-    controls.update();
-
     TWEEN.update();
-    
+    cc.update(0, testMesh, testMesh.velocity, camera)
+
+
+    globe.frustumCulled = false;
+    globe.rotation.x += .0005;
+
 }
 
-const animate = () => {
+const animate = (time) => {
 
     window.requestAnimationFrame(animate)
+    TWEEN.update(time)
     update();
-
-    //Animation should be extracted into its own function
-    //but you get the point for now.
 
     //Render the frame
     renderer.render(scene, camera)
 }
-//Run the update call for the first time, registering
-//it for every animation frame.
+

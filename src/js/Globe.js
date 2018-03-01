@@ -29,7 +29,7 @@ function setArc3D(pointStart, pointEnd, smoothness, color, clockWise) {
   var arc = new THREE.Line(geometry, new THREE.LineBasicMaterial({
     color: color
   }));
-  return arc;
+  return arc
 }
 
 function getRndInteger(min, max) {
