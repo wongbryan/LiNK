@@ -4,12 +4,15 @@
 function buildParts(parent, nodeData, parentNodeData){
 
 	let geom = nodeData.geom;
-	let mat = MAT_DATA['halo'];
+	let mat = nodeData.mat;
 	let mesh = new THREE.Mesh(geom, mat);
 
-	parent.add(mesh);
+	if(nodeData.rotation){
+		let r = nodeData.rotation;
+		mesh.rotation.set(r.x, r.y, r.z);
+	}
 
-	console.log(parent);
+	parent.add(mesh);
 
 	if(parentNodeData){
 
@@ -22,7 +25,8 @@ function buildParts(parent, nodeData, parentNodeData){
 			parentGeom = parentNodeData['geom'];
 
 		}
-		else{ //if parent is not a part, its 'parent' is just the model data entry. use torso geom as magnitude ref
+		else{ //if parent is not a part, its 'parent' is just the root model data entry. 
+			  //use torso geom as magnitude reference
 
 			parentGeom = parentNodeData['torso'].geom;
 
@@ -36,6 +40,7 @@ function buildParts(parent, nodeData, parentNodeData){
 		offset = offset.multiply(magnitude);
 
 		mesh.position.add(offset);
+
 	}
 
 	for(let key in nodeData){
@@ -55,24 +60,7 @@ var Avatar = function(materials){
 	var data = ROBOT_DATA['lbp'];
 	g = buildParts(g, data);
 	// console.log(buildParts(g, data));
-	var mat = MAT_DATA['halo'];
-
-	// var torsoGeom = data.torso.geom;
-	// torsoGeom.computeBoundingBox();
-	// var max = torsoGeom.boundingBox.max;
-	// var min = torsoGeom.boundingBox.min;
-	// var magnitude = max.sub(min);
-
-	// for(var key in data){	
-	// 	var offset = data[key].offset;
-	// 	offset = offset.multiply(magnitude);
-	// 	var geom = data[key].geom;
-
-	// 	var mesh = new THREE.Mesh(geom, mat);
-	// 	mesh.position.add(offset);
-
-	// 	g.add(mesh);
-	// }
 
 	this.__proto__ = g;
 }
+

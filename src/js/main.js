@@ -33,7 +33,7 @@ const init = () => {
 
     testMesh = new Avatar();
     testMesh.castShadow = true;
-    testMesh.position.y = GLOBE_RADIUS;
+    testMesh.position.y = GLOBE_RADIUS+5;
     let s = .5;
     testMesh.scale.multiplyScalar(s);
 
@@ -44,12 +44,12 @@ const init = () => {
     testMesh.add(container);
     scene.add(testMesh);
 
-    globe = new Globe(GLOBE_RADIUS, new THREE.Color(0xffe877), testMesh.position);
+    globe = new Globe(GLOBE_RADIUS+5, new THREE.Color(0xffe877), testMesh.position);
     // globe.position.y = -GLOBE_RADIUS;
     // globe.receiveShadow = true;
     scene.add(globe);
 
-    let sGeom = new THREE.SphereGeometry(GLOBE_RADIUS);
+    let sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 32, 32);
     let sMat = new THREE.MeshPhongMaterial({
         emissive: COLORS.black, 
         specular: COLORS.black,
