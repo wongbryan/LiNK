@@ -1,5 +1,49 @@
 const GLOBE_RADIUS = 500;
 
+var Globe = function(radius, color, avatarPos){
+
+  /* Calculate offset (positions) of each instance */
+
+  const MAX_VERTICES = 4000;
+
+  let sGeom = new THREE.SphereGeometry(radius, 32, 32);
+  let g = new THREE.SphereBufferGeometry(1, 16, 16);
+  let geom = new THREE.InstancedBufferGeometry();
+  geom.copy(g);
+  let positions = THREE.GeometryUtils.randomPointsInGeometry(sGeom, MAX_VERTICES);
+
+  let vOffsetArr = new Float32Array(MAX_VERTICES*3);
+
+  positions.forEach( ( p, i ) => {
+
+    let index = i*3;
+    vOffsetArr[index] = p.x;
+    vOffsetArr[index+1] = p.y;
+    vOffsetArr[index+2] = p.z;
+
+  } );
+
+  let vOffset = new THREE.InstancedBufferAttribute(vOffsetArr, 3, 1);
+  geom.addAttribute('vOffset', vOffset);
+
+  let mat = new THREE.ShaderMaterial({
+        uniforms: {
+            'avatarPos': { value: avatarPos },
+            'appearAmt': { value: .5},
+            'maxDist': { value: 200. }
+        },
+        blending: THREE.AdditiveBlending,
+        transparent: true,
+        vertexShader: document.getElementById('globeVertex').textContent,
+        fragmentShader: document.getElementById('globeFragment').textContent,
+        side: THREE.DoubleSide,
+  });
+
+  let p = new THREE.Mesh(geom, mat);
+
+  this.__proto__ = p;
+}
+
 function setArc3D(pointStart, pointEnd, smoothness, color, clockWise) {
   // calculate a normal ( taken from Geometry().computeFaceNormals() )
   var cb = new THREE.Vector3(), ab = new THREE.Vector3(), normal = new THREE.Vector3();

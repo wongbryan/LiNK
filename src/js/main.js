@@ -3,7 +3,7 @@
 var renderer, camera, scene, controls, spotLight;
 var clock;
 var globe, testMesh;
-var curve, cc;
+var cc, controls;
 
 const init = () => {
     scene = new THREE.Scene();
@@ -32,7 +32,6 @@ const init = () => {
     spotLight.position.set(-10, 30, 0);
     scene.add(spotLight);
 
-
     let sphereGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 16, 16);
     let sphereMat = new THREE.MeshPhongMaterial({
         emissive: COLORS.black, 
@@ -47,12 +46,11 @@ const init = () => {
 
 
     //Initialize the avatars position
-    
 
     testMesh = new Avatar();
 
     testMesh.castShadow = true;
-    testMesh.position.y = GLOBE_RADIUS;
+    testMesh.position.y = GLOBE_RADIUS+5;
     let s = .5;
     testMesh.scale.multiplyScalar(s);
 
@@ -63,12 +61,19 @@ const init = () => {
     testMesh.add(container);
     scene.add(testMesh);
 
-    testMesh.position.y += 5;
+    globe = new Globe(GLOBE_RADIUS+5, new THREE.Color(0xffe877), testMesh.position);
+    // globe.position.y = -GLOBE_RADIUS;
+    // globe.receiveShadow = true;
+    scene.add(globe);
 
-    testMesh.animations.bodyPosAnim({x:10, y:0, z:10}).start()
-
-    testMesh.animations.bodyRotAnim(new THREE.Vector3(1,0,1)).start()
-
+    let sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 32, 32);
+    let sMat = new THREE.MeshPhongMaterial({
+        emissive: COLORS.black, 
+        specular: COLORS.black,
+        shininess: 0
+    });
+    let innerGlobe = new THREE.Mesh(sGeom, sMat);
+    scene.add(innerGlobe);
     clock = new THREE.Clock();
 
     window.addEventListener('resize', resize);
@@ -82,7 +87,7 @@ const init = () => {
 
     let arc = setArc3D(pointStart, pointEnd, 3000, "lime", true);
 
-    curve = new THREE.SplineCurve3(arc.geometry.vertices)
+    let curve = new THREE.SplineCurve3(arc.geometry.vertices)
 
     let movement = moveAlongCurve(testMesh, curve, {easing:TWEEN.Easing.Quadratic.Out, duration:600000, delay:0})
 
@@ -90,7 +95,6 @@ const init = () => {
 
     cc.init(testMesh, camera)
 
-    
     movement.start()
     
     scene.add(arc);
@@ -105,8 +109,8 @@ const update = () => {
     let globalTime = clock.elapsedTime;
 
     TWEEN.update();
-    cc.update(0, testMesh, testMesh.velocity, camera)
-
+      cc.update(0, testMesh, testMesh.velocity, camera)
+    //controls.update()
 
     globe.frustumCulled = false;
     globe.rotation.x += .0005;
