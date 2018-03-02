@@ -1,56 +1,22 @@
 
-/* Constructs a mesh given a root Object3D and model data w/ nested parts*/
+function buildParts(data){
 
-function buildParts(parent, nodeData, parentNodeData){
+	const obj = new THREE.Object3D();
+	const g = new THREE.Group();
 
-	let geom = nodeData.geom;
-	let mat = nodeData.mat;
-	let mesh = new THREE.Mesh(geom, mat);
+	//create pivots 
+	let upper = obj.clone();
+	middle = obj.clone();
+	leftUpper = obj.clone();
+	rightUpper = obj.clone();
+	leftLower = obj.clone();
+	rightLower = obj.clone();
 
-	if(nodeData.rotation){
-		let r = nodeData.rotation;
-		mesh.rotation.set(r.x, r.y, r.z);
-	}
+	for (let key in data){
 
-	parent.add(mesh);
-
-	if(parentNodeData){
-
-		let parentGeom;
-		let max;
-		let min;
-		let magnitude;
-		if(parentNodeData.hasOwnProperty('part')){
-
-			parentGeom = parentNodeData['geom'];
-
-		}
-		else{ //if parent is not a part, its 'parent' is just the root model data entry. 
-			  //use torso geom as magnitude reference
-
-			parentGeom = parentNodeData['torso'].geom;
-
-		}
-
-		parentGeom.computeBoundingBox();
-		max = parentGeom.boundingBox.max;
-		min = parentGeom.boundingBox.min;
-		magnitude = max.sub(min);
-		let offset = nodeData.offset;
-		offset = offset.multiply(magnitude);
-
-		mesh.position.add(offset);
+		let 
 
 	}
-
-	for(let key in nodeData){
-		let child = nodeData[key];
-		if(typeof child === 'object' && child.hasOwnProperty('part')){
-			parent.add(buildParts(mesh, child, nodeData));
-		}
-	}
-
-	return parent;
 
 }
 

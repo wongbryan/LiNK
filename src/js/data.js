@@ -105,154 +105,33 @@ function round(geom, n){
 //offset calculated in relation to torso
 //use 'part' property so we don't recursively iterate through 
 //threejs objects
-const ROBOT_DATA = {
-	lbp: {
-		head:{
-			part: true,
-			geom: round(new THREE.BoxGeometry(5, 5, 5, 3, 3), 4),
-			mat: MAT_DATA['orange'].clone(),
-			offset: new THREE.Vector3(0, 1.25, 0),
-			rotation: new THREE.Vector3(0, 0, 0),
-
-			eyeLeft:{
-				part: true,
-				// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
-				geom: new THREE.CircleGeometry(.2, 32, 32),
-				mat: MAT_DATA['black'].clone(),
-				offset: new THREE.Vector3(-.2, .1, .51)
-			},
-
-			eyeRight:{
-				part: true,
-				// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
-				geom: new THREE.CircleGeometry(.2, 32, 32),
-				mat: MAT_DATA['black'].clone(),
-				offset: new THREE.Vector3(.2, .1, .51)
-			},
-
-			antennae:{
-				part: true,
-				geom: new THREE.CylinderGeometry(.03, .05, 3),
-				mat: MAT_DATA['black'].clone(),
-				offset: new THREE.Vector3(0, .45, 0),
-
-				bulb: {
-					part: true,
-					geom: new THREE.SphereGeometry(.25, 16, 16),
-					mat: MAT_DATA['red'].clone(),
-					offset: new THREE.Vector3(0, .5, 0)
-				}
-			},
-
-			mouth: {
-				part: true,
-				geom: round(new THREE.BoxGeometry(1, 2.5, .1, 3, 3), 4),
-				mat: MAT_DATA['white'].clone(),
-				offset: new THREE.Vector3(0, -.2, .51),
-				rotation: new THREE.Vector3(0, 0, Math.PI/2),
-
-				line: {
-					part: true,
-					geom: new THREE.BoxGeometry(.03, 2.4, .03),
-					mat: MAT_DATA['black'].clone(),
-					offset: new THREE.Vector3(0, 0, 1),
-					rotation: new THREE.Vector3(0, 0, 0)
-				},
-
-				outline:{
-					part: true,
-					geom: round(new THREE.BoxGeometry(1.075, 2.575, .1, 3, 3), 4),
-					mat: MAT_DATA['blackline'].clone(),
-					offset: new THREE.Vector3(0, 0, -.1),
-				}
-			},
-		},
-		pad: {
-			part: true,
-			geom: round(new THREE.BoxGeometry(1.25, 2.75, .1, 3, 3), 4),
-			mat: MAT_DATA['white'].clone(),
-			offset: new THREE.Vector3(-.125, 0, .32),
-			rotation: new THREE.Vector3(-Math.PI/16, 0, 0),
-
-			outline: {
-				part: true,
-				geom: round(new THREE.BoxGeometry(1.28, 2.78, .1, 3, 3), 4),
-				mat: MAT_DATA['redline'].clone(),
-				offset: new THREE.Vector3(0, 0, -.02),
+const CHAR_DATA = {
+	robot: {
+		upper: {
+			offset: new THREE.Vector3(0, 1, 0),
+			head: {
+				geom: round(new THREE.BoxGeometry(5, 5, 5, 3, 3), 4),
+				mat: MAT_DATA['orange'].clone(),
+				offset: new THREE.Vector3(0, 1.25, 0),
 				rotation: new THREE.Vector3(0, 0, 0),
-			}
+			},
 		},
-		pad2: {
-			part: true,
-			geom: new THREE.CircleGeometry(.6, 32, 32),
-			mat: MAT_DATA['orange'].clone(),
-			offset: new THREE.Vector3(.125, -.17, .34),
-			rotation: new THREE.Vector3(-Math.PI/16, 0, 0),
+		middle: {
+
+
+
 		},
-		light1: {
-			part: true,
-			geom: new THREE.CircleGeometry(.2, 32, 32),
-			mat: MAT_DATA['red'].clone(),
-			offset: new THREE.Vector3(.05, .2, .31),
-			rotation: new THREE.Vector3(-Math.PI/16, 0, 0),
+		leftUpper: {
+
 		},
-		light2: {
-			part: true,
-			geom: new THREE.CircleGeometry(.2, 32, 32),
-			mat: MAT_DATA['green'].clone(),
-			offset: new THREE.Vector3(.125, .2, .31),
-			rotation: new THREE.Vector3(-Math.PI/16, 0, 0),
+		rightUpper: {
+
 		},
-		light3: {
-			part: true,
-			geom: new THREE.CircleGeometry(.2, 32, 32),
-			mat: MAT_DATA['yellow'].clone(),
-			offset: new THREE.Vector3(.2, .2, .31),
-			rotation: new THREE.Vector3(-Math.PI/16, 0, 0),
+		leftLower: {
+
 		},
-		tag:{
-			part: true,
-			geom: new THREE.PlaneGeometry(.3, 1.4),
-			mat: MAT_DATA['darkgray'].clone(),
-			offset: new THREE.Vector3(.125, .075, .31),
-			rotation: new THREE.Vector3(-Math.PI/16, 0, Math.PI/2),
-		},
-		torso: {
-			part: true,
-			geom: new THREE.CylinderGeometry(2.75, 3.7, 4, 4, 12),
-			mat: MAT_DATA['lightblue'],
-			offset: new THREE.Vector3(0, 0, 0),
-			rotation: new THREE.Vector3(0, Math.PI/4, 0),
-		},
-		armLeft: {
-			part: true,
-			geom: new THREE.SphereGeometry(.5, 32, 32),
-			// geom: new THREE.BoxGeometry(1, 2, 1),
-			mat: MAT_DATA['lightgray'],
-			offset: new THREE.Vector3(-.45, .15, 0),
-			rotation: new THREE.Vector3(0, 0, -Math.PI/12)
-		},
-		armRight: {
-			part: true,
-			geom: new THREE.SphereGeometry(.5, 32, 32),
-			// geom: new THREE.BoxGeometry(1, 2, 1),
-			mat: MAT_DATA['lightgray'],
-			offset: new THREE.Vector3(.45, .15, 0),
-			rotation: new THREE.Vector3(0, 0, Math.PI/12)
-		},
-		legLeft: {
-			part: true,
-			geom: round(new THREE.BoxGeometry(1, 2, 1, 3, 3), 4),
-			mat: MAT_DATA['gray'],
-			offset: new THREE.Vector3(-.3, -.75, 0),
-			rotation: new THREE.Vector3(0, 0, Math.PI/2)
-		},
-		legRight: {
-			part: true,
-			geom: round(new THREE.BoxGeometry(1, 2, 1, 3, 3), 4),
-			mat: MAT_DATA['gray'],
-			offset: new THREE.Vector3(.3, -.75, 0),
-			rotation: new THREE.Vector3(0, 0, -Math.PI/2)
+		rightLower: {
+
 		}
 	}
 }
