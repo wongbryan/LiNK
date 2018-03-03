@@ -113,7 +113,7 @@ const CHAR_DATA = {
 				offset: new THREE.Vector3(0, 1, 0),
 			},
 			{	
-				name: head,
+				name: 'head',
 				dom: true, //if dom, use to calculate position of other parts
 				geom: round(new THREE.BoxGeometry(5, 5, 5, 3, 3), 4),
 				mat: MAT_DATA['orange'].clone(),
@@ -121,18 +121,18 @@ const CHAR_DATA = {
 				rotation: new THREE.Vector3(0, 0, 0),
 			},
 			{	
-				name: eyeLeft,
+				name: 'eyeLeft',
 				// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
 				geom: new THREE.CircleGeometry(.2, 32, 32),
 				mat: MAT_DATA['black'].clone(),
 				offset: new THREE.Vector3(-.2, .1, .51)
 			},
 			{
-				name: eyeRight
+				name: 'eyeRight',
 				// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
 				geom: new THREE.CircleGeometry(.2, 32, 32),
 				mat: MAT_DATA['black'].clone(),
-				offset: new THREE.Vector3(.2, .1, .51)
+				offset: new THREE.Vector3(-.2, .1, .51)
 			},
 		],
 		middle: {

@@ -7,8 +7,6 @@ function buildParts(data){
 
 	for(let key in data){
 
-		console.log(g);
-
 		let sectionData = data[key];
 		let section = obj.clone();
 		let sectionBoundingBox;
@@ -23,14 +21,14 @@ function buildParts(data){
 			} else {
 
 				let d = sectionData[i];
-				console.log(d.offset);
+				let n = d.name;
 				let geom = d.geom;
 				let mat = d.mat;
 				let offset = d.offset || z;
 				let rot = d.rotation || z;
 
 				if (d.dom){
-					
+
 					geom.computeBoundingBox();
 					sectionBoundingBox = geom.boundingBox;
 
@@ -43,11 +41,14 @@ function buildParts(data){
 				let min = sectionBoundingBox.min;
 				let magnitude = max.sub(min);
 
-				offset = offset.mul(magnitude);
-				
+				offset = offset.multiply(magnitude);
 
+				console.log(sectionBoundingBox);
+				
 				part.position.copy(offset);
 				part.rotation.copy(rot);
+
+				part.name = n;
 
 			}
 
