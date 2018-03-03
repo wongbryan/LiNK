@@ -107,17 +107,35 @@ function round(geom, n){
 //threejs objects
 const CHAR_DATA = {
 	robot: {
-		upper: {
-			offset: new THREE.Vector3(0, 1, 0),
-			head: {
+		upper: [
+			{
+				name: 'position',
+				offset: new THREE.Vector3(0, 1, 0),
+			},
+			{	
+				name: head,
+				dom: true, //if dom, use to calculate position of other parts
 				geom: round(new THREE.BoxGeometry(5, 5, 5, 3, 3), 4),
 				mat: MAT_DATA['orange'].clone(),
-				offset: new THREE.Vector3(0, 1.25, 0),
+				offset: new THREE.Vector3(0, 0, 0),
 				rotation: new THREE.Vector3(0, 0, 0),
 			},
-		},
+			{	
+				name: eyeLeft,
+				// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
+				geom: new THREE.CircleGeometry(.2, 32, 32),
+				mat: MAT_DATA['black'].clone(),
+				offset: new THREE.Vector3(-.2, .1, .51)
+			},
+			{
+				name: eyeRight
+				// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
+				geom: new THREE.CircleGeometry(.2, 32, 32),
+				mat: MAT_DATA['black'].clone(),
+				offset: new THREE.Vector3(.2, .1, .51)
+			},
+		],
 		middle: {
-
 
 
 		},
@@ -138,26 +156,26 @@ const CHAR_DATA = {
 
 //custom tweaks so I don't have to copy and paste data
 
-const numTeeth = 4;
-for(let i=0; i<numTeeth; i++){
+// const numTeeth = 4;
+// for(let i=0; i<numTeeth; i++){
 
-	let length = 2;
-	let height = 1;
-	let o = length / numTeeth / 2;
+// 	let length = 2;
+// 	let height = 1;
+// 	let o = length / numTeeth / 2;
 
-	let t = {
-		part: true,
-		geom: new THREE.BoxGeometry(.03, height-.05, .03),
-		mat: MAT_DATA['black'].clone(),
-		offset: new THREE.Vector3(0, 0, 1),
-		rotation: new THREE.Vector3(0, 0, Math.PI/2)
-	};
+// 	let t = {
+// 		part: true,
+// 		geom: new THREE.BoxGeometry(.03, height-.05, .03),
+// 		mat: MAT_DATA['black'].clone(),
+// 		offset: new THREE.Vector3(0, 0, 1),
+// 		rotation: new THREE.Vector3(0, 0, Math.PI/2)
+// 	};
 
-	let pos = new THREE.Vector3( 0, (i-numTeeth/2 + .5)*o, 1);
-	console.log(pos);
-	t.offset = pos;
+// 	let pos = new THREE.Vector3( 0, (i-numTeeth/2 + .5)*o, 1);
+// 	console.log(pos);
+// 	t.offset = pos;
 
-	let key = 'tooth' + i;
-	ROBOT_DATA.lbp.head.mouth[key] = t;
-}
+// 	let key = 'tooth' + i;
+// 	ROBOT_DATA.lbp.head.mouth[key] = t;
+// }
 
