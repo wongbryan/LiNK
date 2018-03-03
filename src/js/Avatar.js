@@ -9,21 +9,22 @@ function buildParts(data){
 
 		let sectionData = data[key];
 		let section = obj.clone();
+		section.name = key;
 		let sectionBoundingBox;
 		let magnitude;
 
 		for (let i=0; i<sectionData.length; i++){
 
-			if(i === 0){ //offset the section
+			let d = sectionData[i];
 
-				let o = sectionData[i].offset;
-				let n = sectionData[i].name;
-				section.name = n;
+			if(i === 0){ //offset the section and handle section data
+
+				let o = d.offset;
+				let n = d.name;
 				section.position.copy(o);
 
 			} else {
 
-				let d = sectionData[i];
 				let n = d.name;
 				let geom = d.geom;
 				let mat = d.mat;
@@ -65,7 +66,7 @@ function buildParts(data){
 var Avatar = function(materials){
 
 	var g = new THREE.Group();
-	var data = CHAR_DATA['robot'];
+	var data = CHAR_DATA['dice'];
 	g = buildParts(data);
 	// console.log(buildParts(g, data));
 

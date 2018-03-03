@@ -1,12 +1,13 @@
 const MODELS_PATH = 'assets/models/';
+const FONTS_PATH = 'assets/fonts/';
 
 var Loader = (function () {
     const manager = new THREE.LoadingManager();
     const objLoader = new THREE.ObjectLoader(manager);
-    const fontLoader = new THREE.FontLoader(manager);
     const textureLoader = new THREE.TextureLoader(manager);
     const audioLoader = new THREE.AudioLoader(manager);
     const jsonLoader = new THREE.JSONLoader(manager);
+    const fontLoader = new THREE.FontLoader(manager);
     // const $progress = document.getElementById('progress');
 
     var reduceableModels = ['banana', 'raspberry', 'pumpkin'];
@@ -16,9 +17,28 @@ var Loader = (function () {
     };
 
     manager.onLoad = function () {
+        initData();
         init();
     };
 
+    this.loadFont = file => {
+
+        let path = FONTS_PATH + file + '.json';
+
+        let font = fontLoader.load(
+
+            path,
+
+            // onLoad callback
+            function ( font ) {
+
+               FONT_DATA[file] = font;
+
+            },
+
+        );
+
+    }
 
     this.loadObj = file => {
 
@@ -61,16 +81,6 @@ var Loader = (function () {
         )
     };
 
-    this.loadFont = function(file) {
-        fontLoader.load(
-            FONT_ASSETS_PATH + file + '.typeface.json',
-
-            function(font) {
-                FONTS_DATA[file].font = font;
-            }
-        );
-    };
-
     this.loadAudio = function(file, ext) {
         audioLoader.load(
             AUDIO_ASSETS_PATH + file + ext,
@@ -86,4 +96,8 @@ var Loader = (function () {
 
 for (let file in MODEL_DATA) {
     Loader.loadObj(file);
+}
+
+for (let file in FONT_DATA){
+    Loader.loadFont(file);
 }

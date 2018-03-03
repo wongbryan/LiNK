@@ -122,3 +122,21 @@ const resize = () => {
     camera.updateProjectionMatrix()
     renderer.setSize( window.innerWidth, window.innerHeight )
 }
+
+const getFontGeom = (letter, fontData, size, height=.1) => {
+
+  var textGeometry = new THREE.TextGeometry(letter, {
+      font: fontData,
+      size: size,
+      height: height,
+      curveSegments: 20
+  });
+  textGeometry.computeBoundingBox();
+  let box = textGeometry.boundingBox;
+  let mag = box.max.sub(box.min);
+  textGeometry.translate(-mag.x/2, -mag.y/2, -mag.z/2);
+
+  return textGeometry;
+
+
+}
