@@ -17,6 +17,8 @@ function buildParts(data){
 			if(i === 0){ //offset the section
 
 				let o = sectionData[i].offset;
+				let n = sectionData[i].name;
+				section.name = n;
 				section.position.copy(o);
 
 			} else {
@@ -41,7 +43,6 @@ function buildParts(data){
 				let part = new THREE.Mesh(geom, mat);
 				section.add(part);
 
-				console.log(offset);
 				offset = offset.multiply(magnitude);
 
 				part.position.add(offset);

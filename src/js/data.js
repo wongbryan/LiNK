@@ -109,7 +109,7 @@ const CHAR_DATA = {
 	robot: {
 		upper: [
 			{
-				name: 'position',
+				name: 'upper',
 				offset: new THREE.Vector3(0, 4.75, 0),
 			},
 			{	
@@ -163,7 +163,7 @@ const CHAR_DATA = {
 		],
 		middle: [
 			{
-				name: 'position',
+				name: 'middle',
 				offset: new THREE.Vector3(0, 0, 0),
 			},
 			{
@@ -227,7 +227,7 @@ const CHAR_DATA = {
 		],
 		leftUpper: [
 			{
-				name: 'position',
+				name: 'leftUpper',
 				offset: new THREE.Vector3(-3.5, 1.3, 0),
 			},
 			{
@@ -243,7 +243,7 @@ const CHAR_DATA = {
 		],
 		rightUpper: [
 			{
-				name: 'position',
+				name: 'rightUpper',
 				offset: new THREE.Vector3(3.5, 1.3, 0),
 			},
 			{
@@ -259,7 +259,7 @@ const CHAR_DATA = {
 		],
 		leftLower: [
 			{
-				name: 'position',
+				name: 'leftLower',
 				offset: new THREE.Vector3(-2, -3.5, 0),
 			},
 			{
@@ -274,7 +274,7 @@ const CHAR_DATA = {
 		],
 		rightLower: [
 			{
-				name: 'position',
+				name: 'rightLower',
 				offset: new THREE.Vector3(2, -3.5, 0),
 			},
 			{
