@@ -1,20 +1,125 @@
-/* Loaded data */
+const MAT_DATA = {
+	'yellow': new THREE.MeshStandardMaterial({
+        color: 0x89918c,
+        emissive: 0xf0d93d,
+        roughness: .4,
+        flatShading: false,
+        metalness: .6
+    }),
+    'lightblue': new THREE.MeshStandardMaterial({
+	    color: 0x89918c,
+	    emissive: 0x2baff7,
+	    roughness: .4,
+	    flatShading: false,
+	    metalness: .6
+	}),
+	'black': new THREE.MeshStandardMaterial({
+	    color: 0xffffff,
+	    emissive: 0x040709,
+	    roughness: .0,
+	    flatShading: false,
+	    metalness: .24
+	}), 
+	'white': new THREE.MeshStandardMaterial({
+	    color: 0x1e2023,
+	    emissive: 0xf4f8ff,
+	    roughness: .0,
+	    flatShading: false,
+	    metalness: .24,
+	}),
+	'blackline': new THREE.LineBasicMaterial({
+		color: 0x000000,
+	}),
+	'redline': new THREE.LineBasicMaterial({
+		color: 0xf7312a,
+	}),
+	'lightgray': new THREE.MeshStandardMaterial({
+	    color: 0xf7faff,
+	    emissive: 0xe8eaef,
+	    roughness: .0,
+	    flatShading: false,
+	    metalness: .75,
+	}),
+	'lightgray2': new THREE.MeshStandardMaterial({
+	    color: 0xf7faff,
+	    emissive: 0xdbdcdd,
+	    roughness: .0,
+	    flatShading: false,
+	    metalness: .75,
+	}),
+	'red': new THREE.MeshStandardMaterial({
+        color: 0xd9486b,
+        emissive: 0xf7312a,
+        roughness: .0,
+        flatShading: false,
+        metalness: .3
+    }),
+    green: new THREE.MeshStandardMaterial({
+        color: 0xf7faff,
+        emissive: 0x29d025,
+        metalness: .5,
+        flatShading: false,
+        roughness: .06
+    }),
+    darkgray: new THREE.MeshStandardMaterial({
+	    color: 0xf7faff,
+	    emissive: 0x75777c,
+	    roughness: .0,
+	    flatShading: false,
+	    metalness: .75,
+	}),
+	gray: new THREE.MeshStandardMaterial({
+	    color: 0xf7faff,
+	    emissive: 0x86888c,
+	    roughness: .0,
+	    flatShading: false,
+	    metalness: .75,
+	}),
+    orange: new THREE.MeshStandardMaterial({
+        color: 0xebfffb,
+        emissive: 0xfda638,
+        metalness: .5,
+        flatShading: false,
+        roughness: .06
+    }),
+    darkbrown: new THREE.MeshStandardMaterial({
+        color: 0xebfffb,
+        emissive: 0x75472c,
+        metalness: .5,
+        flatShading: false,
+        roughness: .06
+    }),
+    lightbrown: new THREE.MeshStandardMaterial({
+        color: 0xebfffb,
+        emissive: 0xa36636,
+        metalness: .5,
+        flatShading: false,
+        roughness: .06
+    }),
+};
 
-const RIG_DATA = {
-	'test-anim': null,
-}
+/* Dynamic data */
 
 let MODEL_DATA = {
-    'latin2': {
-        'poncho': {
-            mesh: null,
-        },
-        'mustache_latin':{
-            mesh: null,
-        },
-        'hat_latin': {
-            mesh: null
-        }
+    'bread': {
+ 		backing: {
+ 		},
+ 		bread: {
+ 		},
+ 		crust: {
+ 		}
+    },
+    'poop': {
+ 		top: {
+ 		},
+ 		ring1: {
+ 		},
+ 		ring2: {
+ 		},
+ 		ring3: {
+ 		},
+ 		ring4: {
+ 		},
     }
 }
 
@@ -24,98 +129,11 @@ let FONT_DATA = {
 
 /* Static data */
 
-let MAT_DATA; 
 let CHAR_DATA;
 
-/* Assign after loading dependencies */
+/* Assign after loading dependencies. Char data depends on loaded models. */
 
 const initData = () => {
-	MAT_DATA = {
-		'yellow': new THREE.MeshStandardMaterial({
-	        color: 0x89918c,
-	        emissive: 0xf0d93d,
-	        roughness: .4,
-	        flatShading: false,
-	        metalness: .6
-	    }),
-	    'lightblue': new THREE.MeshStandardMaterial({
-		    color: 0x89918c,
-		    emissive: 0x2baff7,
-		    roughness: .4,
-		    flatShading: false,
-		    metalness: .6
-		}),
-		'black': new THREE.MeshStandardMaterial({
-		    color: 0xffffff,
-		    emissive: 0x040709,
-		    roughness: .0,
-		    flatShading: false,
-		    metalness: .24
-		}), 
-		'white': new THREE.MeshStandardMaterial({
-		    color: 0x1e2023,
-		    emissive: 0xf4f8ff,
-		    roughness: .0,
-		    flatShading: false,
-		    metalness: .24,
-		}),
-		'blackline': new THREE.LineBasicMaterial({
-			color: 0x000000,
-		}),
-		'redline': new THREE.LineBasicMaterial({
-			color: 0xf7312a,
-		}),
-		'lightgray': new THREE.MeshStandardMaterial({
-		    color: 0xf7faff,
-		    emissive: 0xe8eaef,
-		    roughness: .0,
-		    flatShading: false,
-		    metalness: .75,
-		}),
-		'lightgray2': new THREE.MeshStandardMaterial({
-		    color: 0xf7faff,
-		    emissive: 0xdbdcdd,
-		    roughness: .0,
-		    flatShading: false,
-		    metalness: .75,
-		}),
-		'red': new THREE.MeshStandardMaterial({
-	        color: 0xd9486b,
-	        emissive: 0xf7312a,
-	        roughness: .0,
-	        flatShading: false,
-	        metalness: .3
-	    }),
-	    green: new THREE.MeshStandardMaterial({
-	        color: 0xf7faff,
-	        emissive: 0x29d025,
-	        metalness: .5,
-	        flatShading: false,
-	        roughness: .06
-	    }),
-	    darkgray: new THREE.MeshStandardMaterial({
-		    color: 0xf7faff,
-		    emissive: 0x75777c,
-		    roughness: .0,
-		    flatShading: false,
-		    metalness: .75,
-		}),
-		gray: new THREE.MeshStandardMaterial({
-		    color: 0xf7faff,
-		    emissive: 0x86888c,
-		    roughness: .0,
-		    flatShading: false,
-		    metalness: .75,
-		}),
-	    orange: new THREE.MeshStandardMaterial({
-	        color: 0xebfffb,
-	        emissive: 0xfda638,
-	        metalness: .5,
-	        flatShading: false,
-	        roughness: .06
-	    }),
-
-	}
 
 	function round(geom, n){
 		var modifier = new THREE.SubdivisionModifier(n);
@@ -586,7 +604,115 @@ const initData = () => {
 					rotation: new THREE.Vector3(0, 0, Math.PI/2)
 				},
 			],
-		}
+		},
+
+		breadGuy: {
+			upper: [],
+			middle: [
+				{
+					offset: new THREE.Vector3(0, 0, 0),
+				},
+				{
+					dom: true,
+					name: 'torso',
+					mesh: MODEL_DATA['bread'].backing.mesh,
+					mat: MAT_DATA['darkgray'],
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(0, 0, Math.PI/2)
+				}
+			],
+			upperLeft: [],
+			upperRight: [],
+			lowerLeft: [],
+			lowerRight: [],
+
+		},
+
+		poopGuy: {
+			upper: [
+				{
+					offset: new THREE.Vector3(0, .5, 0),
+				},
+				{	
+					dom: true,
+					name: 'eyeLeft',
+					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
+					geom: new THREE.CylinderGeometry(.2, .2, .1, 32, 32),
+					mat: MAT_DATA['orange'].clone(),
+					offset: new THREE.Vector3(-2.5, -7, .4),
+					rotation: new THREE.Vector3(Math.PI/2, 0, 0),
+				},
+				{
+					name: 'eyeRight',
+					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
+					geom: new THREE.CylinderGeometry(.2, .2, .1, 32, 32),
+					mat: MAT_DATA['orange'].clone(),
+					offset: new THREE.Vector3(2.5, -7, .4),
+					rotation: new THREE.Vector3(Math.PI/2, 0, 0),
+				},
+				{	
+					dom: true,
+					name: 'browLeft',
+					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
+					geom: new THREE.TorusGeometry(.25, .075, 16, 20, Math.PI),
+					mat: MAT_DATA['orange'].clone(),
+					offset: new THREE.Vector3(-1.5, -1, .4),
+				},
+				{
+					name: 'browRight',
+					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
+					geom: new THREE.TorusGeometry(.25, .075, 16, 20, Math.PI),
+					mat: MAT_DATA['orange'].clone(),
+					offset: new THREE.Vector3(1.5, -1, .4)
+				},
+			],
+			middle: [
+				{
+					offset: new THREE.Vector3(0, 0, 0),
+				},
+				{
+					dom: true,
+					name: 'torsotop',
+					mesh: MODEL_DATA['poop'].top.mesh,
+					mat: MAT_DATA['lightbrown'],
+					offset: new THREE.Vector3(0, -.25, 0),
+					rotation: new THREE.Vector3(Math.PI/2, 0, 0)
+				},
+				{
+					name: 'ring1',
+					mesh: MODEL_DATA['poop'].ring1.mesh,
+					mat: MAT_DATA['darkbrown'],
+					offset: new THREE.Vector3(0, -.35, 0),
+					rotation: new THREE.Vector3(Math.PI/2, 0, 0)
+				},
+				{
+					name: 'ring2',
+					mesh: MODEL_DATA['poop'].ring2.mesh,
+					mat: MAT_DATA['lightbrown'],
+					offset: new THREE.Vector3(0, -.55, 0),
+					rotation: new THREE.Vector3(Math.PI/2, 0, 0)
+				},
+				{
+					name: 'ring3',
+					mesh: MODEL_DATA['poop'].ring3.mesh,
+					mat: MAT_DATA['darkbrown'],
+					offset: new THREE.Vector3(0, -.75, 0),
+					rotation: new THREE.Vector3(Math.PI/2, 0, 0)
+				},
+				{
+					name: 'ring4',
+					mesh: MODEL_DATA['poop'].ring4.mesh,
+					mat: MAT_DATA['darkbrown'],
+					offset: new THREE.Vector3(0, -1, 0),
+					rotation: new THREE.Vector3(Math.PI/2, 0, 0)
+				},
+			],
+			upperLeft: [],
+			upperRight: [],
+			lowerLeft: [],
+			lowerRight: [],
+
+		},
 	}
 
 	//custom tweaks so I don't have to copy and paste data
