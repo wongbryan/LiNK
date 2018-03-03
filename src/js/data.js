@@ -110,7 +110,7 @@ const CHAR_DATA = {
 		upper: [
 			{
 				name: 'position',
-				offset: new THREE.Vector3(0, 1, 0),
+				offset: new THREE.Vector3(0, 4.75, 0),
 			},
 			{	
 				name: 'head',
@@ -132,50 +132,185 @@ const CHAR_DATA = {
 				// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
 				geom: new THREE.CircleGeometry(.2, 32, 32),
 				mat: MAT_DATA['black'].clone(),
-				offset: new THREE.Vector3(-.2, .1, .51)
+				offset: new THREE.Vector3(.2, .1, .51)
+			},
+			{
+				name: 'antennae',
+				geom: new THREE.CylinderGeometry(.03, .05, 3),
+				mat: MAT_DATA['black'].clone(),
+				offset: new THREE.Vector3(0, .45, 0),
+			},
+			{
+				name: 'bulb',
+				geom: new THREE.SphereGeometry(.25, 16, 16),
+				mat: MAT_DATA['red'].clone(),
+				offset: new THREE.Vector3(0, .75, 0)
+			},
+			{
+				name: 'mouth',
+				geom: round(new THREE.BoxGeometry(1, 2.5, .1, 3, 3), 4),
+				mat: MAT_DATA['white'].clone(),
+				offset: new THREE.Vector3(0, -.2, .515),
+				rotation: new THREE.Vector3(0, 0, Math.PI/2),
+			},
+			{
+				name: 'outline',
+				geom: round(new THREE.BoxGeometry(1.075, 2.575, .1, 3, 3), 4),
+				mat: MAT_DATA['blackline'].clone(),
+				offset: new THREE.Vector3(0, -.2, .51),
+				rotation: new THREE.Vector3(0, 0, Math.PI/2),
 			},
 		],
-		middle: {
-
-
-		},
-		leftUpper: {
-
-		},
-		rightUpper: {
-
-		},
-		leftLower: {
-
-		},
-		rightLower: {
-
-		}
+		middle: [
+			{
+				name: 'position',
+				offset: new THREE.Vector3(0, 0, 0),
+			},
+			{
+				dom: true,
+				name: 'torso',
+				geom: new THREE.CylinderGeometry(2.75, 3.7, 4, 4, 12),
+				mat: MAT_DATA['lightblue'],
+				offset: new THREE.Vector3(0, 0, 0),
+				rotation: new THREE.Vector3(0, Math.PI/4, 0),
+			},
+			{
+				name: 'outline',
+				geom: round(new THREE.BoxGeometry(1.35, 2.85, .1, 3, 3), 4),
+				mat: MAT_DATA['redline'].clone(),
+				offset: new THREE.Vector3(-.125, 0, .33),
+				rotation: new THREE.Vector3(-Math.PI/16, 0, 0),
+			},
+			{
+				name: 'pad1',
+				geom: round(new THREE.BoxGeometry(1.25, 2.75, .1, 3, 3), 4),
+				mat: MAT_DATA['white'].clone(),
+				offset: new THREE.Vector3(-.125, 0, .335),
+				rotation: new THREE.Vector3(-Math.PI/16, 0, 0),
+			},
+			{
+				name: 'pad2',
+				geom: new THREE.CircleGeometry(.6, 32, 32),
+				mat: MAT_DATA['orange'].clone(),
+				offset: new THREE.Vector3(.125, -.17, .34),
+				rotation: new THREE.Vector3(-Math.PI/16, 0, 0),
+			},
+			{
+				name: 'light1',
+				geom: new THREE.CircleGeometry(.2, 32, 32),
+				mat: MAT_DATA['red'].clone(),
+				offset: new THREE.Vector3(.05, .2, .31),
+				rotation: new THREE.Vector3(-Math.PI/16, 0, 0),
+			},
+			{
+				name: 'light2',
+				geom: new THREE.CircleGeometry(.2, 32, 32),
+				mat: MAT_DATA['green'].clone(),
+				offset: new THREE.Vector3(.125, .2, .31),
+				rotation: new THREE.Vector3(-Math.PI/16, 0, 0),
+			},
+			{
+				name: 'light3',
+				geom: new THREE.CircleGeometry(.2, 32, 32),
+				mat: MAT_DATA['yellow'].clone(),
+				offset: new THREE.Vector3(.2, .2, .31),
+				rotation: new THREE.Vector3(-Math.PI/16, 0, 0),
+			},
+			{
+				name: 'tag',
+				part: true,
+				geom: new THREE.PlaneGeometry(.3, 1.4),
+				mat: MAT_DATA['darkgray'].clone(),
+				offset: new THREE.Vector3(.125, .075, .31),
+				rotation: new THREE.Vector3(-Math.PI/16, 0, Math.PI/2),
+			},
+		],
+		leftUpper: [
+			{
+				name: 'position',
+				offset: new THREE.Vector3(-3.5, 1.3, 0),
+			},
+			{
+				dom: true,
+				name: 'armLeft',
+				part: true,
+				geom: new THREE.SphereGeometry(.5, 32, 32),
+				// geom: new THREE.BoxGeometry(1, 2, 1),
+				mat: MAT_DATA['lightgray'],
+				offset: new THREE.Vector3(0, 0, 0),
+				rotation: new THREE.Vector3(0, 0, -Math.PI/12)
+			},
+		],
+		rightUpper: [
+			{
+				name: 'position',
+				offset: new THREE.Vector3(3.5, 1.3, 0),
+			},
+			{
+				dom: true,
+				name: 'armLeft',
+				part: true,
+				geom: new THREE.SphereGeometry(.5, 32, 32),
+				// geom: new THREE.BoxGeometry(1, 2, 1),
+				mat: MAT_DATA['lightgray'],
+				offset: new THREE.Vector3(0, 0, 0),
+				rotation: new THREE.Vector3(0, 0, -Math.PI/12)
+			},
+		],
+		leftLower: [
+			{
+				name: 'position',
+				offset: new THREE.Vector3(-2, -3.5, 0),
+			},
+			{
+				dom: true,
+				name: 'legLeft',
+				part: true,
+				geom: round(new THREE.BoxGeometry(1, 2, 1, 3, 3), 4),
+				mat: MAT_DATA['gray'],
+				offset: new THREE.Vector3(0, 0, 0),
+				rotation: new THREE.Vector3(0, 0, Math.PI/2)
+			},
+		],
+		rightLower: [
+			{
+				name: 'position',
+				offset: new THREE.Vector3(2, -3.5, 0),
+			},
+			{
+				dom: true,
+				name: 'legRight',
+				part: true,
+				geom: round(new THREE.BoxGeometry(1, 2, 1, 3, 3), 4),
+				mat: MAT_DATA['gray'],
+				offset: new THREE.Vector3(0, 0, 0),
+				rotation: new THREE.Vector3(0, 0, Math.PI/2)
+			},
+		]
 	}
 }
 
 //custom tweaks so I don't have to copy and paste data
 
-// const numTeeth = 4;
-// for(let i=0; i<numTeeth; i++){
+const numTeeth = 2;
+for(let i=0; i<numTeeth; i++){
 
-// 	let length = 2;
-// 	let height = 1;
-// 	let o = length / numTeeth / 2;
+	let length = 1;
+	let height = 1;
+	let o = length / numTeeth / 2;
 
-// 	let t = {
-// 		part: true,
-// 		geom: new THREE.BoxGeometry(.03, height-.05, .03),
-// 		mat: MAT_DATA['black'].clone(),
-// 		offset: new THREE.Vector3(0, 0, 1),
-// 		rotation: new THREE.Vector3(0, 0, Math.PI/2)
-// 	};
+	let t = {
+		name: 'line' + i,
+		geom: new THREE.BoxGeometry(.03, height-.05, .03),
+		mat: MAT_DATA['black'].clone(),
+		offset: new THREE.Vector3(0, 0, 0),
+		rotation: new THREE.Vector3(0, 0, 0)
+	};
 
-// 	let pos = new THREE.Vector3( 0, (i-numTeeth/2 + .5)*o, 1);
-// 	console.log(pos);
-// 	t.offset = pos;
+	let pos = new THREE.Vector3( (i-numTeeth/2 + .5)*o, -.2, .53);
+	console.log(pos);
+	t.offset = pos;
 
-// 	let key = 'tooth' + i;
-// 	ROBOT_DATA.lbp.head.mouth[key] = t;
-// }
+	CHAR_DATA['robot'].upper.push(t);
+}
 

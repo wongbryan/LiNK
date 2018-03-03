@@ -10,6 +10,7 @@ function buildParts(data){
 		let sectionData = data[key];
 		let section = obj.clone();
 		let sectionBoundingBox;
+		let magnitude;
 
 		for (let i=0; i<sectionData.length; i++){
 
@@ -31,22 +32,20 @@ function buildParts(data){
 
 					geom.computeBoundingBox();
 					sectionBoundingBox = geom.boundingBox;
+					let max = sectionBoundingBox.max;
+					let min = sectionBoundingBox.min;
+					magnitude = max.sub(min);
 
 				}
 
 				let part = new THREE.Mesh(geom, mat);
 				section.add(part);
 
-				let max = sectionBoundingBox.max;
-				let min = sectionBoundingBox.min;
-				let magnitude = max.sub(min);
-
+				console.log(offset);
 				offset = offset.multiply(magnitude);
 
-				console.log(sectionBoundingBox);
-				
-				part.position.copy(offset);
-				part.rotation.copy(rot);
+				part.position.add(offset);
+				part.rotation.set(rot.x, rot.y, rot.z);
 
 				part.name = n;
 
