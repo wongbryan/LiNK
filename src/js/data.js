@@ -61,6 +61,7 @@ const initData = () => {
 		}),
 		'blackline': new THREE.LineBasicMaterial({
 			color: 0x000000,
+			linewidth: 50,
 		}),
 		'redline': new THREE.LineBasicMaterial({
 			color: 0xf7312a,
@@ -170,7 +171,7 @@ const initData = () => {
 				{
 					name: 'outline',
 					geom: round(new THREE.BoxGeometry(1.075, 2.575, .1, 3, 3), 4),
-					mat: MAT_DATA['blackline'].clone(),
+					mat: MAT_DATA['black'].clone(),
 					offset: new THREE.Vector3(0, -.2, .51),
 					rotation: new THREE.Vector3(0, 0, Math.PI/2),
 				},
@@ -190,7 +191,7 @@ const initData = () => {
 				{
 					name: 'outline',
 					geom: round(new THREE.BoxGeometry(1.35, 2.85, .1, 3, 3), 4),
-					mat: MAT_DATA['redline'].clone(),
+					mat: MAT_DATA['red'].clone(),
 					offset: new THREE.Vector3(-.125, 0, .33),
 					rotation: new THREE.Vector3(-Math.PI/16, 0, 0),
 				},
@@ -394,6 +395,50 @@ const initData = () => {
 					rotation: new THREE.Vector3(-Math.PI/2, 0, 0),
 				},
 			],
+			middle: [],
+			lowerLeft: [],
+			lowerRight: [],
+		},
+
+		astronaut: {
+			upper: [
+				{
+					offset: new THREE.Vector3(0, 4.75, 0),
+				},
+				{	
+					name: 'head',
+					dom: true, //if dom, use to calculate position of other parts
+					geom: round(new THREE.BoxGeometry(5, 5, 5, 3, 3), 4),
+					mat: MAT_DATA['orange'].clone(),
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(0, 0, 0),
+				},
+				{	
+					name: 'eyeLeft',
+					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
+					geom: new THREE.CircleGeometry(.2, 32, 32),
+					mat: MAT_DATA['black'].clone(),
+					offset: new THREE.Vector3(-.2, .1, .51)
+				},
+				{
+					name: 'eyeRight',
+					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
+					geom: new THREE.CircleGeometry(.2, 32, 32),
+					mat: MAT_DATA['black'].clone(),
+					offset: new THREE.Vector3(.2, .1, .51)
+				},
+				{
+					name: 'helmet',
+					geom: getEdgesGeom(new THREE.BoxGeometry(5, 5, 5, 3, 3)),
+					mat: MAT_DATA['blackline'].clone(),
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(0, 0, 0),
+					lines: true,
+				}
+
+			],
+			upperLeft: [],
+			upperRight: [],
 			middle: [],
 			lowerLeft: [],
 			lowerRight: [],

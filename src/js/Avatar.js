@@ -41,7 +41,18 @@ function buildParts(data){
 
 				}
 
-				let part = new THREE.Mesh(geom, mat);
+				let part;
+
+				if(d.lines){
+
+					part = new THREE.LineSegments(geom, mat);
+
+				} else {
+
+					part = new THREE.Mesh(geom, mat);
+
+				}
+
 				section.add(part);
 
 				offset = offset.multiply(magnitude);
@@ -66,7 +77,7 @@ function buildParts(data){
 var Avatar = function(materials){
 
 	var g = new THREE.Group();
-	var data = CHAR_DATA['dice'];
+	var data = CHAR_DATA['astronaut'];
 	g = buildParts(data);
 	// console.log(buildParts(g, data));
 
