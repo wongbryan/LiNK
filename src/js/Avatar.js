@@ -30,6 +30,7 @@ function buildParts(data){
 				let mat = d.mat;
 				let offset = d.offset || z;
 				let rot = d.rotation || z;
+				let opacity = d.opacity;
 
 				if (d.dom){
 
@@ -59,6 +60,13 @@ function buildParts(data){
 
 				part.position.add(offset);
 				part.rotation.set(rot.x, rot.y, rot.z);
+
+				if(d.opacity){
+
+					part.material.transparent = true;
+					part.material.opacity = opacity;
+
+				}
 
 				part.name = n;
 

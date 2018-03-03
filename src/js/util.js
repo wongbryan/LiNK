@@ -142,7 +142,7 @@ const getFontGeom = (letter, fontData, size, height=.1) => {
 
 const getEdgesGeom = (geom) => { //use w THREE.LineSegments or THREE.Line and line material
 
-  return new THREE.LineSegmentsGeometry( geom );
+  return new THREE.EdgesGeometry( geom );
 
 }
 
