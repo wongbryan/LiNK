@@ -97,6 +97,34 @@ var Avatar2 = function () {
 var RIG_DATA = {
 	'test-anim': null
 };
+"use strict";
+
+var GLOBE_RADIUS = 500;
+
+function setArc3D(pointStart, pointEnd, smoothness, color, clockWise) {
+  // calculate a normal ( taken from Geometry().computeFaceNormals() )
+  var cb = new THREE.Vector3(),
+      ab = new THREE.Vector3(),
+      normal = new THREE.Vector3();
+  cb.subVectors(new THREE.Vector3(), pointEnd);
+  ab.subVectors(pointStart, pointEnd);
+  cb.cross(ab);
+  normal.copy(cb).normalize();
+
+  var angle = pointStart.angleTo(pointEnd); // get the angle between vectors
+  if (clockWise) angle = angle - Math.PI * 2; // if clockWise is true, then we'll go the longest path
+  var angleDelta = angle / (smoothness - 1); // increment
+
+  var geometry = new THREE.Geometry();
+  for (var i = 0; i < smoothness; i++) {
+    geometry.vertices.push(pointStart.clone().applyAxisAngle(normal, angleDelta * i)); // this is the key operation
+  }
+
+  var arc = new THREE.Line(geometry, new THREE.LineBasicMaterial({
+    color: color
+  }));
+  return arc;
+}
 'use strict';
 
 var MODELS_PATH = 'assets/models/';
@@ -179,7 +207,7 @@ for (var obj in RIG_DATA) {
 
 var renderer, camera, scene, controls, spotLight;
 var clock;
-var plane, testMesh;
+var globe, testMesh;
 
 var init = function init() {
     scene = new THREE.Scene();
@@ -208,18 +236,21 @@ var init = function init() {
     spotLight.position.set(-10, 30, 0);
     scene.add(spotLight);
 
-    var planeGeom = new THREE.PlaneGeometry(PLANE_WIDTH, PLANE_HEIGHT);
-    var planeMat = new THREE.MeshPhongMaterial({
+    var sphereGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 16, 16);
+    var sphereMat = new THREE.MeshPhongMaterial({
         emissive: COLORS.black,
-        specular: COLORS.black
+        specular: COLORS.black,
+        shininess: 0
     });
 
-    plane = new THREE.Mesh(planeGeom, planeMat);
-    plane.rotation.x = -Math.PI / 2;
-    plane.receiveShadow = true;
-    scene.add(plane);
+    globe = new THREE.Mesh(sphereGeom, sphereMat);
+    // globe.position.y = -GLOBE_RADIUS;
+    globe.receiveShadow = true;
+    scene.add(globe);
 
+    // testMesh = new THREE.Mesh(new THREE.SphereGeometry(100, 32, 32), new THREE.MeshBasicMaterial({color: 0xff0000}));
     testMesh = new Avatar(RIG_DATA['test-anim']);
+    testMesh.position.y += GLOBE_RADIUS + 5;
     var s = .05;
     testMesh.scale.multiplyScalar(s);
 
@@ -236,16 +267,38 @@ var init = function init() {
 
     window.addEventListener('resize', resize);
 
+    var x = 0,
+        y = 1,
+        z = 0;
+
+    var pointStart = new THREE.Vector3(x, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
+    var pointEnd = new THREE.Vector3(x - .0001, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
+    curve = setArc3D(pointStart, pointEnd, 3000, "lime", true);
+    scene.add(curve);
+
+    testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
+
+    // let a = new THREE.AmbientLight();
+    // scene.add(a);
+
+    clock.start();
     animate();
 };
 
 var update = function update() {
-    // console.log("Time:" + globalTime)
-    // const elipsePathPoint = testMesh.movementFunc(globalTime)
-    // testMesh.position.x = elipsePathPoint.x
-    // testMesh.position.y = elipsePathPoint.y
-    // testMesh.position.z = 10*Math.sin(globalTime);
-    testMesh.update(clock.getDelta());
+    var d = clock.getDelta();
+    var globalTime = clock.elapsedTime;
+
+    var elipsePathPoint = testMesh.movementFunc(globalTime);
+
+    // camera.lookAt(testMesh);
+    testMesh.position.x = elipsePathPoint.x;
+    testMesh.position.y = elipsePathPoint.y;
+    testMesh.position.z = elipsePathPoint.z;
+
+    // camera.position.copy(testMesh.position);
+    // camera.position.z = 5;
+    // testMesh.update(d);
     controls.update();
 };
 
@@ -338,15 +391,19 @@ var UIController = function () {
 /* WORLD RELATED DATA */
 
 var COLORS = {
+<<<<<<< HEAD
   'black': new THREE.Color(0x00010c)
 };
 
 var PLANE_WIDTH = 250;
 var PLANE_HEIGHT = 750;
+=======
+  'black': new THREE.Color(0x0f0f0f)
+>>>>>>> char-design-2
 
-//Some example curves to test curve movement
-//Pulled from THREEJS Docs : https://threejs.org/docs/#api/extras/curves/EllipseCurve
-var ellipseCurve = new THREE.EllipseCurve(0, 0, // ax, aY
+  //Some example curves to test curve movement
+  //Pulled from THREEJS Docs : https://threejs.org/docs/#api/extras/curves/EllipseCurve
+};var ellipseCurve = new THREE.EllipseCurve(0, 0, // ax, aY
 20, 20, // xRadius, yRadius
 0, 2 * Math.PI, // aStartAngle, aEndAngle
 false, // aClockwise
@@ -378,6 +435,7 @@ var getLineFromCurve = function getLineFromCurve(curve) {
 var genMoveAlongCurve = function genMoveAlongCurve(curve, timeToMove, startTime) {
 
   var endTime = startTime + timeToMove;
+  var vertices = curve.geometry.vertices;
   return function (time) {
     //If time for animation
     if (time >= startTime && time <= endTime) {
@@ -386,18 +444,19 @@ var genMoveAlongCurve = function genMoveAlongCurve(curve, timeToMove, startTime)
       //using current time
       var timeInAnim = time - startTime;
       var currentPropOfCurve = timeInAnim / timeToMove;
+      var index = Math.floor(currentPropOfCurve * vertices.length);
 
       //In case you wanna see it as we go
       //console.log("Current Proportion of curve: " + currentPropOfCurve)
 
       //Return the point on the curve
-      return curve.getPoint(currentPropOfCurve);
+      return vertices[index];
     }
     //Otherwise return curve endpoints
     else if (time < startTime) {
-        return curve.getPoint(0);
+        return vertices[0];
       } else if (time > endTime) {
-        return curve.getPoint(1);
+        return vertices[vertices.length - 1];
       }
   };
 };
@@ -423,7 +482,7 @@ var initializeRenderer = function initializeRenderer() {
 var initializeCamera = function initializeCamera() {
   //Set camera to requested position
   var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
-  camera.position.set(0, 5, 10);
+  camera.position.set(25, GLOBE_RADIUS + 5, 25);
   //Similar to above
   return camera;
 };

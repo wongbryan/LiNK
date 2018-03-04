@@ -1,80 +1,113 @@
-var Avatar = function(rig, parts){
-	var mesh = rig;
-	var bones = rig.skeleton.bones;
 
-	/* TODO: ADD PARTS TO EACH BONE */
-	let ball = new THREE.Mesh(new THREE.SphereGeometry(1), new THREE.MeshBasicMaterial({color: 0xff0000}));
-	bones.forEach((bone) => {
-		let b = ball.clone();
-		bone.add(b);
-	});
+function buildParts(data){
 
-	var anims = rig.geometry.animations;
-	var actions = {};
-	var mixer = new THREE.AnimationMixer( mesh );
-	mixer.timeScale = 1;
+	const obj = new THREE.Object3D();
+	const g = new THREE.Group();
+	const z = new THREE.Vector3();
 
-	anims.forEach((anim) => {
-		var name = anim.name;
-		actions[name] = mixer.clipAction(name);
-	});
+	for(let key in data){
 
-	function setWeight( action, weight ) {
-		action.enabled = true;
-		action.setEffectiveTimeScale( 1 );
-		action.setEffectiveWeight( weight );
-	}
+		let sectionData = data[key];
+		let section = obj.clone();
+		section.name = key;
+		let sectionBoundingBox;
+		let magnitude;
 
-	function enableAction(name){
-		var action = actions[name];
-		setWeight(action, 1);
-		action.play();
-	}
+		let o = sectionData['offset'];
+		section.position.copy(o);
 
-	function update(d){
-		mixer.update(d);
-	}
+		let dom = sectionData['dom']; //dominant part
+		let geom = dom.geom || dom.mesh.geometry;
 
-	this.update = update;
-	this.enableAction = enableAction;
-	this.__proto__ = mesh;
-}
+		geom.computeBoundingBox();
+		sectionBoundingBox = geom.boundingBox;
+		let max = sectionBoundingBox.max;
+		let min = sectionBoundingBox.min;
+		magnitude = max.sub(min);
 
-/* ES6 Implementation */
-class Avatar2 {
-	constructor(rig, parts){
-		let mesh = rig;
-		let bones = rig.skeleton.bones;
+		for (let k in sectionData){
 
-		for (var i=0; i<bones.length; i++){
-			var ball = new THREE.Mesh(new THREE.SphereGeometry(1), new THREE.MeshBasicMaterial({color: 0xff0000}));
-			bones[i].add(ball);
+			let d = sectionData[k];
+
+			let part;
+
+			if(d.hasOwnProperty('mesh')){
+
+				d.mesh.material = d.matOverride || d.mat;
+				part = d.mesh;
+
+			} else {
+
+				let geom = d.geom;
+				let mat = d.matOverride || d.mat;
+
+				part = new THREE.Mesh(geom, mat);
+
+			}
+
+			let n = d.name;
+			let offset = d.offset || z;
+			let rot = d.rotation || z;
+			let opacity = d.opacity;
+
+			offset = offset.multiply(magnitude);
+
+			part.position.add(offset);
+			part.rotation.set(rot.x, rot.y, rot.z);
+
+			if(d.opacity){
+
+				part.material.transparent = true;
+				part.material.opacity = opacity;
+
+			}
+
+			part.name = n;
+			section.add(part);
+
 		}
 
-		let anims = rig.geometry.animations,
-		actions = {};
+		g.add(section);	
 
-		let mixer = new THREE.AnimationMixer( mesh );
-		mixer.timeScale = 1;
-
-		anims.forEach( ( anim ) => {
-			let name = anim.name;
-			actions[name] = mixer.clipAction(name);
-		})
-
-		this.mixer = mixer;
-		this._animations = anims;
-		this._actions = actions;
-		this.__proto__ = mesh;
 	}
 
-	enableAction(name){
-		let action = this.actions[name];
+	return g;
 
-		action.enabled = true;
-		action.setEffectiveTimeScale( 1 );
-		action.setEffectiveWeight( weight );
-
-		action.play();
-	}
 }
+
+var Avatar = function(data){
+
+	let char = data['name'];
+	let charData = Object.assign({}, CHAR_DATA[char]);
+
+	for(let str in data){
+
+		let mKey = data[str];
+		let keys = str.split('_');
+
+		if(keys.length < 2)
+			continue;
+
+		let m = MAT_DATA[mKey];
+		let obj = charData;
+
+		keys.forEach( k => {
+
+			obj = obj[k];
+
+		} );
+
+		console.log(obj);
+
+		obj.mat = m;
+
+	}
+
+	console.log(charData);
+
+	let g = new THREE.Group();
+	g = buildParts(charData);
+
+	this.__proto__ = g;
+}
+
