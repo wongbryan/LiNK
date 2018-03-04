@@ -13,44 +13,33 @@ function buildParts(data){
 		let sectionBoundingBox;
 		let magnitude;
 
-		for (let i=0; i<sectionData.length; i++){
+		let o = sectionData['offset'];
+		section.position.copy(o);
 
-			let d = sectionData[i];
+		let dom = sectionData['dom']; //dominant part
+		let geom = dom.geom || dom.mesh.geometry;
 
-			if(i === 0){ //offset the section and handle section data
+		geom.computeBoundingBox();
+		sectionBoundingBox = geom.boundingBox;
+		let max = sectionBoundingBox.max;
+		let min = sectionBoundingBox.min;
+		magnitude = max.sub(min);
 
-				let o = d.offset;
-				let n = d.name;
-				section.position.copy(o);
-				continue;
+		for (let k in sectionData){
 
-			} 
-
-			if (d.dom){
-
-				geom = d.geom || d.mesh.geometry;
-
-				geom.computeBoundingBox();
-				sectionBoundingBox = geom.boundingBox;
-				let max = sectionBoundingBox.max;
-				let min = sectionBoundingBox.min;
-				magnitude = max.sub(min);
-
-			}
+			let d = sectionData[k];
 
 			let part;
 
 			if(d.hasOwnProperty('mesh')){
 
-				console.log(d);
-				d.mesh.material = d.mat;
+				d.mesh.material = d.matOverride || d.mat;
 				part = d.mesh;
-
 
 			} else {
 
 				let geom = d.geom;
-				let mat = d.mat;
+				let mat = d.matOverride || d.mat;
 
 				part = new THREE.Mesh(geom, mat);
 
@@ -86,12 +75,38 @@ function buildParts(data){
 
 }
 
-var Avatar = function(materials){
+var Avatar = function(data){
 
-	var g = new THREE.Group();
-	var data = CHAR_DATA['poopGuy'];
-	g = buildParts(data);
-	// console.log(buildParts(g, data));
+	let char = data['name'];
+	let charData = Object.assign({}, CHAR_DATA[char]);
+
+	for(let str in data){
+
+		let mKey = data[str];
+		let keys = str.split('_');
+
+		if(keys.length < 2)
+			continue;
+
+		let m = MAT_DATA[mKey];
+		let obj = charData;
+
+		keys.forEach( k => {
+
+			obj = obj[k];
+
+		} );
+
+		console.log(obj);
+
+		obj.mat = m;
+
+	}
+
+	console.log(charData);
+
+	let g = new THREE.Group();
+	g = buildParts(charData);
 
 	this.__proto__ = g;
 }

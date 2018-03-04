@@ -31,11 +31,18 @@ const init = () => {
     spotLight.position.set(-10, 30, 0);
     scene.add(spotLight);
 
-    testMesh = new Avatar();
+    testMesh = new Avatar(test);
     testMesh.castShadow = true;
     testMesh.position.y = GLOBE_RADIUS+5;
     let s = .5;
     testMesh.scale.multiplyScalar(s);
+
+    // testMesh2 = new Avatar(test2);
+    // testMesh2.castShadow = true;
+    // testMesh2.position.y = GLOBE_RADIUS+5;
+    // testMesh2.position.x += 5;
+    // testMesh2.scale.multiplyScalar(s);
+    // scene.add(testMesh2);
 
     spotLight.target = testMesh;
     let container = new THREE.Object3D();
