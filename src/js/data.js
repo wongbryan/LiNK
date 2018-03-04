@@ -720,13 +720,13 @@ const initData = () => {
 const test = {
 	id: '',
 	name: 'robot',
-	upper_dom: 'black',
-	upper_eyeLeft: 'white',
+	// upper_dom: 'black',
+	// upper_eyeLeft: 'white',
 }
 
-const test2 = {
-	id: '',
-	name: 'astronaut',
-	upper_dom: 'white',
-	// upper_eyeLeft: 'orange',
-}
+// const test2 = {
+// 	id: '',
+// 	name: 'astronaut',
+// 	upper_dom: 'white',
+// 	// upper_eyeLeft: 'orange',
+// }
