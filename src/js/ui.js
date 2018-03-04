@@ -1,15 +1,18 @@
 const UIController = (function(){
 
 	var title = document.getElementById('title'),
+	titleButton = title.getElementsByClassName('submitButton')[0];
+
+	var quoteInput = document.getElementById('quoteInput'),
+	quoteInputButton = quoteInput.getElementsByClassName('submitButton')[0],
 	prompt = document.getElementById('prompt'),
-	answer = document.getElementById('userAnswer'),
-	userSubmitQuote = document.getElementById('userSubmitQuote'),
+	quoteInputAnswer = document.getElementById('userAnswer'),
 	remaining = document.getElementById('userAnswerRemaining'),
 	answerMax = 250;
 
-	var quoteBoxMain = document.getElementById('quoteBoxMain'),
+	var quoteMain = document.getElementById('quoteMain'),
 	quoteAnswer = document.getElementById('quoteAnswer'),
-	quoteClose = quoteBoxMain.getElementsByClassName('close')[0];
+	quoteClose = quoteMain.getElementsByClassName('close')[0];
 
 	/* TITLE SCREEN */
 
@@ -50,9 +53,15 @@ const UIController = (function(){
 	   el.style.opacity = opacity;
 	}
 
-	title.addEventListener("mousedown", mousedown);
-	title.addEventListener("mouseup", mouseup);
-	title.addEventListener("mouseout", mouseup);
+	// title.addEventListener("mousedown", mousedown);
+	// title.addEventListener("mouseup", mouseup);
+	// title.addEventListener("mouseout", mouseup);
+
+	titleButton.addEventListener('mousedown', function(){
+		hideTitle();
+		showQuoteInput();
+	});
+
 
 	/* USER INPUT ANSWER SCREEN */
 
@@ -61,10 +70,9 @@ const UIController = (function(){
 		if(e)
 			e.preventDefault();
 
-		let ans = answer.value;
-		console.log(ans);
+		let ans = quoteInputAnswer.value;
 
-		title.classList.add('fadeOut');
+		hideQuoteInput();
 
 		return false;
 	}
@@ -89,33 +97,61 @@ const UIController = (function(){
 		el.focus();
 	}
 
-	userSubmitQuote.addEventListener('mousedown', onAnswerSubmit);
-	answer.addEventListener('keydown', ansKeyDown);
-	answer.addEventListener('blur', keepBlur);
+	quoteInputButton.addEventListener('mousedown', onAnswerSubmit);
+	quoteInputAnswer.addEventListener('keydown', ansKeyDown);
+	quoteInputAnswer.addEventListener('blur', keepBlur);
 
-	/* QUOTE PAGE FROM OTHER USERS */
+	/* Util functions for navigation */
+
+	function showTitle(){
+		show(title);
+	}
+
+	function hideTitle(){
+		hide(title);
+	}
 
 	function showQuoteMain(data){
-
-		let otherAns = quoteBoxMain.getElementsByClassName('quoteAnswer')[0],
-		username = quoteBoxMain.getElementsByClassName('username')[0];
+		let otherAns = quoteMain.getElementsByClassName('quoteAnswer')[0],
+		username = quoteMain.getElementsByClassName('username')[0];
 
 		otherAns.innerHTML = data.quote;
 		username.innerHTML = "-" + data.username;
 
-		quoteBoxMain.classList.add('fadeIn');
-
+		quoteMain.classList.add('fadeIn');
 	}
 
 	function hideQuoteMain(){
-		quoteBoxMain.classList.remove('fadeIn');
-		quoteBoxMain.classList.add('fadeOut');
+		hide(quoteMain);
+	}
+
+	function showQuoteInput(){
+		show(quoteInput);
+	}	
+
+	function hideQuoteInput(){
+		hide(quoteInput);
+	}
+
+	function hide(elem){
+		elem.classList.remove('fadeIn');
+		elem.classList.add('fadeOut');
+	}
+
+	function show(elem){
+		elem.classList.remove('fadeOut');
+		elem.classList.add('fadeIn');
 	}
 
 	quoteClose.addEventListener('mousedown', hideQuoteMain);
 
 	return{
+		showTitle: showTitle,
+		hideTitle: hideTitle,
 		showQuoteMain: showQuoteMain,
+		hideQuoteMain: hideQuoteMain,
+		showQuoteInput: showQuoteInput,
+		hideQuoteInput: hideQuoteInput,
 	}
 
 })();

@@ -9,7 +9,7 @@ const APIController = (function(fetch){
 			{
 
 				headers: { "Content-Type": "application/json" },
-				method: "GET",
+				method: "POST",
 				body: JSON.stringify(data),
 
 			}

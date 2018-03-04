@@ -6,7 +6,7 @@ h1, h2, header, p, a, span {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
 
-#title, #quoteBoxMain, #quoteInput {
+#title, #quoteMain, #quoteInput {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -14,6 +14,7 @@ h1, h2, header, p, a, span {
   color: #f9fafc; }
 
 #title {
+  background: none !important;
   z-index: 4; }
   #title .main {
     position: absolute;
@@ -27,8 +28,7 @@ h1, h2, header, p, a, span {
       color: #f9fafc;
       font-weight: lighter;
       font-size: 5rem;
-      margin: 0;
-      text-shadow: 0 0 20px white; }
+      margin: 0; }
     #title .main h2 {
       font-family: "Brandon Text";
       font-weight: lighter;
@@ -85,49 +85,20 @@ h1, h2, header, p, a, span {
       font-size: 15px;
       color: #808285;
       margin-bottom: 20px; }
-    #quoteInput .main #userSubmitQuote {
-      display: block;
-      margin: auto;
-      position: relative;
-      font-family: 'Open Sans', sans-serif;
-      height: 30px;
-      width: 30px;
-      border-radius: 50%;
-      border: 1px solid #929598;
-      cursor: pointer;
-      transition: box-shadow .25s ease;
-      box-shadow: 0px 0px 10px white; }
-      #quoteInput .main #userSubmitQuote:before {
-        content: ">";
-        position: absolute;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%); }
-      #quoteInput .main #userSubmitQuote:hover {
-        border: 1px solid #f9fafc;
-        animation: none;
-        box-shadow: 0px 0px 40px white; }
 
-@keyframes blinkGlow {
-  0% {
-    box-shadow: 0px 0px 5px white; }
-  100% {
-    box-shadow: 0px 0px 15px white; } }
-
-#quoteBoxMain {
+#quoteMain {
   z-index: 2;
   visibility: hidden;
   opacity: 0; }
-  #quoteBoxMain .main {
+  #quoteMain .main {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center; }
-  #quoteBoxMain .close {
+  #quoteMain .close {
     margin: auto; }
-    #quoteBoxMain .close:hover {
+    #quoteMain .close:hover {
       cursor: pointer; }
 
 .fadeOut {
@@ -153,3 +124,37 @@ h1, h2, header, p, a, span {
   100% {
     opacity: 1;
     visibility: visible; } }
+
+.submitButton {
+  display: block;
+  margin: auto;
+  position: relative;
+  font-family: 'Open Sans', sans-serif;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  border: 1px solid #929598;
+  cursor: pointer;
+  transition: box-shadow .25s ease;
+  box-shadow: 0px 0px 10px white; }
+  .submitButton:before {
+    content: ">";
+    position: absolute;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); }
+
+@keyframes blinkGlow {
+  0% {
+    box-shadow: 0px 0px 5px white; }
+  100% {
+    box-shadow: 0px 0px 15px white; } }
+
+.glowBorder:hover {
+  border: 1px solid #f9fafc;
+  animation: none;
+  box-shadow: 0px 0px 40px white; }
+
+.glow {
+  text-shadow: 0 0 20px white; }
