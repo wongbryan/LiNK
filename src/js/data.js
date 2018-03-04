@@ -727,6 +727,6 @@ const test = {
 const test2 = {
 	id: '',
 	name: 'astronaut',
-	upper_dom: 'white',
+	// upper_dom: 'white',
 	// upper_eyeLeft: 'orange',
 }

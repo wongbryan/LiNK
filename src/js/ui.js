@@ -11,8 +11,8 @@ const UIController = (function(){
 	answerMax = 250;
 
 	var quoteMain = document.getElementById('quoteMain'),
-	quoteAnswer = document.getElementById('quoteAnswer'),
-	quoteClose = quoteMain.getElementsByClassName('close')[0];
+	quoteMainAnswer = document.getElementById('quoteAnswer'),
+	quoteMainButton = quoteMain.getElementsByClassName('close')[0];
 
 	/* TITLE SCREEN */
 
@@ -143,7 +143,7 @@ const UIController = (function(){
 		elem.classList.add('fadeIn');
 	}
 
-	quoteClose.addEventListener('mousedown', hideQuoteMain);
+	quoteMainButton.addEventListener('mousedown', hideQuoteMain);
 
 	return{
 		showTitle: showTitle,

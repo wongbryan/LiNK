@@ -109,5 +109,5 @@ var Avatar = function(data){
 	g = buildParts(charData);
 
 	this.__proto__ = g;
-}
 
+}

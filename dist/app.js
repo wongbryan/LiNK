@@ -1273,8 +1273,8 @@ var UIController = function () {
 	    answerMax = 250;
 
 	var quoteMain = document.getElementById('quoteMain'),
-	    quoteAnswer = document.getElementById('quoteAnswer'),
-	    quoteClose = quoteMain.getElementsByClassName('close')[0];
+	    quoteMainAnswer = document.getElementById('quoteAnswer'),
+	    quoteMainButton = quoteMain.getElementsByClassName('close')[0];
 
 	/* TITLE SCREEN */
 
@@ -1547,3 +1547,6 @@ var getEdgesGeom = function getEdgesGeom(geom) {
 
   return new THREE.EdgesGeometry(geom);
 };
+"use strict";
+
+var WORLD_CONTROLLER = function WORLD_CONTROLLER() {};

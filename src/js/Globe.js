@@ -29,7 +29,7 @@ var Globe = function(radius, color, avatarPos){
   let mat = new THREE.ShaderMaterial({
         uniforms: {
             'avatarPos': { value: avatarPos },
-            'appearAmt': { value: .5},
+            'appearAmt': { value: 0},
             'maxDist': { value: 200. }
         },
         blending: THREE.AdditiveBlending,
