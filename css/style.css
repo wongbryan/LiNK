@@ -18,8 +18,7 @@ h1, h2, header, p, a, span {
 
 #title {
   background: none !important;
-  z-index: 4;
-  display: none; }
+  z-index: 4; }
   #title .main {
     text-align: center;
     position: absolute;
@@ -46,32 +45,33 @@ h1, h2, header, p, a, span {
       font-style: italic;
       font-size: .8rem;
       margin: 30px;
-      color: #929598; }
+      color: #929598;
+      opacity: 0; }
     #title .main form input {
       display: block;
       margin: auto;
       margin-bottom: 10px; }
 
-#quoteInput {
+#quoteInput, #nameInput {
   z-index: 3;
   visibility: hidden; }
-  #quoteInput .main {
+  #quoteInput .main, #nameInput .main {
     width: 600px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center; }
-    #quoteInput .main h1 {
+    #quoteInput .main h1, #nameInput .main h1 {
       font-family: "CaslonGraphiqueEF";
       color: #f4f5f7;
       font-weight: lighter;
       font-size: 2.15rem;
       margin: 0;
       margin-bottom: 25px; }
-    #quoteInput .main #prompt {
+    #quoteInput .main #prompt, #nameInput .main #prompt {
       position: relative; }
-      #quoteInput .main #prompt .textinput {
+      #quoteInput .main #prompt .textinput, #nameInput .main #prompt .textinput {
         position: relative;
         background: none;
         color: #cbcdd0;
@@ -86,16 +86,19 @@ h1, h2, header, p, a, span {
         line-height: 22px;
         margin-bottom: 30px;
         width: 100%; }
-        #quoteInput .main #prompt .textinput:focus + i {
+        #quoteInput .main #prompt .textinput:focus + i, #nameInput .main #prompt .textinput:focus + i {
           display: none; }
-        #quoteInput .main #prompt .textinput:focus {
+        #quoteInput .main #prompt .textinput:focus, #nameInput .main #prompt .textinput:focus {
           outline: none; }
-    #quoteInput .main .remaining {
+    #quoteInput .main .remaining, #nameInput .main .remaining {
       font-family: "Brandon Text";
       font-weight: lighter;
       font-size: 15px;
       color: #808285;
       margin-bottom: 20px; }
+
+#nameInput {
+  z-index: 2; }
 
 #quoteMain {
   z-index: 2;
@@ -221,18 +224,20 @@ h1, h2, header, p, a, span {
     visibility: visible; } }
 
 .fadeOutBlur {
-  animation: fadeOutBlur forwards 1.1s cubic-bezier(0.65, 0.09, 0.92, 0.29); }
+  animation: fadeOutBlur forwards 2s ease; }
 
 .fadeInBlur {
-  animation: fadeOutBlur forwards 1.1s cubic-bezier(0.65, 0.09, 0.92, 0.29); }
+  animation: fadeInBlur forwards 2s ease; }
 
 /* donation form */
 #donation {
   z-index: 5;
   width: 65%;
   padding: 20px;
+  visibility: hidden;
   background: none; }
   #donation .wrapper {
+    overflow: scroll;
     height: 100%;
     width: 100%;
     padding: 35px;
@@ -248,7 +253,7 @@ h1, h2, header, p, a, span {
     margin-right: 25px;
     width: 80%; }
     #donation .main .info {
-      margin-top: 80px;
+      margin-top: 70px;
       margin-bottom: 50px; }
       #donation .main .info h1 {
         font-family: "CaslonGraphiqueEF";
@@ -267,6 +272,9 @@ h1, h2, header, p, a, span {
         #donation .main .info a:hover {
           color: #f4f5f7;
           text-shadow: 0 0 15px white; }
+  #donation #donationQuoteAnswer {
+    color: #f4f5f7;
+    text-shadow: 0 0 20px white; }
   #donation #donationForm {
     width: 90%; }
   #donation label {
@@ -275,7 +283,7 @@ h1, h2, header, p, a, span {
     font-family: "Brandon Text";
     font-size: 1rem;
     color: #808285;
-    margin-bottom: 2px;
+    margin-bottom: 1px;
     transition: all .5s ease; }
   #donation input {
     outline: none;
@@ -311,7 +319,8 @@ h1, h2, header, p, a, span {
     font-family: "Univers";
     font-weight: 300;
     font-style: italic;
-    margin-top: 4px; }
+    margin-top: 4px;
+    margin-bottom: 0; }
   #donation .form-control {
     display: block;
     border-bottom: #808285 1px solid;
@@ -322,34 +331,46 @@ h1, h2, header, p, a, span {
     color: #cbcdd0;
     padding: 7.5px;
     width: 100%; }
-  #donation #donationForm .name {
-    width: 64%;
-    margin-right: 15px; }
-  #donation #donationForm .cvv {
-    width: 32%; }
-  #donation #donationForm .number {
-    width: 100%; }
-  #donation #donationForm .expiration {
-    font-size: .8rem;
-    width: 100%;
-    min-width: 50px;
-    padding-left: 0; }
-    #donation #donationForm .expiration input {
-      width: 10%; }
-  #donation #donationForm #submit {
-    margin-top: 25px;
-    display: inline-block; }
-    #donation #donationForm #submit button {
-      border: none;
-      display: block;
-      font-family: "Brandon Text";
-      background: none;
-      border-radius: 0;
-      color: #929598;
-      font-size: 1rem;
-      padding: 0;
-      transition: all .5s ease; }
-      #donation #donationForm #submit button:hover {
-        color: #f4f5f7;
-        cursor: pointer;
-        text-shadow: 0 0 15px white; }
+  #donation #donationForm {
+    width: 80%; }
+    #donation #donationForm .name {
+      width: 64%;
+      margin-right: 15px; }
+    #donation #donationForm .cvv {
+      width: 32%; }
+    #donation #donationForm .number {
+      width: 100%; }
+    #donation #donationForm .expiration {
+      font-size: .8rem;
+      min-width: 50px;
+      padding-left: 0;
+      width: 15%;
+      margin-right: 40px; }
+      #donation #donationForm .expiration input {
+        width: 100%; }
+    #donation #donationForm .amount {
+      width: 20%; }
+      #donation #donationForm .amount input {
+        width: 100%;
+        display: inline-block;
+        float: left; }
+    #donation #donationForm .email {
+      width: 100%; }
+    #donation #donationForm #donationSubmit {
+      margin-top: 17px;
+      display: inline-block;
+      width: 100%; }
+      #donation #donationForm #donationSubmit button {
+        border: none;
+        display: block;
+        font-family: "Brandon Text";
+        background: none;
+        border-radius: 0;
+        color: #929598;
+        font-size: 1rem;
+        padding: 0;
+        transition: all .5s ease; }
+        #donation #donationForm #donationSubmit button:hover {
+          color: #f4f5f7;
+          cursor: pointer;
+          text-shadow: 0 0 15px white; }

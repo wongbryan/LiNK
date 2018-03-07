@@ -9,13 +9,23 @@ const UIController = (function(){
 	remaining = document.getElementById('userAnswerRemaining'),
 	answerMax = 250;
 
+	var nameInput = document.getElementById('nameInput'),
+	nameInputAnswer = document.getElementById('nameInputAnswer'),
+	nameInputClose = nameInput.getElementsByClassName('submitButton')[0];
+
 	var quoteMain = document.getElementById('quoteMain'),
 	quoteMainAnswer = document.getElementById('quoteMainAnswer'),
 	quoteMainClose = document.getElementById('quoteMainClose');
 
 	var donation = document.getElementById('donation'),
 	donationForm = document.getElementById('donationForm'),
-	donationClose = document.getElementById('donationClose');
+	donationClose = document.getElementById('donationClose'),
+	donationSubmit = document.getElementById('donationSubmit'),
+	donationQuoteAnswer = document.getElementById('donationQuoteAnswer'),
+	name = document.getElementById('name'),
+	cvv = document.getElementById('cvv'),
+	number = document.getElementById('number'),
+	expiration = document.getElementById('expiration');
 
 	/* TITLE SCREEN */
 
@@ -29,7 +39,6 @@ const UIController = (function(){
 
 		let instr = this.getElementsByTagName('p')[0];
 		instr.classList.remove('blinkAnim');
-		hide(instr);
 
 	}
 
@@ -41,7 +50,6 @@ const UIController = (function(){
 
 	   let instr = this.getElementsByTagName('p')[0];
 	   instr.classList.add('blinkAnim');
-	   hide(instr);
 
 	   var interval = setInterval(function(){
 	   		if(titleBlur <= 0 && opacity >= 1){
@@ -62,6 +70,7 @@ const UIController = (function(){
 	function whilemousedown() {
 	   var el = this;
 	   if(opacity <= 0 || titleBlur >= 60){
+	    showNameInput();
 	   	WORLD_CONTROLLER.setMainLightIntensity(.3);
 	   	el.style.display = 'none';
 	   	clearInterval(mousedownID);
@@ -88,6 +97,10 @@ const UIController = (function(){
 			e.preventDefault();
 
 		let ans = quoteInputAnswer.value;
+		ans = stylizeQuote(ans);
+		donationQuoteAnswer.innerHTML = ans;
+
+		user_data.text = ans;
 
 		hideQuoteInput();
 
@@ -118,6 +131,21 @@ const UIController = (function(){
 	quoteInputAnswer.addEventListener('keydown', ansKeyDown);
 	quoteInputAnswer.addEventListener('blur', keepBlur);
 
+	/* NAME INPUT SCREEN */
+
+	function onNameInputSubmit(e){
+
+		e.preventDefault();
+
+		let name = nameInputAnswer.value;
+		user_data.name = name;
+
+		hideNameInput();
+		showQuoteInput();
+
+	}
+	nameInputClose.addEventListener('mousedown', onNameInputSubmit);
+
 	/* Util functions for navigation */
 
 	function showTitle(){
@@ -126,6 +154,22 @@ const UIController = (function(){
 
 	function hideTitle(){
 		hide(title);
+	}
+
+	function showQuoteInput(){
+		show(quoteInput);
+	}	
+
+	function hideQuoteInput(){
+		hide(quoteInput);
+	}
+
+	function showNameInput(){
+		show(nameInput);
+	}
+
+	function hideNameInput(){
+		hide(nameInput);
 	}
 
 	function showQuoteMain(data){
@@ -140,14 +184,6 @@ const UIController = (function(){
 
 	function hideQuoteMain(){
 		hide(quoteMain);
-	}
-
-	function showQuoteInput(){
-		show(quoteInput);
-	}	
-
-	function hideQuoteInput(){
-		hide(quoteInput);
 	}
 
 	function showDonation(){
@@ -172,7 +208,25 @@ const UIController = (function(){
 
 	/* DONATION BOX STUFF */
 
+	function submitDonation(e){
+		let nameVal = name.value,
+		numberVal = number.value,
+		cvvVal = cvv.value,
+		expirationVal = expiration.value;
+
+		let card = {
+			'name': nameVal,
+			'number': numberVal,
+			'cvv': cvvVal,
+			'expiration': expirationVal
+		};
+
+		console.log(card);
+
+	}
+
 	donationClose.addEventListener('mousedown', hideDonation);
+	donationSubmit.addEventListener('mousedown', submitDonation);
 
 	return{
 		showTitle: showTitle,

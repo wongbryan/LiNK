@@ -15,11 +15,20 @@
 			<p class="blinkAnim">CLICK AND HOLD</p>
 		</div>
 	</div>
+	<div id="nameInput" class="screen">
+		<div class="main">
+			<h1 class="glow">What's your name?</h1>
+			<form id="prompt">
+				<textarea maxlength="250" rows="3" spellcheck="false" id="nameInputAnswer" class="textinput" type="text"" autofocus autocomplete="nope"></textarea>
+			</form>
+			<div class="submitButton glowBorder"></div>
+		</div>
+	</div>
 	<div id="quoteInput" class="screen">
 		<div class="main">
-			<h1 class="glow">What is home?</h1>
+			<h1 class="glow">Home is...</h1>
 			<form id="prompt">
-				<textarea maxlength="250" rows="3" spellcheck="false" id="userAnswer" class="textinput" type="text" id="answer" autofocus autocomplete="nope"></textarea>
+				<textarea maxlength="250" rows="3" spellcheck="false" id="userAnswer" class="textinput" type="text" autofocus autocomplete="nope"></textarea>
 			</form>
 			<div class="remaining"><span id="userAnswerRemaining">250</span> characters remaining</div>
 			<div class="submitButton glowBorder"></div>
@@ -38,7 +47,7 @@
 				<div id="donationClose" class="submitButton glowBorder"></div>
 				<div class="info">
 					<h1 class="glow">Help others find a home</h1>
-					<p>We all have a home. Some don't. Every year, Liberty in North Korea helps refugees escape an oppressive country and find a home somewhere else... donate the support the cause.</p>
+					<p>What is home? Some say it's where the lights are, where the family is. Or maybe it's "<span id="donationQuoteAnswer">sample here</span>." The question of what is easier to answer than where. </br></br>Every year, Liberty in North Korea helps refugees escape an oppressive country. They do this this that this... Help by donating to LiNK below.</p>
 					<a href="https://www.libertyinnorthkorea.org/" target="_blank">learn more</a>
 				</div>
 				<form id="donationForm" spellcheck="false">
@@ -59,8 +68,18 @@
 						<input maxlength="5" type="text" class="form-control" id="expiration" autocomplete="nope"></input>
 						<h1 class="description">mm/yy</h1>
 					</div>
-					<div id="submit">
-						<button type="submit">submit</button>
+					<div class="form-group amount">
+						<label for="amount">amount</label>
+						<input type="text" class="form-control" id="amount" autocomplete="nope"></input>
+						<h1 class="description">usd</h1>
+					</div>
+					<div class="form-group email">
+						<label for="email">email</label>
+						<input type="text" class="form-control" id="amount" autocomplete="nope"></input>
+						<h1 class="description">for an email receipt</h1>
+					</div>
+					<div id="donationSubmit">
+						<button type="button">submit</button>
 					</div>
 				</form>
 			</div>

@@ -1,3 +1,9 @@
+const user_data = {
+	name: "",
+	id: 0,
+	text: "",
+}
+
 const MAT_DATA = {
 	'yellow': new THREE.MeshStandardMaterial({
         color: 0x89918c,

@@ -164,4 +164,21 @@ const tweenScalar = (source, propName, target, easing=TWEEN.Easing.Quadratic.InO
 
 }
 
+const stylizeQuote = function(string){
+
+  const punc = ['?', '.', ';', '!'];
+  let newStr = "";
+
+  string = string.toLowerCase();
+
+  for(let i=0; i<string.length; i++){
+
+    if(punc.indexOf(string[i]) === -1)
+      newStr += string[i];
+
+  }
+
+  return newStr;
+
+}
 
