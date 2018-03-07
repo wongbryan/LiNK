@@ -235,16 +235,20 @@ h1, h2, header, p, a, span {
   #donation .wrapper {
     height: 100%;
     width: 100%;
-    padding: 50px;
-    padding-top: 150px;
+    padding: 35px;
     box-shadow: #00010c 0px 0px 30px;
     background: rgba(0, 1, 12, 0.8); }
+    #donation .wrapper .submitButton:before {
+      content: '<'; }
+    #donation .wrapper .submitButton {
+      margin: 0; }
   #donation .main {
     display: inline-block;
     float: left;
     margin-right: 25px;
     width: 80%; }
     #donation .main .info {
+      margin-top: 80px;
       margin-bottom: 50px; }
       #donation .main .info h1 {
         font-family: "CaslonGraphiqueEF";
@@ -263,16 +267,16 @@ h1, h2, header, p, a, span {
         #donation .main .info a:hover {
           color: #f4f5f7;
           text-shadow: 0 0 15px white; }
-  #donation .form {
-    display: inline-block;
-    float: left; }
+  #donation #donationForm {
+    width: 90%; }
   #donation label {
     display: block;
     text-align: left;
     font-family: "Brandon Text";
     font-size: 1rem;
-    color: #929598;
-    margin-bottom: 2px; }
+    color: #808285;
+    margin-bottom: 2px;
+    transition: all .5s ease; }
   #donation input {
     outline: none;
     border: none; }
@@ -291,7 +295,7 @@ h1, h2, header, p, a, span {
     color: #cbcdd0;
     border: none;
     outline: none;
-    border-bottom: #929598 1px solid; }
+    border-bottom: #808285 1px solid; }
     #donation select:focus {
       border-bottom: #f4f5f7 1px solid; }
   #donation .form-control:focus {
@@ -310,7 +314,7 @@ h1, h2, header, p, a, span {
     margin-top: 4px; }
   #donation .form-control {
     display: block;
-    border-bottom: #929598 1px solid;
+    border-bottom: #808285 1px solid;
     transition: all 0.6s cubic-bezier(0.16, 0.89, 0.44, 0.9);
     background: none;
     font-size: 1rem;
@@ -319,13 +323,33 @@ h1, h2, header, p, a, span {
     padding: 7.5px;
     width: 100%; }
   #donation #donationForm .name {
-    width: 63%;
+    width: 64%;
     margin-right: 15px; }
   #donation #donationForm .cvv {
-    width: 30%; }
+    width: 32%; }
   #donation #donationForm .number {
     width: 100%; }
   #donation #donationForm .expiration {
     font-size: .8rem;
-    width: 20%;
+    width: 100%;
+    min-width: 50px;
     padding-left: 0; }
+    #donation #donationForm .expiration input {
+      width: 10%; }
+  #donation #donationForm #submit {
+    margin-top: 25px;
+    display: inline-block; }
+    #donation #donationForm #submit button {
+      border: none;
+      display: block;
+      font-family: "Brandon Text";
+      background: none;
+      border-radius: 0;
+      color: #929598;
+      font-size: 1rem;
+      padding: 0;
+      transition: all .5s ease; }
+      #donation #donationForm #submit button:hover {
+        color: #f4f5f7;
+        cursor: pointer;
+        text-shadow: 0 0 15px white; }

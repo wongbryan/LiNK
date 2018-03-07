@@ -13,6 +13,10 @@ const UIController = (function(){
 	quoteMainAnswer = document.getElementById('quoteMainAnswer'),
 	quoteMainClose = document.getElementById('quoteMainClose');
 
+	var donation = document.getElementById('donation'),
+	donationForm = document.getElementById('donationForm'),
+	donationClose = document.getElementById('donationClose');
+
 	/* TITLE SCREEN */
 
 	var titleBlur = 0;
@@ -146,6 +150,14 @@ const UIController = (function(){
 		hide(quoteInput);
 	}
 
+	function showDonation(){
+		show(donation);
+	}
+
+	function hideDonation(){
+		hide(donation);
+	}
+
 	function hide(elem){
 		elem.classList.remove('fadeInBlur');
 		elem.classList.add('fadeOutBlur');
@@ -160,8 +172,8 @@ const UIController = (function(){
 
 	/* DONATION BOX STUFF */
 
-	
-	
+	donationClose.addEventListener('mousedown', hideDonation);
+
 	return{
 		showTitle: showTitle,
 		hideTitle: hideTitle,
