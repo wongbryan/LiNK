@@ -19,7 +19,7 @@
 		<div class="main">
 			<h1 class="glow">What is home?</h1>
 			<form id="prompt">
-				<textarea maxlength="250" rows="3" spellcheck="false" id="userAnswer" class="textinput" type="text" id="answer" autofocus autocomplete="off"></textarea>
+				<textarea maxlength="250" rows="3" spellcheck="false" id="userAnswer" class="textinput" type="text" id="answer" autofocus autocomplete="nope"></textarea>
 			</form>
 			<div class="remaining"><span id="userAnswerRemaining">250</span> characters remaining</div>
 			<div class="submitButton glowBorder"></div>
@@ -27,10 +27,39 @@
 	</div>
 	<div id="quoteMain" class="screen">
 		<div class="main">
-			<h1>Home is...</h1>
-			<h2 class="quoteAnswer"></h2>
-			<h2 class="username"></h2>
-			<div class="close">close</div>
+			<h1 id="quoteMainAnswer">"Home is where I can eat a peanut banana sandwich."</h1>
+			<p id="quoteMainUser">Bryan Wong, Los Angeles</p>
+			<div id="quoteMainClose" class="submitButton glowBorder"></div>
+		</div>
+	</div>
+	<div id="donation" class="screen">
+		<div class="wrapper">
+			<div class="main">
+				<div class="info">
+					<h1 class="glow">Help others find a home</h1>
+					<p>We all have a home. Some don't. Every year, Liberty in North Korea helps refugees escape an oppressive country and find a home somewhere else... donate the support the cause.</p>
+					<a href="https://www.libertyinnorthkorea.org/" target="_blank">learn more</a>
+				</div>
+				<form id="donationForm" spellcheck="false">
+					<div class="form-group name">
+						<label for="name">name</label>
+						<input type="text" class="form-control" id="name" autocomplete="nope"></input>
+					</div>
+					<div class="form-group cvv">
+						<label for="cvv">cvv</label>
+						<input maxlength="4" type="text" class="form-control" id="cvv" autocomplete="nope"></input>
+					</div>
+					<div class="form-group number">
+						<label for="number">card number</label>
+						<input type="text" class="form-control" id="number" autocomplete="nope"></input>
+					</div>
+					<div class="form-group expiration">
+						<label for="expiration">expiration</label>
+						<input maxlength="5" type="text" class="form-control" id="expiration" autocomplete="nope"></input>
+						<h1 class="description">mm/yy</h1>
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
 	<div id="container"></div>
@@ -113,14 +142,15 @@
 <script src="node_modules/three/examples/js/controls/OrbitControls.js"></script>
 <script src="node_modules/three/examples/js/modifiers/SubdivisionModifier.js"></script>
 <script src="node_modules/three/examples/js/utils/GeometryUtils.js"></script>
+<script src="node_modules/tween.js/src/Tween.js"></script>
 <script src="src/js/util.js"></script>
 <script src="src/js/data.js"></script>
 <script src="src/js/Loader.js"></script>
 <script src="src/js/Globe.js"></script>
 <script src="src/js/glowMesh.js"></script>
 <script src="src/js/Avatar.js"></script>
-<script src="src/js/main.js"></script>
 <script src="src/js/Submit.js"></script>
-<script src="src/js/ui.js"></script>
 <script src="src/js/WorldController.js"></script>
+<script src="src/js/ui.js"></script>
+<script src="src/js/main.js"></script>
 </html>

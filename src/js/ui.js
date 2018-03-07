@@ -10,8 +10,8 @@ const UIController = (function(){
 	answerMax = 250;
 
 	var quoteMain = document.getElementById('quoteMain'),
-	quoteMainAnswer = document.getElementById('quoteAnswer'),
-	quoteMainButton = quoteMain.getElementsByClassName('close')[0];
+	quoteMainAnswer = document.getElementById('quoteMainAnswer'),
+	quoteMainClose = document.getElementById('quoteMainClose');
 
 	/* TITLE SCREEN */
 
@@ -23,6 +23,10 @@ const UIController = (function(){
 		if(mousedownID==-1)  //Prevent multiple loops!
 			mousedownID = setInterval(whilemousedown.bind(this), 25 /*execute every 100ms*/);
 
+		let instr = this.getElementsByTagName('p')[0];
+		instr.classList.remove('blinkAnim');
+		hide(instr);
+
 	}
 
 	function mouseup(event) {
@@ -30,6 +34,10 @@ const UIController = (function(){
 	     clearInterval(mousedownID);
 	     mousedownID=-1;
 	   }
+
+	   let instr = this.getElementsByTagName('p')[0];
+	   instr.classList.add('blinkAnim');
+	   hide(instr);
 
 	   var interval = setInterval(function(){
 	   		if(titleBlur <= 0 && opacity >= 1){
@@ -49,7 +57,8 @@ const UIController = (function(){
 
 	function whilemousedown() {
 	   var el = this;
-	   if(opacity <= 0){
+	   if(opacity <= 0 || titleBlur >= 60){
+	   	WORLD_CONTROLLER.setMainLightIntensity(.3);
 	   	el.style.display = 'none';
 	   	clearInterval(mousedownID);
 	   	mousedownID = -1;
@@ -116,8 +125,8 @@ const UIController = (function(){
 	}
 
 	function showQuoteMain(data){
-		let otherAns = quoteMain.getElementsByClassName('quoteAnswer')[0],
-		username = quoteMain.getElementsByClassName('username')[0];
+		let answer = document.getElementById('quoteMainAnswer'),
+		username = document.getElementById('quoteMainUser');
 
 		otherAns.innerHTML = data.quote;
 		username.innerHTML = "-" + data.username;
@@ -138,17 +147,21 @@ const UIController = (function(){
 	}
 
 	function hide(elem){
-		elem.classList.remove('fadeIn');
-		elem.classList.add('fadeOut');
+		elem.classList.remove('fadeInBlur');
+		elem.classList.add('fadeOutBlur');
 	}
 
 	function show(elem){
-		elem.classList.remove('fadeOut');
-		elem.classList.add('fadeIn');
+		elem.classList.remove('fadeOutBlur');
+		elem.classList.add('fadeInBlur');
 	}
 
-	quoteMainButton.addEventListener('mousedown', hideQuoteMain);
+	quoteMainClose.addEventListener('mousedown', hideQuoteMain);
 
+	/* DONATION BOX STUFF */
+
+	
+	
 	return{
 		showTitle: showTitle,
 		hideTitle: hideTitle,

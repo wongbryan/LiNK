@@ -27,19 +27,23 @@ function buildParts(data){
 
 		for (let k in sectionData){
 
+			if (k === 'offset'){
+				continue;
+			}
+
 			let d = sectionData[k];
 
 			let part;
 
 			if(d.hasOwnProperty('mesh')){
 
-				d.mesh.material = d.matOverride || d.mat;
+				d.mesh.material = d.matOverride || d.mat.clone();
 				part = d.mesh;
 
 			} else {
 
 				let geom = d.geom;
-				let mat = d.matOverride || d.mat;
+				let mat = d.matOverride || d.mat.clone();
 
 				part = new THREE.Mesh(geom, mat);
 
@@ -48,7 +52,7 @@ function buildParts(data){
 			let n = d.name;
 			let offset = d.offset || z;
 			let rot = d.rotation || z;
-			let opacity = d.opacity;
+			let opacity = d.opacity || 1;
 
 			offset = offset.multiply(magnitude);
 

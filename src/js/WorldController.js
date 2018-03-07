@@ -2,19 +2,34 @@ const WORLD_CONTROLLER = (function(){
 
 	function setMainLightIntensity(n){
 
-		testMesh.light.intensity = n;
+		tweenScalar(testMesh.light, 'intensity', n);
 
 	}
 
-	function adjustWorldLights(appearAmt){
+	function seWorldLights(appearAmt){
 
 		globe.material.uniforms['appearAmt'].value = appearAmt;
 
 	}
 
+	function setAvatarOpacity(n){
+
+		testMesh.traverse( (c) => {
+
+			if(c.hasOwnProperty('material')){
+
+				tweenScalar(c.material, 'opacity', n);
+
+			}
+
+		} );
+
+	}
+
 	return {
 		setMainLightIntensity: setMainLightIntensity,
-		adjustWorldLights: adjustWorldLights,
+		seWorldLights: seWorldLights,
+		setAvatarOpacity: setAvatarOpacity,
 	}
 
 })();

@@ -16,7 +16,8 @@
     "gulp-babel": "^7.0.1",
     "gulp-connect": "^5.2.0",
     "node-sass": "^4.7.2",
-    "three": "^0.89.0"
+    "three": "^0.89.0",
+    "tween.js": "^16.6.0"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
