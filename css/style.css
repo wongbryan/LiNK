@@ -6,26 +6,27 @@ h1, h2, header, p, a, span {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
 
-#title, #quoteMain, #quoteInput {
+.screen {
   position: absolute;
   width: 100%;
   height: 100%;
   background: #00010c;
-  color: #f9fafc; }
+  color: #f4f5f7; }
 
 #title {
   background: none !important;
   z-index: 4; }
   #title .main {
+    text-align: center;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    color: #f9fafc; }
+    color: #f4f5f7; }
     #title .main h1 {
-      font-family: "CaslonGraphiqueEF";
-      color: #f9fafc;
+      font-family: "ITC Grouch";
+      color: #f4f5f7;
       font-weight: lighter;
       font-size: 5rem;
       margin: 0; }
@@ -34,8 +35,14 @@ h1, h2, header, p, a, span {
       font-weight: lighter;
       font-size: 1.3rem;
       margin: 0;
-      color: #929598;
+      color: #f4f5f7;
       margin-bottom: 10px; }
+    #title .main p {
+      font-family: "Univers";
+      font-style: italic;
+      font-size: .8rem;
+      margin: 30px;
+      color: #929598; }
     #title .main form input {
       display: block;
       margin: auto;
@@ -53,7 +60,7 @@ h1, h2, header, p, a, span {
     text-align: center; }
     #quoteInput .main h1 {
       font-family: "CaslonGraphiqueEF";
-      color: #f9fafc;
+      color: #f4f5f7;
       font-weight: lighter;
       font-size: 2rem;
       margin: 0;
@@ -145,16 +152,28 @@ h1, h2, header, p, a, span {
     left: 50%;
     transform: translate(-50%, -50%); }
 
-@keyframes blinkGlow {
+@keyframes blinkGlowBorder {
   0% {
     box-shadow: 0px 0px 5px white; }
   100% {
     box-shadow: 0px 0px 15px white; } }
 
 .glowBorder:hover {
-  border: 1px solid #f9fafc;
+  border: 1px solid #f4f5f7;
   animation: none;
   box-shadow: 0px 0px 40px white; }
 
+@keyframes blinkGlow {
+  0% {
+    text-shadow: 0 0 15px white; }
+  100% {
+    text-shadow: 0 0 30px white; } }
+
 .glow {
   text-shadow: 0 0 20px white; }
+
+.glowAnim {
+  animation: blinkGlow 2s alternate infinite linear; }
+
+.blinkAnim {
+  animation: fadeIn 2s alternate infinite linear; }

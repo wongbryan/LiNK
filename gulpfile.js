@@ -52,6 +52,10 @@ gulp.task('watch', function() {
     gulp.watch('src/scss/**', ['css']);
 });
 
+gulp.task('watch-css', function(){
+	gulp.watch('src/scss/**', ['css']);
+});
+
 gulp.task('webserver', function() {
   connect.server({
     livereload: false

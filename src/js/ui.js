@@ -1,7 +1,6 @@
 const UIController = (function(){
 
-	var title = document.getElementById('title'),
-	titleButton = title.getElementsByClassName('submitButton')[0];
+	var title = document.getElementById('title');
 
 	var quoteInput = document.getElementById('quoteInput'),
 	quoteInputButton = quoteInput.getElementsByClassName('submitButton')[0],
@@ -33,34 +32,39 @@ const UIController = (function(){
 	   }
 
 	   var interval = setInterval(function(){
-	   		if(titleBlur <= 0){
+	   		if(titleBlur <= 0 && opacity >= 1){
 	   			clearInterval(interval);
 	   			return;
 	   		}
 		   	titleBlur--;
 			var el = this;
 			el.style.filter = "blur(" + titleBlur + "px)";
+
+			opacity = opacity > 1 ? 1 : opacity + .01;
+			el.style.opacity = opacity;
+
 	   }.bind(this), 25);
 
 	}
 
 	function whilemousedown() {
-	   titleBlur++;
 	   var el = this;
+	   if(opacity <= 0){
+	   	el.style.display = 'none';
+	   	clearInterval(mousedownID);
+	   	mousedownID = -1;
+	   	return;
+	   }
+	   titleBlur++;
 	   el.style.filter = "blur(" + titleBlur + "px)";
 
-	   opacity -= .005;
+	   opacity -= .01;
 	   el.style.opacity = opacity;
 	}
 
-	// title.addEventListener("mousedown", mousedown);
-	// title.addEventListener("mouseup", mouseup);
-	// title.addEventListener("mouseout", mouseup);
-
-	titleButton.addEventListener('mousedown', function(){
-		hideTitle();
-		showQuoteInput();
-	});
+	title.addEventListener("mousedown", mousedown);
+	title.addEventListener("mouseup", mouseup);
+	title.addEventListener("mouseout", mouseup);
 
 
 	/* USER INPUT ANSWER SCREEN */
