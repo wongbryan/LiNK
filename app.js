@@ -1,23 +1,28 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const API = require('./js/API');
+const API = require('./api');
 
 app.set('view engine', 'ejs');
-app.use('/', express.static('public'));
+
+app.use('/', express.static(path.join(__dirname + '/public')));
 
 app.get('/view/:id', (req, res) => {
 
-	const id = "Bryan Wong";
+	const id = req.params.id;
 
-	res.render('./views/index', {
+	res.render(path.join(__dirname, 'views/index'), {
 		id: id,
 	});
+
 	// API.getEntry(id)
-	// .then( res => {
-		
+	// .then( resp => {
+	// 	v = resp;
+	// 	res.render('views/index', {
+	// 		id: id,
+	// 	});
 	// })
-	// .catch( res => {
+	// .catch( resp => {
 	// 	throw new Error(res);
 	// });
 

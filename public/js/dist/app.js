@@ -1014,8 +1014,8 @@ var GlowMesh = function GlowMesh(geom, color) {
 };
 'use strict';
 
-var MODELS_PATH = 'assets/models/';
-var FONTS_PATH = 'assets/fonts/';
+var MODELS_PATH = '/assets/models/';
+var FONTS_PATH = '/assets/fonts/';
 
 var Loader = function () {
     var manager = new THREE.LoadingManager();
