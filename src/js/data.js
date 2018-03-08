@@ -2,7 +2,9 @@ const user_data = {
 	name: "",
 	id: 0,
 	text: "",
-}
+	votes: 0,
+	character: null,
+};
 
 const MAT_DATA = {
 	'yellow': new THREE.MeshStandardMaterial({
@@ -722,6 +724,13 @@ const initData = () => {
 
 }
 
+const CHAR_DATA_OVERRIDES = {
+	astronaut: ['upper_eyeLeft', 'upper_eyeRight', 'upper_helmet'],
+	robot: ['upper_dom'],
+	dice: ['upperLeft_dom', 'upperRight_dom'],
+	poopGuy: ['middle_dom', 'middle_ring1', 'middle_ring2', 'middle_ring3', 'middle_ring4'],
+	breadGuy: ['middle_dom'],
+}
 
 const test = {
 	id: '',

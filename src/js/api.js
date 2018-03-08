@@ -27,7 +27,7 @@ const APIController = (function(fetch){
 		});
 
 	}
-
+	
 	return {
 		submitEntry: submitEntry,
 	}
