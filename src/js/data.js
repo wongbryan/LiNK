@@ -6,6 +6,8 @@ const user_data = {
 	character: null,
 };
 
+const other_users_data = [];
+
 const MAT_DATA = {
 	'yellow': new THREE.MeshStandardMaterial({
         color: 0x89918c,
@@ -724,10 +726,31 @@ const initData = () => {
 
 }
 
+const excludeColors = ['black', 'lightgray', 'gray', 'white', 'lightgray2', 'darkgray'];
+const allColors = (Object.keys(MAT_DATA)).filter( k => (excludeColors.indexOf(k) === -1) );
+
 const CHAR_DATA_OVERRIDES = {
-	astronaut: ['upper_eyeLeft', 'upper_eyeRight', 'upper_head'],
-	robot: ['upper_dom'],
-	dice: ['upperLeft_dom', 'upperRight_dom'],
-	poopGuy: ['middle_dom', 'middle_ring1', 'middle_ring2', 'middle_ring3', 'middle_ring4'],
-	breadGuy: ['middle_dom'],
+	astronaut: {
+		'upper_eyeLeft': ['black', 'lightgray'],
+		'upper_eyeRight': ['black', 'lightgray'], 
+		'upper_head': ['orange', 'yellow'],
+	},
+	poopGuy: {
+		'upper_dom': ['lightblue'],
+		'upper_eyeRight': ['lightblue'],
+		'middle_dom': allColors,
+		'middle_ring1': allColors,
+		'middle_ring2': allColors,
+		'middle_ring3': allColors,
+		'middle_ring4': allColors
+	},
+	robot: {
+		'upper_eyeLeft': ['black', 'lightgray'],
+		'upper_eyeRight': ['black', 'lightgray'], 
+		'upper_head': ['orange', 'yellow']
+	},
+	dice: {
+		'upperLeft_dom': ['orange', 'yellow'], 
+		'upperRight_dom': ['blue', 'red'], 
+	},
 }

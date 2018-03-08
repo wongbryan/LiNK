@@ -41,6 +41,7 @@ function buildParts(data){
 
 			if(d.hasOwnProperty('mesh')){
 
+				console.log(sectionData);
 				d.mesh.material = d.matOverride || d.mat.clone();
 				part = d.mesh;
 
