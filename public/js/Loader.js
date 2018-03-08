@@ -21,7 +21,7 @@ var Loader = (function () {
         init();
     };
 
-    this.loadFont = file => {
+    const loadFont = file => {
 
         let path = FONTS_PATH + file + '.json';
 
@@ -40,7 +40,7 @@ var Loader = (function () {
 
     }
 
-    this.loadObj = file => {
+    const loadObj = file => {
 
         objLoader.load(
 
@@ -68,7 +68,7 @@ var Loader = (function () {
 
     }
 
-    this.loadTexture = function(file){
+    const loadTexture = function(file){
         textureLoader.load(
             TEXTURE_ASSETS_PATH + file + '.png',
 
@@ -78,7 +78,7 @@ var Loader = (function () {
         )
     };
 
-    this.loadAudio = function(file, ext) {
+    const loadAudio = function(file, ext) {
         audioLoader.load(
             AUDIO_ASSETS_PATH + file + ext,
 
@@ -88,7 +88,12 @@ var Loader = (function () {
         );
     }
 
-    return this;
+    return {
+        loadFont: loadFont,
+        loadTexture: loadTexture,
+        loadObj: loadObj,
+        loadAudio: loadAudio,
+    };
 }());
 
 for (let file in MODEL_DATA) {
