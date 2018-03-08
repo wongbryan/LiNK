@@ -9,13 +9,18 @@ const babel = require('gulp-babel');
 const order = require("gulp-order");
 
 gulp.task('js', function(){
-	return gulp.src('src/js/*.js')
+	return gulp.src('js/*.js')
 	.pipe(order([
-		'src/js/data.js',
-		'src/js/Loader.js',
-		'src/js/Avatar.js',
-		'src/js/util.js',
-		'src/js/main.js',
+		"js/util.js",
+		"js/data.js",
+		"js/Loader.js",
+		"js/Globe.js",
+		"js/glowMesh.js",
+		"js/Avatar.js",
+		"js/API.js",
+		"js/WorldController.js",
+		"js/ui.js",
+		"js/main.js",
 	]))
 	.pipe(babel({
       presets: ['es2015']
@@ -25,22 +30,25 @@ gulp.task('js', function(){
 	.on('error', function (err) {
         gutil.log(gutil.colors.red('[Error]'), err.toString());
     })
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest('js/dist'));
 });
 
 gulp.task('lib', function(){
 	return gulp.src([
-		'node_modules/three/build/three.js',
-		'node_modules/three/examples/js/controls/OrbitControls.js',
+		"js/lib/three.js",
+		"js/lib/OrbitControls.js",
+		"js/lib/SubdivisionModifier.js",
+		"js/lib/GeometryUtils.js",
+		"js/lib/Tween.js",
 	])
 	.pipe(concat('lib.js'))
 	.pipe(uglify())
-	.pipe(gulp.dest('dist'));
+	.pipe(gulp.dest('js/dist'));
 });
 
 gulp.task('css', function(){
 	return gulp.src(
-		'src/scss/style.scss'
+		'scss/style.scss'
 	)
 	.pipe(sass().on('error', sass.logError))
 	.pipe(rename('style.css'))
@@ -48,12 +56,12 @@ gulp.task('css', function(){
 });
 
 gulp.task('watch', function() {
-    gulp.watch('src/js/**', ['js']);
-    gulp.watch('src/scss/**', ['css']);
+    gulp.watch('js/**', ['js']);
+    gulp.watch('scss/**', ['css']);
 });
 
 gulp.task('watch-css', function(){
-	gulp.watch('src/scss/**', ['css']);
+	gulp.watch('scss/**', ['css']);
 });
 
 gulp.task('webserver', function() {

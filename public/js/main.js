@@ -74,7 +74,7 @@ const init = () => {
 
     var pointStart = new THREE.Vector3(x, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
     var pointEnd = new THREE.Vector3(x-.0001, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
-    curve = setArc3D(pointStart, pointEnd, 3000, "lime", true);
+    var curve = setArc3D(pointStart, pointEnd, 3000, "lime", true);
     // scene.add(curve);
 
     testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
