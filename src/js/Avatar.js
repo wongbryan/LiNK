@@ -86,6 +86,8 @@ function buildParts(data){
 
 var Avatar = function(data){
 
+	console.log(data);
+	
 	let char = data['name'];
 	let charData = Object.assign({}, CHAR_DATA[char]);
 

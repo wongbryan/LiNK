@@ -97,12 +97,12 @@ const UIController = (function(){
 			e.preventDefault();
 
 		let ans = quoteInputAnswer.value;
+		user_data.text = ans;
 		ans = stylizeQuote(ans);
 		donationQuoteAnswer.innerHTML = ans;
 
-		user_data.text = ans;
-
 		hideQuoteInput();
+		showDonation();
 
 		return false;
 	}
@@ -220,8 +220,6 @@ const UIController = (function(){
 			'cvv': cvvVal,
 			'expiration': expirationVal
 		};
-
-		console.log(card);
 
 	}
 

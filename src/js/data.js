@@ -3,6 +3,7 @@ const user_data = {
 	id: 0,
 	text: "",
 	votes: 0,
+	donation: 0,
 	character: null,
 };
 
@@ -731,8 +732,8 @@ const allColors = (Object.keys(MAT_DATA)).filter( k => (excludeColors.indexOf(k)
 
 const CHAR_DATA_OVERRIDES = {
 	astronaut: {
-		'upper_eyeLeft': ['black', 'lightgray'],
-		'upper_eyeRight': ['black', 'lightgray'], 
+		'upper_eyeLeft': ['black'],
+		'upper_eyeRight': ['black'], 
 		'upper_head': ['orange', 'yellow'],
 	},
 	poopGuy: {
@@ -747,10 +748,10 @@ const CHAR_DATA_OVERRIDES = {
 	robot: {
 		'upper_eyeLeft': ['black', 'lightgray'],
 		'upper_eyeRight': ['black', 'lightgray'], 
-		'upper_head': ['orange', 'yellow']
+		'upper_dom': ['orange', 'yellow']
 	},
 	dice: {
 		'upperLeft_dom': ['orange', 'yellow'], 
-		'upperRight_dom': ['blue', 'red'], 
+		'upperRight_dom': ['lightblue', 'red'], 
 	},
 }

@@ -4,7 +4,7 @@ const APIController = (function(fetch){
 
 		fetch(
 
-			'http://159.203.117.240/api/v1/entries/',
+			'http://159.203.117.240/api/entries/',
 
 			{
 
@@ -18,7 +18,7 @@ const APIController = (function(fetch){
 		.then( (res) => {
 
 			console.log(res);
-			
+
 		} )
 		.catch( (res) => {
 
@@ -28,11 +28,17 @@ const APIController = (function(fetch){
 
 	}
 
-	function getRandomEntry(){
+	function getRandomEntries(n){
+
+		let url = 'http://159.203.117.240/api/recent/' + n + '/';
 
 		fetch(
 
-			'http://159.203.117.240/api/v1/entries/',
+			url,
+
+			{
+				method: "GET",
+			}
 
 		)
 		.then( (res) => {
@@ -51,7 +57,7 @@ const APIController = (function(fetch){
 
 	return {
 		submitEntry: submitEntry,
-		getRandomEntry: getRandomEntry,
+		getRandomEntries: getRandomEntries,
 	}
 
 })(window.fetch);

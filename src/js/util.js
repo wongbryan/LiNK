@@ -167,15 +167,11 @@ const tweenScalar = (source, propName, target, easing=TWEEN.Easing.Quadratic.InO
 const stylizeQuote = function(string){
 
   const punc = ['?', '.', ';', '!'];
-  let newStr = "";
+  let newStr = '"' + string.slice();
+  newStr = newStr.toLowerCase();
 
-  string = string.toLowerCase();
-
-  for(let i=0; i<string.length; i++){
-
-    if(punc.indexOf(string[i]) === -1)
-      newStr += string[i];
-
+  if(punc.indexOf(newStr[newStr.length-1]) === -1){
+    newStr += '."';
   }
 
   return newStr;
@@ -185,8 +181,8 @@ const stylizeQuote = function(string){
 const getRandomCharacterData = function(){
 
   let keys = Object.keys(CHAR_DATA_OVERRIDES);
-  // let charName = keys[Math.floor(Math.random() * keys.length)];
-  let charName = 'poopGuy';
+  let charName = keys[Math.floor(Math.random() * keys.length)];
+  // let charName = 'robot';
   let overrides = CHAR_DATA_OVERRIDES[charName];
 
   let data = {};
