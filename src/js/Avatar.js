@@ -8,6 +8,10 @@ function buildParts(data){
 	for(let key in data){
 
 		let sectionData = data[key];
+
+		if(Object.keys(sectionData).length === 0)
+			continue;
+
 		let section = obj.clone();
 		section.name = key;
 		let sectionBoundingBox;
@@ -27,28 +31,33 @@ function buildParts(data){
 
 		for (let k in sectionData){
 
+			if (k === 'offset'){
+				continue;
+			}
+
 			let d = sectionData[k];
 
 			let part;
 
 			if(d.hasOwnProperty('mesh')){
 
-				d.mesh.material = d.matOverride || d.mat;
+				console.log(sectionData);
+				d.mesh.material = d.matOverride || d.mat.clone();
 				part = d.mesh;
 
 			} else {
 
 				let geom = d.geom;
-				let mat = d.matOverride || d.mat;
+				let mat = d.matOverride || d.mat.clone();
 
 				part = new THREE.Mesh(geom, mat);
 
 			}
 
 			let n = d.name;
-			let offset = d.offset || z;
+			let offset = d.offset.clone() || z;
 			let rot = d.rotation || z;
-			let opacity = d.opacity;
+			let opacity = d.opacity || 1;
 
 			offset = offset.multiply(magnitude);
 
@@ -77,6 +86,8 @@ function buildParts(data){
 
 var Avatar = function(data){
 
+	console.log(data);
+	
 	let char = data['name'];
 	let charData = Object.assign({}, CHAR_DATA[char]);
 
@@ -97,17 +108,13 @@ var Avatar = function(data){
 
 		} );
 
-		console.log(obj);
-
 		obj.mat = m;
 
 	}
-
-	console.log(charData);
 
 	let g = new THREE.Group();
 	g = buildParts(charData);
 
 	this.__proto__ = g;
-}
 
+}

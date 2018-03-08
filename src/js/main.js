@@ -11,7 +11,7 @@ const init = () => {
     controls = initializeControls(camera, renderer);
 
     spotLight = new THREE.SpotLight();
-    spotLight.intensity = .6;
+    spotLight.intensity = 0;
     spotLight.distance = 85;
     spotLight.penumbra = 1;
     spotLight.angle = .8;
@@ -31,24 +31,25 @@ const init = () => {
     spotLight.position.set(-10, 30, 0);
     scene.add(spotLight);
 
-    testMesh = new Avatar(test);
+    let charData = getRandomCharacterData();
+    user_data.character = charData;
+
+    testMesh = new Avatar(charData);
     testMesh.castShadow = true;
     testMesh.position.y = GLOBE_RADIUS+5;
     let s = .5;
     testMesh.scale.multiplyScalar(s);
-
-    // testMesh2 = new Avatar(test2);
-    // testMesh2.castShadow = true;
-    // testMesh2.position.y = GLOBE_RADIUS+5;
-    // testMesh2.position.x += 5;
-    // testMesh2.scale.multiplyScalar(s);
-    // scene.add(testMesh2);
 
     spotLight.target = testMesh;
     let container = new THREE.Object3D();
     container.add(spotLight);
     container.scale.divideScalar(s);
     testMesh.add(container);
+    testMesh.light = spotLight;
+
+    // WORLD_CONTROLLER.setMainLightIntensity(0);
+    // WORLD_CONTROLLER.setAvatarOpacity(0);
+
     scene.add(testMesh);
 
     globe = new Globe(GLOBE_RADIUS+5, new THREE.Color(0xffe877), testMesh.position);
@@ -87,6 +88,7 @@ const init = () => {
 }
 
 const update = () => {
+    TWEEN.update();
     var d = clock.getDelta();
     let globalTime = clock.elapsedTime;
 

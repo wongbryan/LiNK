@@ -1,7 +1,7 @@
 /* WORLD RELATED DATA */
 
 const COLORS = {
-    'black': new THREE.Color(0x0f0f0f)
+    'black': new THREE.Color(0x00010c)
 }
 
 //Some example curves to test curve movement
@@ -99,7 +99,7 @@ const initializeRenderer = () => {
 const initializeCamera = () => {
   //Set camera to requested position
   let camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 )
-  camera.position.set(0, GLOBE_RADIUS+5, 20)
+  camera.position.set(30, GLOBE_RADIUS+5, 50)
   //Similar to above
   return camera
 }
@@ -146,4 +146,58 @@ const getEdgesGeom = (geom) => { //use w THREE.LineSegments or THREE.Line and li
 
 }
 
+const tweenScalar = (source, propName, target, easing=TWEEN.Easing.Quadratic.InOut) => { //tween for scalar target
 
+  let o = {};
+  o[propName] = source[propName]; //value
+  let t = {};
+  t[propName] = target;
+
+  let tw = new TWEEN.Tween(o).to(t);
+  tw.onUpdate(function(){
+    source[propName] = o[propName];
+  });
+
+  tw.start();
+
+  return tw;
+
+}
+
+const stylizeQuote = function(string){
+
+  const punc = ['?', '.', ';', '!'];
+  let newStr = '"' + string.slice();
+  newStr = newStr.toLowerCase();
+
+  if(punc.indexOf(newStr[newStr.length-1]) === -1){
+    newStr += '."';
+  }
+
+  return newStr;
+
+}
+
+const getRandomCharacterData = function(){
+
+  let keys = Object.keys(CHAR_DATA_OVERRIDES);
+  let charName = keys[Math.floor(Math.random() * keys.length)];
+  // let charName = 'robot';
+  let overrides = CHAR_DATA_OVERRIDES[charName];
+
+  let data = {};
+
+  data['name'] = charName;
+
+  for(let key in overrides){
+
+    let mats = overrides[key];
+    let matName = mats[Math.floor(Math.random() * mats.length)];
+
+    data[key] = matName;
+
+  }
+
+  return data;
+
+}

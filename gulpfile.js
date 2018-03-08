@@ -52,10 +52,14 @@ gulp.task('watch', function() {
     gulp.watch('src/scss/**', ['css']);
 });
 
+gulp.task('watch-css', function(){
+	gulp.watch('src/scss/**', ['css']);
+});
+
 gulp.task('webserver', function() {
   connect.server({
-    livereload: true
+    livereload: false
   });
 });
 
-gulp.task('dev', ['css', 'lib', 'js', 'webserver', 'watch'])
+gulp.task('dev', ['css', 'lib', 'js', 'watch'])

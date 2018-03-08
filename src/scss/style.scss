@@ -1,3 +1,468 @@
+$Caslon: 'CaslonGraphiqueEF';
+$Brandon: 'Brandon Text';
+$Grouch: 'ITC Grouch';
+$Univers: 'Univers';
+
+@mixin instruction-font(){
+	font-family: $Univers;
+	// font-weight: 300;
+	font-style: italic;
+}
+
+*{
+	box-sizing: border-box;
+}
+
+$white: #f4f5f7;
+$darkwhite: #cbcdd0;
+$black: #00010c;
+$gray: #808285;
+$lightgray: #929598;
+
 body{
 	margin: 0;
 }
+
+h1, h2, header, p, a, span{
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+@mixin absolute-center{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.screen{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 1, 12, .8);
+	color: $white;
+}
+
+#title{
+	background: none !important;
+	z-index: 4;
+	.main{
+		text-align: center;
+		h1{
+			font-family: $Grouch;
+			color: $white;
+			font-weight: lighter;
+			font-size: 5rem;
+			margin: 0;
+		}
+		h2{
+			font-family: $Brandon;
+			font-weight: lighter;
+			font-size: 1.3rem;
+			margin: 0;
+			color: $white;
+			margin-bottom: 10px;
+		}
+		p{
+			@include instruction-font();
+			font-size: .8rem;
+			margin: 30px;
+			color: $lightgray;
+			opacity: 0;
+		}
+		@include absolute-center;
+		text-align: center;
+		color: $white;
+
+		form{
+			input{
+				display: block;
+				margin: auto;
+				margin-bottom: 10px;
+			}
+		}
+	}
+}
+
+#quoteInput, #nameInput{
+	z-index: 3;
+	visibility: hidden;
+	.main{
+		width: 600px; //bad
+		@include absolute-center;
+		text-align: center;
+		h1{
+			font-family: $Caslon;
+			color: $white;
+			font-weight: lighter;
+			font-size: 2.15rem;
+			margin: 0;
+			margin-bottom: 25px;
+		}
+
+		#prompt{
+			position: relative;
+			.textinput{
+				position: relative;
+				background: none;
+				color: $darkwhite;
+				border: none;
+				text-align: center;
+				resize: none;
+				font-family: $Brandon;
+				font-weight: lighter;
+				font-size: 20px;
+				transition: all .5s;
+				padding: 0;
+				line-height: 22px;
+				margin-bottom: 30px;
+				width: 100%;
+
+				&:focus + i {
+				    display: none;
+				}
+
+				&:focus{
+					outline: none;
+				}
+			}
+		}
+
+
+		.remaining{
+			font-family: $Brandon;
+			font-weight: lighter;
+			font-size: 15px;
+			color: $gray;
+			margin-bottom: 20px;
+		}
+
+	}
+}
+
+#nameInput{
+	z-index: 2;
+}
+
+#quoteMain{
+	z-index: 2;
+	visibility: hidden;
+	opacity: 0;
+	.main{
+		@include absolute-center;
+		text-align: center;
+		h1{
+			font-family: $Brandon;
+			color: $white;
+			font-size: 2rem;
+			width: 600px;
+			margin: auto;
+			font-weight: lighter;
+			margin-bottom: 0;
+		}
+		p{ //user
+			font-family: $Brandon;
+			color: $lightgray;
+			font-size: 1.2rem;
+			margin: 0;
+			margin: 15px;
+		}
+	}
+
+	#quoteMainClose{
+		margin: auto;
+		margin-top: 35px;
+		&:hover{
+			cursor: pointer;
+		}
+	}
+}
+
+.fadeOut{
+	animation: fadeOut 1s 1 forwards;
+}
+
+.fadeIn{
+	animation: fadeIn 1s 1 forwards;
+}
+
+@keyframes fadeOut{
+	0%{opacity: 1};
+	99%{opacity: 0; visibility: visible;}
+	100%{opacity: 0; visibility: hidden;}
+}
+
+@keyframes fadeIn{
+	0%{opacity: 0; visibility: visible;};
+	100%{opacity: 1; visibility: visible;}
+}
+
+.submitButton{
+	// display: none;
+	display: block;
+	margin: auto;
+	position: relative;
+	font-family: 'Open Sans', sans-serif;
+	height: 30px;
+	width: 30px;
+	border-radius: 50%;
+	border: 1px solid $lightgray;
+	cursor: pointer;
+	transition: box-shadow .25s ease;
+	box-shadow: 0px 0px 10px white;
+	// animation: blinkGlow 2s infinite alternate;
+
+	&:before{
+		content: ">";
+		position: absolute;
+		@include absolute-center;
+	}
+}
+
+@keyframes blinkGlowBorder{
+	0%{box-shadow: 0px 0px 5px white;}
+	100%{box-shadow: 0px 0px 15px white;}
+}
+
+.glowBorder{
+	&:hover{
+		border: 1px solid $white;
+		animation: none;
+		box-shadow: 0px 0px 40px white; 
+	}
+}
+
+@keyframes blinkGlow{
+	0%{text-shadow: 0 0 15px rgba(255, 255, 255, 1);}
+	100%{text-shadow: 0 0 30px rgba(255, 255, 255, 1);}
+}
+
+
+.glow{
+	text-shadow: 0 0 20px rgba(255, 255, 255, 1);
+}
+
+.glowAnim{
+	animation: blinkGlow 2s alternate infinite linear;
+}
+
+.blinkAnim{
+	animation: fadeIn 2s alternate infinite linear;
+}
+
+@keyframes fadeOutBlur{
+	0%{filter: blur(0px); opacity: 1;}
+	99%{filter: blur(100px); opacity: 0; visibility: visible;}
+	100%{filter: blur(100px); opacity: 0; visibility: hidden;}
+}
+
+@keyframes fadeInBlur{
+	0%{filter: blur(100px); opacity: 0; visibility: hidden;}
+	100%{filter: blur(0px); opacity: 1; visibility: visible;}
+}
+
+.fadeOutBlur{
+	animation: fadeOutBlur forwards 2s ease;
+}
+
+.fadeInBlur{
+	animation: fadeInBlur forwards 2s ease;
+}
+
+/* donation form */
+
+#donation{
+	z-index: 5;
+	width: 65%;
+	padding: 20px;
+	visibility: hidden;
+	background: none;
+	.wrapper{
+		overflow: scroll;
+		height: 100%;
+		width: 100%;
+		padding: 35px;
+		.submitButton:before{
+			content: '<';
+		}
+		.submitButton{
+			margin: 0;
+		}
+		box-shadow: $black 0px 0px 30px;
+		background: rgba(0, 1, 12, .8);
+	}
+	.main{
+		display: inline-block;
+		float: left;
+		margin-right: 25px;
+		width: 80%;
+		.info{
+			margin-top: 70px;
+			margin-bottom: 50px;
+			h1{
+			font-family: $Caslon;
+			font-size: 2rem;
+			color: $white;
+			font-weight: lighter;
+			}
+			p{
+				font-family: $Brandon;
+				font-size: 1rem;
+				color: $darkwhite;
+			}
+			a{
+				font-family: $Brandon;
+				font-size: 1rem;
+				color: $gray;
+				transition: all .5s ease;
+				&:hover{
+					color: $white;
+					text-shadow: 0 0 15px rgba(255, 255, 255, 1);
+				}
+			}
+		}
+	}
+
+	#donationQuoteAnswer{
+		color: $white;
+		font-size: 1.5rem;
+		text-shadow: 0 0 20px rgba(255, 255, 255, 1);
+	}
+
+	#donationForm{
+		width: 90%;
+	}
+
+	label{
+		display: block;
+		text-align: left;
+		// width: 100%;
+		font-family: $Brandon;
+		font-size: 1rem;
+		color: $gray;
+		margin-bottom: 1px;
+		transition: all .5s ease;
+	}
+
+	input{
+		outline: none;
+		border: none;
+	}
+
+	select{
+		-webkit-appearance: none;
+	    -moz-appearance: none;
+	    appearance: none;
+	    padding: 5px;
+	    padding-left: 7.5px;
+		margin: 0;
+		font-size: 1rem;
+		border-radius: 0;
+		font-family: $Brandon;
+		display: inline-block;
+		background: none;
+		color: $darkwhite;
+		border: none;
+		outline: none;
+		border-bottom: $gray 1px solid;
+		&:focus{
+			border-bottom: $white 1px solid;
+		}
+	}
+
+	.form-control:focus{
+		border-bottom: $white 1px solid;
+	}
+
+	.form-group{
+		float: left;
+		display: inline-block;
+		margin-bottom: 15px;
+		// &:hover label{
+		// 	color: $white;
+		// 	text-shadow: 0 0 15px rgba(255, 255, 255, 1);
+		// }
+	}
+
+	.description{
+		display: block;
+		font-size: .75rem;
+		color: $gray;
+		font-family: $Univers;
+		font-weight: 300;
+		font-style: italic;
+		margin-top: 4px;
+		margin-bottom: 0;
+	}
+
+	.form-control{
+		display: block;
+		border-bottom: $gray 1px solid;
+		transition: all .6s cubic-bezier(.16,.89,.44,.9);
+		// border: $gray 1px solid;
+		background: none;
+		font-size: 1rem;
+		font-family: $Brandon;
+		color: $darkwhite;
+		padding: 7.5px;
+		width: 100%;
+	}
+
+	#donationForm{
+		width: 80%;
+		.name{
+			width: 64%;
+			margin-right: 15px;
+		}
+		.cvv{
+			width: 32%;
+		}
+		.number{
+			width: 100%;
+		}
+		.expiration{
+			font-size: .8rem;
+			min-width: 50px;
+			padding-left: 0;
+			width: 15%;
+			margin-right: 40px;
+			input{
+				width: 100%;
+			}
+		}
+		.amount{
+			width: 20%;
+			input{
+				width: 100%;
+				display:inline-block;
+				float: left;
+			}
+		}
+		.email{
+			width: 100%;
+		}
+		#donationSubmit{
+			margin-top: 17px;
+			display: inline-block;
+			width: 100%;
+			button{
+				border: none;
+				display: block;
+				font-family: $Brandon;
+				background: none;
+				border-radius: 0;
+				color: $lightgray;
+				font-size: 1rem;
+				padding: 0;
+				transition: all .5s ease;
+				&:hover{
+					color: $white;
+					cursor: pointer;
+					text-shadow: 0 0 15px rgba(255, 255, 255, 1);
+				}
+			}	
+		}
+	}
+}
+
