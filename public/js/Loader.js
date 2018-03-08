@@ -1,5 +1,5 @@
-const MODELS_PATH = 'assets/models/';
-const FONTS_PATH = 'assets/fonts/';
+const MODELS_PATH = '/assets/models/';
+const FONTS_PATH = '/assets/fonts/';
 
 var Loader = (function () {
     const manager = new THREE.LoadingManager();
