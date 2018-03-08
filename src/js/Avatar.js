@@ -8,6 +8,10 @@ function buildParts(data){
 	for(let key in data){
 
 		let sectionData = data[key];
+
+		if(Object.keys(sectionData).length === 0)
+			continue;
+
 		let section = obj.clone();
 		section.name = key;
 		let sectionBoundingBox;
@@ -50,7 +54,7 @@ function buildParts(data){
 			}
 
 			let n = d.name;
-			let offset = d.offset || z;
+			let offset = d.offset.clone() || z;
 			let rot = d.rotation || z;
 			let opacity = d.opacity || 1;
 
@@ -101,13 +105,9 @@ var Avatar = function(data){
 
 		} );
 
-		console.log(obj);
-
 		obj.mat = m;
 
 	}
-
-	console.log(charData);
 
 	let g = new THREE.Group();
 	g = buildParts(charData);

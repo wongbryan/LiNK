@@ -32,6 +32,7 @@ const init = () => {
     scene.add(spotLight);
 
     let charData = getRandomCharacterData();
+    user_data.character = charData;
 
     testMesh = new Avatar(charData);
     testMesh.castShadow = true;
@@ -39,12 +40,15 @@ const init = () => {
     let s = .5;
     testMesh.scale.multiplyScalar(s);
 
-    // testMesh2 = new Avatar(test2);
-    // testMesh2.castShadow = true;
-    // testMesh2.position.y = GLOBE_RADIUS+5;
-    // testMesh2.position.x += 5;
-    // testMesh2.scale.multiplyScalar(s);
-    // scene.add(testMesh2);
+    let charData2 = getRandomCharacterData();
+    console.log(charData2);
+    
+    testMesh2 = new Avatar(charData2);
+    testMesh2.castShadow = true;
+    testMesh2.position.y = GLOBE_RADIUS+5;
+    testMesh2.position.x += 5;
+    testMesh2.scale.multiplyScalar(s);
+    scene.add(testMesh2);
 
     spotLight.target = testMesh;
     let container = new THREE.Object3D();

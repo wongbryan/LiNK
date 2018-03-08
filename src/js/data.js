@@ -327,7 +327,7 @@ const initData = () => {
 		},
 
 		dice: {
-			upper: [],
+			upper: {},
 			upperLeft: {
 				offset: new THREE.Vector3(-3, 0, 0),
 				dom: {	
@@ -725,23 +725,9 @@ const initData = () => {
 }
 
 const CHAR_DATA_OVERRIDES = {
-	astronaut: ['upper_eyeLeft', 'upper_eyeRight', 'upper_helmet'],
+	astronaut: ['upper_eyeLeft', 'upper_eyeRight', 'upper_head'],
 	robot: ['upper_dom'],
 	dice: ['upperLeft_dom', 'upperRight_dom'],
 	poopGuy: ['middle_dom', 'middle_ring1', 'middle_ring2', 'middle_ring3', 'middle_ring4'],
 	breadGuy: ['middle_dom'],
-}
-
-const test = {
-	id: '',
-	name: 'robot',
-	upper_dom: 'black',
-	upper_eyeLeft: 'white',
-}
-
-const test2 = {
-	id: '',
-	name: 'astronaut',
-	// upper_dom: 'white',
-	// upper_eyeLeft: 'orange',
 }
