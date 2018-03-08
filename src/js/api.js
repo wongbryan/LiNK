@@ -30,7 +30,7 @@ const APIController = (function(fetch){
 
 	function getRandomEntries(n){
 
-		let url = 'http://159.203.117.240/api/recent/' + n + '/';
+		let url = 'http://159.203.117.240/api/recent/' + n;
 
 		fetch(
 
@@ -43,7 +43,7 @@ const APIController = (function(fetch){
 		)
 		.then( (res) => {
 
-			let d = res.character;
+			let d = res;
 			console.log(d);
 
 		} )
