@@ -5,16 +5,13 @@ const url = 'http://159.203.117.240/api/';
 const API = (function() {
 
 	function getEntry(id){
-
-		const path = url + 'name/' + id;
-
 		const options = {
 		  method: 'GET',
 		  json: true,
-		  uri: 'http://159.203.117.240/api/name/asdfa',
+		  uri: url + 'entries/' + id,
 		}
 		
-		return (request('http://159.203.117.240/api/name/asdfa')
+		return (request(options)
 		.then( res => {
 			return res;
 		})

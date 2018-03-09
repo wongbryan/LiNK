@@ -1,63 +1,164 @@
+const apibase = 'http://159.203.117.240/api/';
+
 const APIController = (function(fetch){
 
-	function submitEntry(data){
+	async function postEntry(data){
 
-		fetch(
-
-			'http://159.203.117.240/api/entries/',
-
-			{
-
+		try {
+			const response = await fetch(apibase + "entries/", {
+				method: 'POST',
 				headers: { "Content-Type": "application/json" },
-				method: "POST",
 				body: JSON.stringify(data),
+			});
 
+			const status = await response.status;
+			if (status >= 200 && status < 300) {
+				const json = await response.json;
+				console.log("This is your entry: ", json);
+			} else {
+				throw new Error(status);
 			}
-
-		)
-		.then( (res) => {
-
-			console.log(res);
-
-		} )
-		.catch( (res) => {
-
-			throw new Error(res);
-
-		});
+		} catch(e) {
+			throw new Error(e.message);
+		}
 
 	}
 
-	function getRandomEntries(n){
+	async function putEntry(id, data){
 
-		let url = 'http://159.203.117.240/api/recent/' + n;
+		try {
+			const response = await fetch(apibase + "entries/" + id, {
+				method: 'PUT',
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(data),
+			});
 
-		fetch(
-
-			url,
-
-			{
-				method: "GET",
+			const status = await response.status;
+			if (status >= 200 && status < 300) {
+				const json = await response.json;
+				console.log("This is your updated entry: ", json);
+			} else {
+				throw new Error(status);
 			}
+		} catch(e) {
+			throw new Error(e.message);
+		}
 
-		)
-		.then( (res) => {
+	}
 
-			let d = res;
-			console.log(d);
+	async function getLatestDonorEntries(n){
 
-		} )
-		.catch( (res) => {
+		try {
+			const response = await fetch(apibase + "latest/" + n, {
+				method: 'GET',
+				headers: { "Content-Type": "application/json" },
+			});
 
-			throw new Error(res);
+			const status = await response.status;
+			if (status >= 200 && status < 300) {
+				const json = await response.json;
+				console.log("This is all of the latest donor entries: ", json.entries);
+			} else {
+				throw new Error(status);
+			}
+		} catch(e) {
+			throw new Error(e.message);
+		}
 
-		} )
+	}
+
+	async function getRecentEntries(n){
+
+		try {
+			const response = await fetch(apibase + "recent/" + n, {
+				method: 'GET',
+				headers: { "Content-Type": "application/json" },
+			});
+
+			const status = await response.status;
+			if (status >= 200 && status < 300) {
+				const json = await response.json;
+				console.log("This is all of the recent entries: ", json.entries);
+			} else {
+				throw new Error(status);
+			}
+		} catch(e) {
+			throw new Error(e.message);
+		}
+
+	}
+
+	async function getTopDonorEntries(n){
+
+		try {
+			const response = await fetch(apibase + "top/" + n, {
+				method: 'GET',
+				headers: { "Content-Type": "application/json" },
+			});
+
+			const status = await response.status;
+			if (status >= 200 && status < 300) {
+				const json = await response.json;
+				console.log("This is all of the top donors in order: ", json.entries);
+			} else {
+				throw new Error(status);
+			}
+		} catch(e) {
+			throw new Error(e.message);
+		}
+
+	}
+
+	async function getEntry(id){
+
+		try {
+			const response = await fetch(apibase + "entries/" + id, {
+				method: 'GET',
+				headers: { "Content-Type": "application/json" },
+			});
+
+			const status = await response.status;
+			if (status >= 200 && status < 300) {
+				const json = await response.json;
+				console.log("This is the entry you searched for: ", json);
+			} else {
+				throw new Error(status);
+			}
+		} catch(e) {
+			throw new Error(e.message);
+		}
+
+	}
+
+	async function getTotalDonations(){
+
+		try {
+			const response = await fetch(apibase + "donations/", {
+				method: 'GET',
+				headers: { "Content-Type": "application/json" },
+			});
+
+			const status = await response.status;
+			if (status >= 200 && status < 300) {
+				const json = await response.json;
+				console.log("This is the total donations in cents: ", json.total);
+			} else {
+				throw new Error(status);
+			}
+		} catch(e) {
+			throw new Error(e.message);
+		}
 
 	}
 
 	return {
-		submitEntry: submitEntry,
-		getRandomEntries: getRandomEntries,
+		postEntry: postEntry,
+		putEntry: putEntry,
+		getLatestDonorEntries: getLatestDonorEntries,
+		getRecentEntries: getRecentEntries,
+		getTopDonorEntries: getTopDonorEntries,
+		getEntry: getEntry,
+		getTotalDonations: getTotalDonations,
 	}
 
 })(window.fetch);
