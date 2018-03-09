@@ -41,14 +41,14 @@ function buildParts(data){
 
 			if(d.hasOwnProperty('mesh')){
 
-				console.log(sectionData);
-				d.mesh.material = d.matOverride || d.mat.clone();
+				let mat = getMat(d.mat);
+				d.mesh.material = mat;
 				part = d.mesh;
 
 			} else {
 
-				let geom = d.geom;
-				let mat = d.matOverride || d.mat.clone();
+				let geom = d.round ? round(d.geom, d.round):d.geom;
+				let mat = getMat(d.mat);
 
 				part = new THREE.Mesh(geom, mat);
 
@@ -85,8 +85,6 @@ function buildParts(data){
 }
 
 var Avatar = function(data){
-
-	console.log(data);
 	
 	let char = data['name'];
 	let charData = Object.assign({}, CHAR_DATA[char]);
@@ -99,7 +97,7 @@ var Avatar = function(data){
 		if(keys.length < 2)
 			continue;
 
-		let m = MAT_DATA[mKey];
+		let m = mKey;
 		let obj = charData;
 
 		keys.forEach( k => {

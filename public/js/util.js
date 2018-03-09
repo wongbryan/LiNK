@@ -205,3 +205,31 @@ const getRandomCharacterData = function(){
   return data;
 
 }
+
+const getMat = function(name){
+
+  let data = MAT_DATA[name];
+  let mat;
+
+  if(name.substr(name.length-4) === 'line'){
+
+    mat = new THREE.LineBasicMaterial(data);
+
+  } else{
+
+    mat = new THREE.MeshStandardMaterial(data);
+
+  }
+
+  return mat;
+
+}
+
+function round(geom, n){
+
+    var modifier = new THREE.SubdivisionModifier(n);
+    modifier.modify(geom);
+    
+    return geom;
+
+  }

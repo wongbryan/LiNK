@@ -10,110 +10,110 @@ const user_data = {
 const other_users_data = [];
 
 const MAT_DATA = {
-	'yellow': new THREE.MeshStandardMaterial({
+	'yellow': {
         color: 0x89918c,
         emissive: 0xf0d93d,
         roughness: .4,
         flatShading: false,
         metalness: .6
-    }),
-    'lightblue': new THREE.MeshStandardMaterial({
+    },
+    'lightblue': {
 	    color: 0x89918c,
 	    emissive: 0x2baff7,
 	    roughness: .4,
 	    flatShading: false,
 	    metalness: .6
-	}),
-	'black': new THREE.MeshStandardMaterial({
+	},
+	'black': {
 	    color: 0xffffff,
 	    emissive: 0x040709,
 	    roughness: .0,
 	    flatShading: false,
 	    metalness: .24
-	}), 
-	'white': new THREE.MeshStandardMaterial({
+	},
+	'white': {
 	    color: 0x1e2023,
 	    emissive: 0xf4f8ff,
 	    roughness: .0,
 	    flatShading: false,
 	    metalness: .24,
-	}),
-	'blackline': new THREE.LineBasicMaterial({
+	},
+	'blackline':{
 		color: 0x000000,
-	}),
-	'redline': new THREE.LineBasicMaterial({
+	},
+	'redline': {
 		color: 0xf7312a,
-	}),
-	'lightgray': new THREE.MeshStandardMaterial({
+	},
+	'lightgray': {
 	    color: 0xf7faff,
 	    emissive: 0xe8eaef,
 	    roughness: .0,
 	    flatShading: false,
 	    metalness: .75,
-	}),
-	'lightgray2': new THREE.MeshStandardMaterial({
+	},
+	'lightgray2': {
 	    color: 0xf7faff,
 	    emissive: 0xdbdcdd,
 	    roughness: .0,
 	    flatShading: false,
 	    metalness: .75,
-	}),
-	'red': new THREE.MeshStandardMaterial({
+	},
+	'red': {
         color: 0xd9486b,
         emissive: 0xf7312a,
         roughness: .0,
         flatShading: false,
         metalness: .3
-    }),
-    green: new THREE.MeshStandardMaterial({
+    },
+    green: {
         color: 0xf7faff,
         emissive: 0x29d025,
         metalness: .5,
         flatShading: false,
         roughness: .06
-    }),
-    darkgray: new THREE.MeshStandardMaterial({
+    },
+    darkgray: {
 	    color: 0xf7faff,
 	    emissive: 0x75777c,
 	    roughness: .0,
 	    flatShading: false,
 	    metalness: .75,
-	}),
-	gray: new THREE.MeshStandardMaterial({
+	},
+	gray: {
 	    color: 0xf7faff,
 	    emissive: 0x86888c,
 	    roughness: .0,
 	    flatShading: false,
 	    metalness: .75,
-	}),
-    orange: new THREE.MeshStandardMaterial({
+	},
+    orange: {
         color: 0xebfffb,
         emissive: 0xfda638,
         metalness: .5,
         flatShading: false,
         roughness: .06
-    }),
-    darkbrown: new THREE.MeshStandardMaterial({
+    },
+    darkbrown: {
         color: 0xebfffb,
         emissive: 0x75472c,
         metalness: .5,
         flatShading: false,
         roughness: .06
-    }),
-    lightbrown: new THREE.MeshStandardMaterial({
+    },
+    lightbrown: {
         color: 0xebfffb,
         emissive: 0xa36636,
         metalness: .5,
         flatShading: false,
         roughness: .06
-    }),
-    beige: new THREE.MeshStandardMaterial({
+    },
+    beige: {
         color: 0xebfffb,
         emissive: 0xf8da84,
         metalness: .5,
         flatShading: false,
         roughness: .06
-    }),
+    },
 };
 
 /* Dynamic data */
@@ -153,12 +153,6 @@ let CHAR_DATA;
 
 const initData = () => {
 
-	function round(geom, n){
-		var modifier = new THREE.SubdivisionModifier(n);
-		modifier.modify(geom);
-		return geom;
-	}
-
 	//offset calculated in relation to torso
 	//use 'part' property so we don't recursively iterate through 
 	//threejs objects
@@ -170,8 +164,9 @@ const initData = () => {
 				dom: {	
 					name: 'head',
 					dom: true, //if dom, use to calculate position of other parts
-					geom: round(new THREE.BoxGeometry(5, 5, 5, 3, 3), 4),
-					mat: MAT_DATA['orange'],
+					round: 4,
+					geom: new THREE.BoxGeometry(5, 5, 5, 3, 3),
+					mat: 'orange',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, 0),
 				},
@@ -179,39 +174,41 @@ const initData = () => {
 					name: 'eyeLeft',
 					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
 					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['black'],
+					mat: 'black',
 					offset: new THREE.Vector3(-.2, .1, .51)
 				},
 				eyeRight: {
 					name: 'eyeRight',
 					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
 					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['black'],
+					mat: 'black',
 					offset: new THREE.Vector3(.2, .1, .51)
 				},
 				antennae: {
 					name: 'antennae',
 					geom: new THREE.CylinderGeometry(.03, .05, 3),
-					mat: MAT_DATA['black'],
+					mat: 'black',
 					offset: new THREE.Vector3(0, .45, 0),
 				},
 				bulb: {
 					name: 'bulb',
 					geom: new THREE.SphereGeometry(.25, 16, 16),
-					mat: MAT_DATA['red'],
+					mat: 'red',
 					offset: new THREE.Vector3(0, .75, 0)
 				},
 				mouth: {
 					name: 'mouth',
-					geom: round(new THREE.BoxGeometry(1, 2.5, .1, 3, 3), 4),
-					mat: MAT_DATA['white'],
+					round: 4,
+					geom: new THREE.BoxGeometry(1, 2.5, .1, 3, 3),
+					mat: 'white',
 					offset: new THREE.Vector3(0, -.2, .515),
 					rotation: new THREE.Vector3(0, 0, Math.PI/2),
 				},
 				outline: {
 					name: 'outline',
-					geom: round(new THREE.BoxGeometry(1.075, 2.575, .1, 3, 3), 4),
-					mat: MAT_DATA['black'],
+					round: 4,
+					geom: new THREE.BoxGeometry(1.075, 2.575, .1, 3, 3),
+					mat: 'black',
 					offset: new THREE.Vector3(0, -.2, .51),
 					rotation: new THREE.Vector3(0, 0, Math.PI/2),
 				},
@@ -222,49 +219,51 @@ const initData = () => {
 					dom: true,
 					name: 'torso',
 					geom: new THREE.CylinderGeometry(2.75, 3.7, 4, 4, 12),
-					mat: MAT_DATA['lightblue'],
+					mat: 'lightblue',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, Math.PI/4, 0),
 				},
 				outline: {
 					name: 'outline',
-					geom: round(new THREE.BoxGeometry(1.35, 2.85, .1, 3, 3), 4),
-					mat: MAT_DATA['red'],
+					round: 4,
+					geom: new THREE.BoxGeometry(1.35, 2.85, .1, 3, 3),
+					mat: 'red',
 					offset: new THREE.Vector3(-.125, 0, .33),
 					rotation: new THREE.Vector3(-Math.PI/16, 0, 0),
 				},
 				pad1: {
 					name: 'pad1',
-					geom: round(new THREE.BoxGeometry(1.25, 2.75, .1, 3, 3), 4),
-					mat: MAT_DATA['white'],
+					round: 4,
+					geom: new THREE.BoxGeometry(1.25, 2.75, .1, 3, 3),
+					mat: 'white',
 					offset: new THREE.Vector3(-.125, 0, .335),
 					rotation: new THREE.Vector3(-Math.PI/16, 0, 0),
 				},
 				pad2: {
 					name: 'pad2',
 					geom: new THREE.CircleGeometry(.6, 32, 32),
-					mat: MAT_DATA['orange'],
+					mat: 'orange',
 					offset: new THREE.Vector3(.125, -.17, .34),
 					rotation: new THREE.Vector3(-Math.PI/16, 0, 0),
 				},
 				light1: {
 					name: 'light1',
 					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['red'],
+					mat: 'red',
 					offset: new THREE.Vector3(.05, .2, .31),
 					rotation: new THREE.Vector3(-Math.PI/16, 0, 0),
 				},
 				light2: {
 					name: 'light2',
 					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['green'],
+					mat: 'green',
 					offset: new THREE.Vector3(.125, .2, .31),
 					rotation: new THREE.Vector3(-Math.PI/16, 0, 0),
 				},
 				light3: {
 					name: 'light3',
 					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['yellow'],
+					mat: 'yellow',
 					offset: new THREE.Vector3(.2, .2, .31),
 					rotation: new THREE.Vector3(-Math.PI/16, 0, 0),
 				},
@@ -272,7 +271,7 @@ const initData = () => {
 					name: 'tag',
 					part: true,
 					geom: new THREE.PlaneGeometry(.3, 1.4),
-					mat: MAT_DATA['darkgray'],
+					mat: 'darkgray',
 					offset: new THREE.Vector3(.125, .075, .31),
 					rotation: new THREE.Vector3(-Math.PI/16, 0, Math.PI/2),
 				},
@@ -285,7 +284,7 @@ const initData = () => {
 					part: true,
 					geom: new THREE.SphereGeometry(.5, 32, 32),
 					// geom: new THREE.BoxGeometry(1, 2, 1),
-					mat: MAT_DATA['lightgray'],
+					mat: 'lightgray',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, -Math.PI/12)
 				},
@@ -298,7 +297,7 @@ const initData = () => {
 					part: true,
 					geom: new THREE.SphereGeometry(.5, 32, 32),
 					// geom: new THREE.BoxGeometry(1, 2, 1),
-					mat: MAT_DATA['lightgray'],
+					mat: 'lightgray',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, -Math.PI/12)
 				},
@@ -309,8 +308,9 @@ const initData = () => {
 					dom: true,
 					name: 'legLeft',
 					part: true,
-					geom: round(new THREE.BoxGeometry(1, 2, 1, 3, 3), 4),
-					mat: MAT_DATA['gray'],
+					round: 4,
+					geom: new THREE.BoxGeometry(1, 2, 1, 3, 3),
+					mat: 'gray',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, Math.PI/2)
 				},
@@ -321,8 +321,9 @@ const initData = () => {
 					dom: true,
 					name: 'legRight',
 					part: true,
-					geom: round(new THREE.BoxGeometry(1, 2, 1, 3, 3), 4),
-					mat: MAT_DATA['gray'],
+					round: 4,
+					geom: new THREE.BoxGeometry(1, 2, 1, 3, 3),
+					mat: 'gray',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, Math.PI/2)
 				},
@@ -336,34 +337,35 @@ const initData = () => {
 				dom: {	
 					name: 'head',
 					dom: true, 
-					geom: round(new THREE.BoxGeometry(3, 3, 3, 3, 3), 4),
-					mat: MAT_DATA['orange'],
+					round: 4,
+					geom: new THREE.BoxGeometry(3, 3, 3, 3, 3),
+					mat: 'orange',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, 0),
 				},
 				eye1: {	
 					name: 'eye1',
 					geom: new THREE.CircleGeometry(.1, 32, 32),
-					mat: MAT_DATA['black'],
+					mat: 'black',
 					offset: new THREE.Vector3(-.2, .1, .51)
 				},
 				eye2: {
 					name: 'eye2',
 					geom: new THREE.CircleGeometry(.1, 32, 32),
-					mat: MAT_DATA['black'],
+					mat: 'black',
 					offset: new THREE.Vector3(.2, .1, .51)
 				},
 				mouth: {
 					name: 'mouth',
 					geom: new THREE.CircleGeometry(.4, 32, 0, Math.PI),
-					mat: MAT_DATA['black'],
+					mat: 'black',
 					offset: new THREE.Vector3(0, -.1, .51),
 					rotation: new THREE.Vector3(0, 0, Math.PI),
 				},
 				letter1: {
 					name: 'letter1',
 					geom: getFontGeom('6', FONT_DATA['fugue'], 1.5),
-					mat: MAT_DATA['black'],
+					mat: 'black',
 					offset: new THREE.Vector3(0, .51, 0),
 					rotation: new THREE.Vector3(-Math.PI/2, 0, 0),
 				},
@@ -373,50 +375,51 @@ const initData = () => {
 				dom: {	
 					name: 'head',
 					dom: true, 
-					geom: round(new THREE.BoxGeometry(3, 3, 3, 3, 3), 4),
-					mat: MAT_DATA['green'],
+					round: 4,
+					geom: new THREE.BoxGeometry(3, 3, 3, 3, 3),
+					mat: 'green',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, 0),
 				},
 				line1: {	
 					name: 'line1',
 					geom: new THREE.PlaneGeometry(.1, .5),
-					mat: MAT_DATA['black'],
+					mat: 'black',
 					offset: new THREE.Vector3(-.2, .15, .51),
 					rotation: new THREE.Vector3(0, 0, Math.PI/4)
 				},
 				line2: {	
 					name: 'line2',
 					geom: new THREE.PlaneGeometry(.1, .5),
-					mat: MAT_DATA['black'],
+					mat: 'black',
 					offset: new THREE.Vector3(-.2, .15, .51),
 					rotation: new THREE.Vector3(0, 0, -Math.PI/4)
 				},
 				line3: {	
 					name: 'line3',
 					geom: new THREE.PlaneGeometry(.1, .5),
-					mat: MAT_DATA['black'],
+					mat: 'black',
 					offset: new THREE.Vector3(.2, .15, .51),
 					rotation: new THREE.Vector3(0, 0, Math.PI/4)
 				},
 				line4: {	
 					name: 'line4',
 					geom: new THREE.PlaneGeometry(.1, .5),
-					mat: MAT_DATA['black'],
+					mat: 'black',
 					offset: new THREE.Vector3(.2, .15, .51),
 					rotation: new THREE.Vector3(0, 0, -Math.PI/4)
 				},
 				mouth: {
 					name: 'mouth',
 					geom: new THREE.CircleGeometry(.4, 32, 0, -Math.PI),
-					mat: MAT_DATA['black'],
+					mat: 'black',
 					offset: new THREE.Vector3(0, -.175, .51),
 					rotation: new THREE.Vector3(0, Math.PI, Math.PI),
 				},
 				letter1: {
 					name: 'letter1',
 					geom: getFontGeom('9', FONT_DATA['fugue'], 1.5),
-					mat: MAT_DATA['black'],
+					mat: 'black',
 					offset: new THREE.Vector3(0, .51, 0),
 					rotation: new THREE.Vector3(-Math.PI/2, 0, 0),
 				},
@@ -432,9 +435,10 @@ const initData = () => {
 				dom: {
 					dom: true,
 					name: 'helmet',
-					// geom: round(new THREE.BoxGeometry(5.2, 5.2, 5.2, 3, 3), 4),
+					round: 4,
+					// geom: new THREE.BoxGeometry(5.2, 5.2, 5.2, 3, 3),
 					geom: new THREE.SphereGeometry(3.5, 32, 32),
-					mat: MAT_DATA['white'],
+					mat: 'white',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, 0),
 					opacity: .5
@@ -442,9 +446,10 @@ const initData = () => {
 				head: {	
 					name: 'head',
 					// dom: true, //if dom, use to calculate position of other parts
-					geom: round(new THREE.BoxGeometry(4.5, 4.5, 5.3, 3, 3), 4),
+					round: 4,
+					geom: new THREE.BoxGeometry(4.5, 4.5, 5.3, 3, 3),
 					// geom: new THREE.SphereGeometry(3, 32, 32),
-					mat: MAT_DATA['orange'],
+					mat: 'orange',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, 0),
 				},
@@ -452,27 +457,29 @@ const initData = () => {
 					name: 'eyeLeft',
 					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
 					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['black'],
+					mat: 'black',
 					offset: new THREE.Vector3(-.2, .1, .4)
 				},
 				eyeRight: {
 					name: 'eyeRight',
 					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
 					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['black'],
+					mat: 'black',
 					offset: new THREE.Vector3(.2, .1, .4)
 				},
 				pad1: {
 					name: 'pad1',
-					geom: round(new THREE.CylinderGeometry(1.2, 1.2, .8, 32, 1), 4),
-					mat: MAT_DATA['lightgray'],
+					round: 4,
+					geom: new THREE.CylinderGeometry(1.2, 1.2, .8, 32, 1),
+					mat: 'lightgray',
 					offset: new THREE.Vector3(-.55, 0, 0),
 					rotation: new THREE.Vector3(0, 0, Math.PI/2),
 				},
 				pad2: {
 					name: 'pad2',
-					geom: round(new THREE.CylinderGeometry(1.2, 1.2, .8, 32, 1), 4),
-					mat: MAT_DATA['lightgray'],
+					round: 4,
+					geom: new THREE.CylinderGeometry(1.2, 1.2, .8, 32, 1),
+					mat: 'lightgray',
 					offset: new THREE.Vector3(.55, 0, 0),
 					rotation: new THREE.Vector3(0, 0, Math.PI/2),
 				},
@@ -485,7 +492,7 @@ const initData = () => {
 					part: true,
 					geom: new THREE.SphereGeometry(.5, 32, 32),
 					// geom: new THREE.BoxGeometry(1, 2, 1),
-					mat: MAT_DATA['darkgray'],
+					mat: 'darkgray',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, -Math.PI/12)
 				},
@@ -498,7 +505,7 @@ const initData = () => {
 					part: true,
 					geom: new THREE.SphereGeometry(.5, 32, 32),
 					// geom: new THREE.BoxGeometry(1, 2, 1),
-					mat: MAT_DATA['darkgray'],
+					mat: 'darkgray',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, -Math.PI/12)
 				},
@@ -508,64 +515,68 @@ const initData = () => {
 				dom: {
 					dom: true,
 					name: 'torso1',
-					geom: round(new THREE.CylinderGeometry(1.75, 1.75, .8, 32, 1), 4),
-					mat: MAT_DATA['lightgray2'],
+					round: 4,
+					geom: new THREE.CylinderGeometry(1.75, 1.75, .8, 32, 1),
+					mat: 'lightgray2',
 					offset: new THREE.Vector3(0, 2, 0),
 					rotation: new THREE.Vector3(0, Math.PI/4, 0),
 				},
 				torso2: {
 					name: 'torso2',
-					geom: round(new THREE.CylinderGeometry(2.3, 2.3, .8, 32, 1), 4),
-					mat: MAT_DATA['lightgray2'],
+					round: 4,
+					geom: new THREE.CylinderGeometry(2.3, 2.3, .8, 32, 1),
+					mat: 'lightgray2',
 					offset: new THREE.Vector3(0, 1.25, 0),
 					rotation: new THREE.Vector3(0, Math.PI/4, 0),
 				},
 				torso3: {
 					name: 'torso3',
-					geom: round(new THREE.CylinderGeometry(2.3, 2.3, .8, 32, 1), 4),
-					mat: MAT_DATA['lightgray2'],
+					round: 4,
+					geom: new THREE.CylinderGeometry(2.3, 2.3, .8, 32, 1),
+					mat: 'lightgray2',
 					offset: new THREE.Vector3(0, .5, 0),
 					rotation: new THREE.Vector3(0, Math.PI/4, 0),
 				},
 				torso4: {
 					name: 'torso4',
-					geom: round(new THREE.CylinderGeometry(2.5, 2.5, .8, 32, 1), 4),
-					mat: MAT_DATA['lightgray2'],
+					round: 4,
+					geom: new THREE.CylinderGeometry(2.5, 2.5, .8, 32, 1),
+					mat: 'lightgray2',
 					offset: new THREE.Vector3(0, .5, 0),
 					rotation: new THREE.Vector3(0, Math.PI/4, 0),
 				},
 				torso5: {
 					name: 'torso5',
 					geom: new THREE.BoxGeometry(4.76, 1.75, 4, 3, 3),
-					mat: MAT_DATA['lightgray'],
+					mat: 'lightgray',
 					offset: new THREE.Vector3(0, -1.3, 0),
 					rotation: new THREE.Vector3(0, 0, 0),
 				},
 				light1: {
 					name: 'light1',
 					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['lightblue'],
+					mat: 'lightblue',
 					offset: new THREE.Vector3(.15, -1.3, .6),
 					rotation: new THREE.Vector3(0, 0, 0),
 				},
 				light2: {
 					name: 'light2',
 					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['green'],
+					mat: 'green',
 					offset: new THREE.Vector3(.30, -1.3, .6),
 					rotation: new THREE.Vector3(0, 0, 0),
 				},
 				light3: {
 					name: 'light3',
 					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['orange'],
+					mat: 'orange',
 					offset: new THREE.Vector3(.45, -1.3, .6),
 					rotation: new THREE.Vector3(0, 0, 0),
 				},
 				light4: {
 					name: 'light4',
 					geom: new THREE.PlaneGeometry(.9, .9),
-					mat: MAT_DATA['black'],
+					mat: 'black',
 					offset: new THREE.Vector3(-.4, -1.3, .6),
 					rotation: new THREE.Vector3(0, 0, 0),
 				},
@@ -576,8 +587,9 @@ const initData = () => {
 					dom: true,
 					name: 'legLeft',
 					part: true,
-					geom: round(new THREE.BoxGeometry(1, 2, 1, 3, 3), 4),
-					mat: MAT_DATA['darkgray'],
+					round: 4,
+					geom: new THREE.BoxGeometry(1, 2, 1, 3, 3),
+					mat: 'darkgray',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, Math.PI/2)
 				},
@@ -588,8 +600,9 @@ const initData = () => {
 					dom: true,
 					name: 'legRight',
 					part: true,
-					geom: round(new THREE.BoxGeometry(1, 2, 1, 3, 3), 4),
-					mat: MAT_DATA['darkgray'],
+					round: 4,
+					geom: new THREE.BoxGeometry(1, 2, 1, 3, 3),
+					mat: 'darkgray',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, Math.PI/2)
 				},
@@ -602,20 +615,20 @@ const initData = () => {
 				offset: new THREE.Vector3(0, 0, 0),
 				dom: {
 					mesh: MODEL_DATA['bread'].backing.mesh,
-					mat: MAT_DATA['beige'],
+					mat: 'beige',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, 0),
 				},
 				eyeLeft: {	
 					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
 					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['orange'],
+					mat: 'orange',
 					offset: new THREE.Vector3(-.5, 2, .55)
 				},
 				eyeRight: {
 					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
 					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['orange'],
+					mat: 'orange',
 					offset: new THREE.Vector3(.5, 2, .55)
 				},
 			},
@@ -632,7 +645,7 @@ const initData = () => {
 				dom: {	
 					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
 					geom: new THREE.CylinderGeometry(.2, .2, .1, 32, 32),
-					mat: MAT_DATA['orange'],
+					mat: 'orange',
 					offset: new THREE.Vector3(-2.5, -7, .4),
 					rotation: new THREE.Vector3(Math.PI/2, 0, 0),
 				},
@@ -640,7 +653,7 @@ const initData = () => {
 					name: 'eyeRight',
 					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
 					geom: new THREE.CylinderGeometry(.2, .2, .1, 32, 32),
-					mat: MAT_DATA['orange'],
+					mat: 'orange',
 					offset: new THREE.Vector3(2.5, -7, .4),
 					rotation: new THREE.Vector3(Math.PI/2, 0, 0),
 				},
@@ -648,13 +661,13 @@ const initData = () => {
 					dom: true,
 					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
 					geom: new THREE.TorusGeometry(.25, .075, 16, 20, Math.PI),
-					mat: MAT_DATA['orange'],
+					mat: 'orange',
 					offset: new THREE.Vector3(-1.5, -1, .4),
 				},
 				browRight: {
 					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
 					geom: new THREE.TorusGeometry(.25, .075, 16, 20, Math.PI),
-					mat: MAT_DATA['orange'],
+					mat: 'orange',
 					offset: new THREE.Vector3(1.5, -1, .4)
 				},
 			},
@@ -662,31 +675,31 @@ const initData = () => {
 				offset: new THREE.Vector3(0, 0, 0),
 				dom: {
 					mesh: MODEL_DATA['poop'].top.mesh,
-					mat: MAT_DATA['lightbrown'],
+					mat: 'lightbrown',
 					offset: new THREE.Vector3(0, -.25, 0),
 					rotation: new THREE.Vector3(Math.PI/2, 0, 0)
 				},
 				ring1: {
 					mesh: MODEL_DATA['poop'].ring1.mesh,
-					mat: MAT_DATA['darkbrown'],
+					mat: 'darkbrown',
 					offset: new THREE.Vector3(0, -.35, 0),
 					rotation: new THREE.Vector3(Math.PI/2, 0, 0)
 				},
 				ring2: {
 					mesh: MODEL_DATA['poop'].ring2.mesh,
-					mat: MAT_DATA['lightbrown'],
+					mat: 'lightbrown',
 					offset: new THREE.Vector3(0, -.55, 0),
 					rotation: new THREE.Vector3(Math.PI/2, 0, 0)
 				},
 				ring3: {
 					mesh: MODEL_DATA['poop'].ring3.mesh,
-					mat: MAT_DATA['darkbrown'],
+					mat: 'darkbrown',
 					offset: new THREE.Vector3(0, -.75, 0),
 					rotation: new THREE.Vector3(Math.PI/2, 0, 0)
 				},
 				ring4: {
 					mesh: MODEL_DATA['poop'].ring4.mesh,
-					mat: MAT_DATA['darkbrown'],
+					mat: 'darkbrown',
 					offset: new THREE.Vector3(0, -1, 0),
 					rotation: new THREE.Vector3(Math.PI/2, 0, 0)
 				},
@@ -711,7 +724,7 @@ const initData = () => {
 		let t = {
 			name: 'line' + i,
 			geom: new THREE.BoxGeometry(.03, height-.05, .03),
-			mat: MAT_DATA['black'],
+			mat: 'black',
 			offset: new THREE.Vector3(0, 0, 0),
 			rotation: new THREE.Vector3(0, 0, 0)
 		};

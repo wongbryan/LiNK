@@ -20,6 +20,10 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
    	monochromePass.renderToScreen = true;
     composer.addPass( monochromePass );
 
+    const pixelPass = new THREE.ShaderPass( SHADERS.pixel );
+    pixel.renderToScreen = true;
+    composer.addPass( pixelPass );
+
     const shaderPasses = {
 
     	'monochrome': monochromePass,
