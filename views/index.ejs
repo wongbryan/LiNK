@@ -5,11 +5,15 @@
 	<link rel="stylesheet" type="text/css" href="/assets/fonts/brandon-text-web/stylesheet.css"/>
 	<link rel="stylesheet" type="text/css" href="/assets/fonts/itc-grouch-web/stylesheet.css"/>
 	<link rel="stylesheet" type="text/css" href="/css/style.css"/>
-	<title><%= id %></title>
+	<title>Single User Page</title>
 </head>
 <body>
 	<div id="container"></div>
 </body>
+<script>
+	let entry = <%- JSON.stringify(entry) %>;
+	console.log(entry);
+</script>
 <script type="text/javascript" src="/js/lib/three.js"></script>
 <script type="text/javascript" src="/js/lib/OrbitControls.js"></script>
 <script type="text/javascript" src="/js/lib/SubdivisionModifier.js"></script>

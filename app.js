@@ -13,12 +13,12 @@ app.get('/view/:id', (req, res) => {
 	API.getEntry(id)
 	.then( resp => {
 		res.render('index', {
-			id: resp.character_name,
+			entry: resp,
 		});
 	})
 	.catch( err => {
 		res.render('index', {
-			id: err.message,
+			entry: err,
 		})
 	});
 });
