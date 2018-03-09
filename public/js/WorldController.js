@@ -12,7 +12,6 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 	clock.start();
 
 	/* Post processing stuff */
-	let postprocessing = false;
 
 	const composer = new THREE.EffectComposer(renderer);
     composer.addPass(new THREE.RenderPass(scene, camera));
@@ -21,32 +20,65 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
    	monochromePass.renderToScreen = true;
     composer.addPass( monochromePass );
 
-    function fadeIntoColor(){
+    const shaderPasses = {
 
-    	tweenScalar(monochromePass.uniforms['magnitude'], 'value', 0);
+    	'monochrome': monochromePass,
 
     }
 
-    function expandStarField(){
+    turnOnPostProcessing('monochrome');
 
-    	let s = 1.5;
-    	let t = new THREE.Vector3(s, s, s);
+    function turnOnPostProcessing(name){
 
-    	let tween = new TWEEN.Tween(globe.scale).to(t, 1000);
-    	tween.easing(TWEEN.Easing.Exponential.Out);
-    	tween.onUpdate( () => {
+    	let pass = shaderPasses[name];
+    	pass.renderToScreen = true;
+    	postprocessing = pass;
 
-    		globe.material.uniforms['maxDist'].value += 10;
-    		globe.material.uniforms['size'].value += .001;
+    }
 
-    	});
-    	tween.onComplete(()=>{
+    function turnOffPostProcessing(){
 
-    		globe.material.uniforms['maxDist'].value = 10000;
+    	if(postprocessing){
 
-    	});
+    		postprocessing.renderToScreen = false;
+    		postprocessing = null;
 
-    	tween.start();
+    	}
+
+    }
+
+    function fadeToColor(delay){
+
+    	setTimeout(function(){
+    		tweenScalar(monochromePass.uniforms['darkness'], 'value', 0);
+    		tweenScalar(monochromePass.uniforms['magnitude'], 'value', 0);
+    	}, delay);
+
+    }
+
+    function expandStarField(delay){
+
+    	setTimeout(function(){
+    		let s = 1.5;
+	    	let t = new THREE.Vector3(s, s, s);
+
+	    	let tween = new TWEEN.Tween(globe.scale).to(t, 1000);
+	    	tween.easing(TWEEN.Easing.Exponential.Out);
+	    	tween.onUpdate( () => {
+
+	    		globe.material.uniforms['maxDist'].value += 10;
+	    		globe.material.uniforms['size'].value += .001;
+
+	    	});
+	    	tween.onComplete(()=>{	
+
+	    		turnOffPostProcessing();
+	    		globe.material.uniforms['maxDist'].value = 10000;
+
+	    	});
+
+	    	tween.start();
+    	}, delay);
 
     }
 
@@ -109,6 +141,7 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
 	    if(postprocessing){
 
+
 	    	composer.render();
 
 	    } else{
@@ -122,7 +155,7 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 		setMainLightIntensity: setMainLightIntensity,
 		setWorldLights: setWorldLights,
 		setAvatarOpacity: setAvatarOpacity,
-		fadeIntoColor: fadeIntoColor,
+		fadeToColor: fadeToColor,
 		expandStarField: expandStarField,
 		moveCamera: moveCamera,
 		update: update,

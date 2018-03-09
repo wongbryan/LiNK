@@ -102,7 +102,8 @@ const UIController = (function(){
 		donationQuoteAnswer.innerHTML = ans;
 
 		hideQuoteInput();
-		showDonation();
+		WORLD_CONTROLLER.fadeToColor(1200);
+		WORLD_CONTROLLER.expandStarField(1200);
 
 		return false;
 	}
@@ -225,7 +226,7 @@ const UIController = (function(){
 
 	donationClose.addEventListener('mousedown', hideDonation);
 	donationSubmit.addEventListener('mousedown', submitDonation);
-	
+
 	return{
 		showTitle: showTitle,
 		hideTitle: hideTitle,
