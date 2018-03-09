@@ -1,43 +1,159 @@
-"use strict";
+'use strict';
+
+var apibase = 'http://159.203.117.240/api/';
 
 var APIController = function (fetch) {
 
-	function submitEntry(data) {
+	async function postEntry(data) {
 
-		fetch('http://159.203.117.240/api/entries/', {
+		try {
+			var response = await fetch(apibase + "entries/", {
+				method: 'POST',
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(data)
+			});
 
-			headers: { "Content-Type": "application/json" },
-			method: "POST",
-			body: JSON.stringify(data)
-
-		}).then(function (res) {
-
-			console.log(res);
-		}).catch(function (res) {
-
-			throw new Error(res);
-		});
+			var status = await response.status;
+			if (status >= 200 && status < 300) {
+				var json = await response.json;
+				console.log("This is your entry: ", json);
+			} else {
+				throw new Error(status);
+			}
+		} catch (e) {
+			throw new Error(e.message);
+		}
 	}
 
-	function getRandomEntries(n) {
+	async function putEntry(id, data) {
 
-		var url = 'http://159.203.117.240/api/recent/' + n;
+		try {
+			var response = await fetch(apibase + "entries/" + id, {
+				method: 'PUT',
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(data)
+			});
 
-		fetch(url, {
-			method: "GET"
-		}).then(function (res) {
+			var status = await response.status;
+			if (status >= 200 && status < 300) {
+				var json = await response.json;
+				console.log("This is your updated entry: ", json);
+			} else {
+				throw new Error(status);
+			}
+		} catch (e) {
+			throw new Error(e.message);
+		}
+	}
 
-			var d = res;
-			console.log(d);
-		}).catch(function (res) {
+	async function getLatestDonorEntries(n) {
 
-			throw new Error(res);
-		});
+		try {
+			var response = await fetch(apibase + "latest/" + n, {
+				method: 'GET',
+				headers: { "Content-Type": "application/json" }
+			});
+
+			var status = await response.status;
+			if (status >= 200 && status < 300) {
+				var json = await response.json;
+				console.log("This is all of the latest donor entries: ", json.entries);
+			} else {
+				throw new Error(status);
+			}
+		} catch (e) {
+			throw new Error(e.message);
+		}
+	}
+
+	async function getRecentEntries(n) {
+
+		try {
+			var response = await fetch(apibase + "recent/" + n, {
+				method: 'GET',
+				headers: { "Content-Type": "application/json" }
+			});
+
+			var status = await response.status;
+			if (status >= 200 && status < 300) {
+				var json = await response.json;
+				console.log("This is all of the recent entries: ", json.entries);
+			} else {
+				throw new Error(status);
+			}
+		} catch (e) {
+			throw new Error(e.message);
+		}
+	}
+
+	async function getTopDonorEntries(n) {
+
+		try {
+			var response = await fetch(apibase + "top/" + n, {
+				method: 'GET',
+				headers: { "Content-Type": "application/json" }
+			});
+
+			var status = await response.status;
+			if (status >= 200 && status < 300) {
+				var json = await response.json;
+				console.log("This is all of the top donors in order: ", json.entries);
+			} else {
+				throw new Error(status);
+			}
+		} catch (e) {
+			throw new Error(e.message);
+		}
+	}
+
+	async function getEntry(id) {
+
+		try {
+			var response = await fetch(apibase + "entries/" + id, {
+				method: 'GET',
+				headers: { "Content-Type": "application/json" }
+			});
+
+			var status = await response.status;
+			if (status >= 200 && status < 300) {
+				var json = await response.json;
+				console.log("This is the entry you searched for: ", json);
+			} else {
+				throw new Error(status);
+			}
+		} catch (e) {
+			throw new Error(e.message);
+		}
+	}
+
+	async function getTotalDonations() {
+
+		try {
+			var response = await fetch(apibase + "donations/", {
+				method: 'GET',
+				headers: { "Content-Type": "application/json" }
+			});
+
+			var status = await response.status;
+			if (status >= 200 && status < 300) {
+				var json = await response.json;
+				console.log("This is the total donations in cents: ", json.total);
+			} else {
+				throw new Error(status);
+			}
+		} catch (e) {
+			throw new Error(e.message);
+		}
 	}
 
 	return {
-		submitEntry: submitEntry,
-		getRandomEntries: getRandomEntries
+		postEntry: postEntry,
+		putEntry: putEntry,
+		getLatestDonorEntries: getLatestDonorEntries,
+		getRecentEntries: getRecentEntries,
+		getTopDonorEntries: getTopDonorEntries,
+		getEntry: getEntry,
+		getTotalDonations: getTotalDonations
 	};
 }(window.fetch);
 'use strict';
@@ -1096,6 +1212,130 @@ for (var file in MODEL_DATA) {
 for (var _file in FONT_DATA) {
     Loader.loadFont(_file);
 }
+"use strict";
+
+//Main Script
+
+var renderer, camera, scene, controls, spotLight;
+var clock;
+var globe, testMesh;
+
+var init = function init() {
+    scene = new THREE.Scene();
+    renderer = initializeRenderer();
+    camera = initializeCamera();
+    controls = initializeControls(camera, renderer);
+
+    spotLight = new THREE.SpotLight();
+    spotLight.intensity = .3;
+    spotLight.distance = 85;
+    spotLight.penumbra = 1;
+    spotLight.angle = .8;
+    spotLight.decay = 1.5;
+
+    spotLight.shadow.camera.left = -5;
+    spotLight.shadow.camera.right = 55;
+    spotLight.shadow.camera.top = 5;
+    spotLight.shadow.camera.bottom = -5;
+    spotLight.shadow.camera.near = 1;
+    spotLight.shadow.camera.far = 100;
+
+    spotLight.shadow.mapSize.width = 1024;
+    spotLight.shadow.mapSize.height = 1024;
+
+    spotLight.castShadow = true;
+    spotLight.position.set(-10, 30, 0);
+    scene.add(spotLight);
+
+    var charData = getRandomCharacterData();
+    user_data.character = charData;
+
+    testMesh = new Avatar(charData);
+    testMesh.castShadow = true;
+    testMesh.position.y = GLOBE_RADIUS + 5;
+    var s = .5;
+    testMesh.scale.multiplyScalar(s);
+
+    spotLight.target = testMesh;
+    var container = new THREE.Object3D();
+    container.add(spotLight);
+    container.scale.divideScalar(s);
+    testMesh.add(container);
+    testMesh.light = spotLight;
+
+    // WORLD_CONTROLLER.setMainLightIntensity(0);
+    // WORLD_CONTROLLER.setAvatarOpacity(0);
+
+    scene.add(testMesh);
+
+    // globe = new Globe(GLOBE_RADIUS+5, new THREE.Color(0xffe877), testMesh.position);
+    // // globe.position.y = -GLOBE_RADIUS;
+    // // globe.receiveShadow = true;
+    // scene.add(globe);
+
+    var sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 32, 32);
+    var sMat = new THREE.MeshPhongMaterial({
+        emissive: COLORS.black,
+        specular: COLORS.black,
+        shininess: 0
+    });
+    var innerGlobe = new THREE.Mesh(sGeom, sMat);
+    scene.add(innerGlobe);
+
+    clock = new THREE.Clock();
+
+    window.addEventListener('resize', resize);
+
+    var x = 0,
+        y = 1,
+        z = 0;
+
+    var pointStart = new THREE.Vector3(x, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
+    var pointEnd = new THREE.Vector3(x - .0001, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
+    var curve = setArc3D(pointStart, pointEnd, 3000, "lime", true);
+    // scene.add(curve);
+
+    testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
+
+    // let a = new THREE.AmbientLight();
+    // scene.add(a);
+
+    clock.start();
+    animate();
+};
+
+var update = function update() {
+    TWEEN.update();
+    var d = clock.getDelta();
+    var globalTime = clock.elapsedTime;
+
+    var elipsePathPoint = testMesh.movementFunc(globalTime);
+
+    // camera.lookAt(testMesh);
+    // testMesh.position.x = elipsePathPoint.x
+    // testMesh.position.y = elipsePathPoint.y
+    // testMesh.position.z = elipsePathPoint.z;
+
+    // camera.position.copy(testMesh.position);
+    // camera.position.z = 5;
+    // testMesh.update(d);
+
+    controls.update();
+};
+
+var animate = function animate() {
+
+    window.requestAnimationFrame(animate);
+    update();
+
+    //Animation should be extracted into its own function
+    //but you get the point for now.
+
+    //Render the frame
+    renderer.render(scene, camera);
+};
+//Run the update call for the first time, registering
+//it for every animation frame.
 "use strict";
 
 //Main Script

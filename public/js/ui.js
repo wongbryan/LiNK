@@ -225,7 +225,7 @@ const UIController = (function(){
 
 	donationClose.addEventListener('mousedown', hideDonation);
 	donationSubmit.addEventListener('mousedown', submitDonation);
-
+	
 	return{
 		showTitle: showTitle,
 		hideTitle: hideTitle,

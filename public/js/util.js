@@ -1,7 +1,9 @@
 /* WORLD RELATED DATA */
 
 const COLORS = {
-    'black': new THREE.Color(0x00010c)
+    'black': new THREE.Color(0x00010c),
+    'yellow': new THREE.Color(0xffce3d),
+    'teal': new THREE.Color(0x0d759b),
 }
 
 //Some example curves to test curve movement
@@ -88,7 +90,8 @@ const initializeRenderer = () => {
   renderer.shadowMap.type = THREE.PCSoftShadowMap
   renderer.setPixelRatio( window.devicePixelRatio )
   renderer.setSize( window.innerWidth, window.innerHeight)
-  renderer.setClearColor(COLORS.black)
+  // renderer.setClearColor(COLORS.black)
+  renderer.setClearColor(COLORS.yellow)
 
   container.appendChild( renderer.domElement )
 
@@ -99,7 +102,8 @@ const initializeRenderer = () => {
 const initializeCamera = () => {
   //Set camera to requested position
   let camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 )
-  camera.position.set(30, GLOBE_RADIUS+5, 50)
+  // camera.position.set(-GLOBE_RADIUS/3, GLOBE_RADIUS+7.5, 0)
+  camera.position.set(0, GLOBE_RADIUS+7.5, GLOBE_RADIUS/3)
   //Similar to above
   return camera
 }

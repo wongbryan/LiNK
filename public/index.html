@@ -116,10 +116,10 @@
 	uniform vec3 avatarPos;
 	uniform float appearAmt; //0->1 how many meshes appear around avatar
 	uniform float maxDist;
+	uniform float size;
 
 	attribute vec3 vOffset;
 
-	varying vec3 testColor;
 	varying float opacity;
 
 	float rand(float n){return fract(sin(n) * 43758.5453123);}
@@ -127,7 +127,7 @@
 	void main() 
 	{
 	    vec4 mPosition = modelMatrix * vec4(vOffset, 1.);
-	    float scale = rand(vOffset.x);
+	    float scale =  size * (.1 + 1.5*rand(vOffset.x));
 	    mPosition.xyz += position * 3.*scale;
 
 	    float dist = distance(mPosition.xyz, avatarPos);
@@ -137,8 +137,6 @@
 	    float appear = step( 1.-appearAmt, rand(scale) );
 	    opacity *= appear;
 
-	    testColor = (viewMatrix * mPosition).xyz;
-
 	    gl_Position = projectionMatrix * viewMatrix * mPosition;
 	}
 
@@ -147,7 +145,6 @@
 
 	uniform vec3 avatarPos;
 
-	varying vec3 testColor;
 	varying float opacity;
 
 	void main() 
@@ -160,6 +157,26 @@
 
 </script>
 
-<script src="/js/dist/lib.js"></script>
-<script src="/js/dist/app.js"></script>
+<script type="text/javascript" src="/js/lib/three.js"></script>
+<script type="text/javascript" src="/js/lib/OrbitControls.js"></script>
+<script type="text/javascript" src="/js/lib/SubdivisionModifier.js"></script>
+<script type="text/javascript" src="/js/lib/GeometryUtils.js"></script>
+
+<script type="text/javascript" src="/js/lib/CopyShader.js"></script>
+<script type="text/javascript" src="/js/lib/EffectComposer.js"></script>
+<script type="text/javascript" src="/js/lib/RenderPass.js"></script>
+<script type="text/javascript" src="/js/lib/ShaderPass.js"></script>
+
+<script type="text/javascript" src="/js/lib/Tween.js"></script>
+<script type="text/javascript" src="/js/util.js"></script>
+<script type="text/javascript" src="/js/Shaders.js"></script>
+<script type="text/javascript" src="/js/data.js"></script>
+<script type="text/javascript" src="/js/Loader.js"></script>
+<script type="text/javascript" src="/js/Globe.js"></script>
+<script type="text/javascript" src="/js/glowMesh.js"></script>
+<script type="text/javascript" src="/js/Avatar.js"></script>
+<script type="text/javascript" src="/js/API.js"></script>
+<script type="text/javascript" src="/js/WorldController.js"></script>
+<script type="text/javascript" src="/js/ui.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
 </html>

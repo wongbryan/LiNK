@@ -1,4 +1,4 @@
-const GLOBE_RADIUS = 500;
+const GLOBE_RADIUS = 250;
 
 var Globe = function(radius, color, avatarPos){
 
@@ -29,8 +29,9 @@ var Globe = function(radius, color, avatarPos){
   let mat = new THREE.ShaderMaterial({
         uniforms: {
             'avatarPos': { value: avatarPos },
-            'appearAmt': { value: 0},
-            'maxDist': { value: 200. }
+            'appearAmt': { value: 0.},
+            'maxDist': { value: 40. },
+            'size': { value: .1 },
         },
         blending: THREE.AdditiveBlending,
         transparent: true,

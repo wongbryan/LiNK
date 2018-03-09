@@ -37,6 +37,10 @@ gulp.task('lib', function(){
 	return gulp.src([
 		"js/lib/three.js",
 		"js/lib/OrbitControls.js",
+		"js/lib/CopyShader.js",
+		"js/lib/EffectComposer.js",
+		"js/lib/RenderPass.js",
+		"js/lib/ShaderPass.js",
 		"js/lib/SubdivisionModifier.js",
 		"js/lib/GeometryUtils.js",
 		"js/lib/Tween.js",
@@ -56,6 +60,7 @@ gulp.task('css', function(){
 });
 
 gulp.task('watch', function() {
+	gulp.watch('js/lib/**', ['lib']);
     gulp.watch('js/**', ['js']);
     gulp.watch('scss/**', ['css']);
 });

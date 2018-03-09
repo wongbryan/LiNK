@@ -37,7 +37,7 @@ const init = () => {
     testMesh = new Avatar(charData);
     testMesh.castShadow = true;
     testMesh.position.y = GLOBE_RADIUS+5;
-    let s = .5;
+    let s = 1;
     testMesh.scale.multiplyScalar(s);
 
     spotLight.target = testMesh;
@@ -47,20 +47,17 @@ const init = () => {
     testMesh.add(container);
     testMesh.light = spotLight;
 
-    // WORLD_CONTROLLER.setMainLightIntensity(0);
-    // WORLD_CONTROLLER.setAvatarOpacity(0);
-
     scene.add(testMesh);
 
-    globe = new Globe(GLOBE_RADIUS+5, new THREE.Color(0xffe877), testMesh.position);
+    globe = new Globe(GLOBE_RADIUS+2.5, new THREE.Color(0xffe877), testMesh.position);
     // globe.position.y = -GLOBE_RADIUS;
     // globe.receiveShadow = true;
     scene.add(globe);
 
     let sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 32, 32);
     let sMat = new THREE.MeshPhongMaterial({
-        emissive: COLORS.black, 
-        specular: COLORS.black,
+        emissive: COLORS.teal, 
+        specular: 0xffffff,
         shininess: 0
     });
     let innerGlobe = new THREE.Mesh(sGeom, sMat);
@@ -79,45 +76,11 @@ const init = () => {
 
     testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
 
-    // let a = new THREE.AmbientLight();
-    // scene.add(a);
+    WORLD_CONTROLLER = createController(renderer, scene, camera, testMesh, globe);
+    WORLD_CONTROLLER.setWorldLights(1);
+    WORLD_CONTROLLER.setMainLightIntensity(.3);
 
     clock.start();
-    animate();
+    WORLD_CONTROLLER.animate();
 
 }
-
-const update = () => {
-    TWEEN.update();
-    var d = clock.getDelta();
-    let globalTime = clock.elapsedTime;
-
-    let elipsePathPoint = testMesh.movementFunc(globalTime)
-
-    // camera.lookAt(testMesh);
-    // testMesh.position.x = elipsePathPoint.x
-    // testMesh.position.y = elipsePathPoint.y
-    // testMesh.position.z = elipsePathPoint.z;
-
-    // camera.position.copy(testMesh.position);
-    // camera.position.z = 5;
-    // testMesh.update(d);
-
-    globe.frustumCulled = false;
-    globe.rotation.x += .0005;
-    controls.update();
-}
-
-const animate = () => {
-
-    window.requestAnimationFrame(animate)
-    update();
-
-    //Animation should be extracted into its own function
-    //but you get the point for now.
-
-    //Render the frame
-    renderer.render(scene, camera)
-}
-//Run the update call for the first time, registering
-//it for every animation frame.
