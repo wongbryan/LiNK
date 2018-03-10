@@ -120,24 +120,13 @@ const MAT_DATA = {
 
 let MODEL_DATA = {
     'bread': {
- 		backing: {
- 		},
- 		bread: {
- 		},
- 		crust: {
- 		}
+
+    },
+    'egg': {
+
     },
     'poop': {
- 		top: {
- 		},
- 		ring1: {
- 		},
- 		ring2: {
- 		},
- 		ring3: {
- 		},
- 		ring4: {
- 		},
+
     }
 }
 
@@ -614,10 +603,35 @@ const initData = () => {
 			middle: {
 				offset: new THREE.Vector3(0, 0, 0),
 				dom: {
-					mesh: MODEL_DATA['bread'].backing.mesh,
+					mesh: MODEL_DATA['bread'].bread.mesh,
 					mat: 'beige',
+					offset: new THREE.Vector3(0, -.5, 0),
+					rotation: new THREE.Vector3(0, 0, 0),
+					scale: 1.5
+				},
+				crust: {
+					mesh: MODEL_DATA['bread'].crust.mesh,
+					mat: 'darkbrown',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, 0),
+				},
+				crust: {
+					mesh: MODEL_DATA['bread'].backing.mesh,
+					mat: 'lightbrown',
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(0, 0, 0),
+				},
+				eggWhite: {
+					mesh: MODEL_DATA['egg']['egg white'].mesh,
+					mat: 'white',
+					offset: new THREE.Vector3(0, 1., 0),
+					rotation: new THREE.Vector3(-Math.PI/2, 0, 0),
+				},
+				eggYolk: {
+					mesh: MODEL_DATA['egg'].yolk.mesh,
+					mat: 'yellow',
+					offset: new THREE.Vector3(0, 1.2, 0),
+					rotation: new THREE.Vector3(0, -Math.PI/2, 0),
 				},
 				eyeLeft: {	
 					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
@@ -766,5 +780,12 @@ const CHAR_DATA_OVERRIDES = {
 	dice: {
 		'upperLeft_dom': ['orange', 'yellow'], 
 		'upperRight_dom': ['lightblue', 'red'], 
+	},
+	breadGuy: {
+		'middle_dom': ['lightbrown'],
+		'middle_eyeRight': ['black'],
+		'middle_eyeLeft': ['black'],
+		'middle_eggYolk': ['yellow'],
+		'middle_eggWhite': ['white'],
 	},
 }

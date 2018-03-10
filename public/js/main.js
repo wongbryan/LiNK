@@ -31,7 +31,8 @@ const init = () => {
     spotLight.position.set(-10, 30, 0);
     scene.add(spotLight);
 
-    let charData = getRandomCharacterData();
+    // let charData = getRandomCharacterData();
+    let charData = getCharData('breadGuy');
     user_data.character = charData;
 
     testMesh = new Avatar(charData);
@@ -79,6 +80,7 @@ const init = () => {
     WORLD_CONTROLLER = createController(renderer, scene, camera, testMesh, globe);
     WORLD_CONTROLLER.setWorldLights(1);
     WORLD_CONTROLLER.setMainLightIntensity(.3);
+    WORLD_CONTROLLER.turnOffPostProcessing();
 
     clock.start();
     WORLD_CONTROLLER.animate();

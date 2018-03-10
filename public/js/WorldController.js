@@ -163,6 +163,8 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 	}
 
 	return {
+		turnOnPostProcessing: turnOnPostProcessing,
+		turnOffPostProcessing: turnOffPostProcessing,
 		setMainLightIntensity: setMainLightIntensity,
 		setWorldLights: setWorldLights,
 		setAvatarOpacity: setAvatarOpacity,

@@ -60,11 +60,13 @@ function buildParts(data){
 			let offset = d.offset.clone() || z;
 			let rot = d.rotation || z;
 			let opacity = d.opacity || 1;
+			let scale = d.scale || 1;
 
 			offset = offset.multiply(magnitude);
 
 			part.position.add(offset);
 			part.rotation.set(rot.x, rot.y, rot.z);
+			part.scale.multiplyScalar(scale);
 
 			if(d.opacity){
 

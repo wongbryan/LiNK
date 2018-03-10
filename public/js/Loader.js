@@ -55,9 +55,9 @@ var Loader = (function () {
                         c.position.set(0, 0, 0); //reset any position changes, position them later
                         c.rotation.set(0, 0, 0);
                         let n = c.name
-                        let d = MODEL_DATA[file][n];
+                        MODEL_DATA[file][n] = {};
 
-                        d.mesh = c;
+                        MODEL_DATA[file][n].mesh = c;
 
                     }
 

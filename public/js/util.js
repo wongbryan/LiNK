@@ -182,11 +182,14 @@ const stylizeQuote = function(string){
 
 }
 
-const getRandomCharacterData = function(){
+const getRandomCharName = function(){
 
-  let keys = Object.keys(CHAR_DATA_OVERRIDES);
-  let charName = keys[Math.floor(Math.random() * keys.length)];
-  // let charName = 'robot';
+  let keys = Object.keys(CHAR_DATA);
+  return keys[Math.floor(Math.random() * keys.length)];
+
+}
+const getCharData = function(charName){
+
   let overrides = CHAR_DATA_OVERRIDES[charName];
 
   let data = {};
