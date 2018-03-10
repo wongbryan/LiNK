@@ -9,7 +9,7 @@ function buildParts(data){
 
 		let sectionData = data[key];
 
-		if(Object.keys(sectionData).length === 0 || key === 'scale')
+		if(Object.keys(sectionData).length === 0 || !sectionData.hasOwnProperty('dom') )
 			continue;
 
 		let section = obj.clone();
@@ -17,7 +17,7 @@ function buildParts(data){
 		let sectionBoundingBox;
 		let magnitude;
 
-		let o = sectionData['offset'];
+		let o = sectionData['offset'] || z;
 		section.position.copy(o);
 
 		let dom = sectionData['dom']; //dominant part
@@ -55,7 +55,7 @@ function buildParts(data){
 			}
 
 			let n = d.name || k;
-			let offset = d.offset.clone() || z;
+			let offset = d.offset || z;
 			let rot = d.rotation || z;
 			let opacity = d.opacity || 1;
 			let scale = d.scale || 1;
@@ -83,7 +83,9 @@ function buildParts(data){
 	}
 
 	let scale = data['scale'] || 1.;
+	let offset = data['offset'] || z;
 	g.scale.multiplyScalar(scale);
+	g.offset = offset;
 
 	return g;
 

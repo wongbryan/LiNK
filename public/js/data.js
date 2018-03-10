@@ -134,6 +134,9 @@ let MODEL_DATA = {
     },
     'poop': {
 
+    },
+    'house': {
+
     }
 }
 
@@ -155,6 +158,7 @@ const initData = () => {
 	CHAR_DATA = {
 
 		robot: {
+			offset: new THREE.Vector3(0, 5, 0),
 			upper: {
 				offset: new THREE.Vector3(0, 4.75, 0),
 				dom: {	
@@ -327,6 +331,7 @@ const initData = () => {
 		},
 
 		dice: {
+			offset: new THREE.Vector3(0, 5, 0),
 			upper: {},
 			upperLeft: {
 				offset: new THREE.Vector3(-3, 0, 0),
@@ -426,6 +431,7 @@ const initData = () => {
 		},
 
 		astronaut: {
+			offset: new THREE.Vector3(0, 5, 0),
 			upper: {
 				offset: new THREE.Vector3(0, 5.5, 0),
 				dom: {
@@ -664,6 +670,8 @@ const initData = () => {
 		},
 
 		poopGuy: {
+			scale: 3.,
+			offset: new THREE.Vector3(0, 10., 0),
 			upper: {
 				offset: new THREE.Vector3(0, .5, 0),
 				dom: {	
@@ -732,8 +740,76 @@ const initData = () => {
 			// upperRight: [],
 			// lowerLeft: [],
 			// lowerRight: [],
-
 		},
+
+		houseGuy: {
+			top: {
+				offset: new THREE.Vector3(0, 2.3, 0),
+				dom: {
+					mesh: MODEL_DATA['house'].roof.mesh,
+					mat: 'lightbrown',
+					offset: new THREE.Vector3(0, .51, 0),
+					rotation: new THREE.Vector3(-Math.PI/2, 0, 0)
+				},
+			},
+			middle: {
+				offset: new THREE.Vector3(0, 2.5, 0),
+				dom: {
+					mesh: MODEL_DATA['house'].base.mesh,
+					mat: 'beige',
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(-Math.PI/2, 0, 0)
+				},
+				eyeLeft: {	
+					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
+					geom: new THREE.CircleGeometry(.15, 32, 32),
+					mat: 'black',
+					offset: new THREE.Vector3(-.4, .8, .55)
+				},
+				eyeRight: {
+					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
+					geom: new THREE.CircleGeometry(.15, 32, 32),
+					mat: 'black',
+					offset: new THREE.Vector3(.4, .8, .55)
+				},
+			},
+			upperLeft: {
+				offset: new THREE.Vector3(-1.5, 2, 0),
+				dom: {
+					mesh: MODEL_DATA['house'].leftArm.mesh,
+					mat: 'lightblue',
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(-Math.PI/2, -Math.PI/2, 0)
+				},
+			},
+			upperRight: {
+				offset: new THREE.Vector3(1.5, 2, 0),
+				dom: {
+					mesh: MODEL_DATA['house'].rightArm.mesh,
+					mat: 'lightblue',
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(Math.PI/2, Math.PI/2, 0)
+				},
+			},
+			lowerLeft:{
+				offset: new THREE.Vector3(-.65, .75, .5),
+				dom: {
+					mesh: MODEL_DATA['house'].leftLeg.mesh,
+					mat: 'lightblue',
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(-Math.PI/2, 0, Math.PI/2)
+				},
+			},
+			lowerRight:{
+				offset: new THREE.Vector3(.65, .75, .5),
+				dom: {
+					mesh: MODEL_DATA['house'].rightLeg.mesh,
+					mat: 'lightblue',
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(-Math.PI/2, 0, -Math.PI/2)
+				},
+			}
+		}
 	}
 
 	//custom tweaks so I don't have to copy and paste data
@@ -764,23 +840,24 @@ const initData = () => {
 
 }
 
-const excludeColors = ['black', 'lightgray', 'gray', 'white', 'lightgray2', 'darkgray'];
+const excludeColors = ['black', 'lightgray', 'gray', 'white', 'lightgray2', 'darkgray', 'blackline', 'redline'];
 const allColors = (Object.keys(MAT_DATA)).filter( k => (excludeColors.indexOf(k) === -1) );
+const primaryColors = ['red', 'green', 'lightblue',' orange', 'yellow'];
 
 const CHAR_DATA_OVERRIDES = {
 	astronaut: {
 		'upper_eyeLeft': ['black'],
 		'upper_eyeRight': ['black'], 
-		'upper_head': ['orange', 'yellow'],
+		'upper_head': ['orange', 'beige'],
 	},
 	poopGuy: {
 		'upper_dom': ['lightblue'],
 		'upper_eyeRight': ['lightblue'],
-		'middle_dom': allColors,
-		'middle_ring1': allColors,
-		'middle_ring2': allColors,
-		'middle_ring3': allColors,
-		'middle_ring4': allColors
+		'middle_dom': primaryColors,
+		'middle_ring1': primaryColors,
+		'middle_ring2': primaryColors,
+		'middle_ring3': primaryColors,
+		'middle_ring4': primaryColors
 	},
 	robot: {
 		'upper_eyeLeft': ['black', 'lightgray'],
@@ -798,4 +875,8 @@ const CHAR_DATA_OVERRIDES = {
 		'middle_eggYolk': ['yellow'],
 		'middle_eggWhite': ['white'],
 	},
+	houseGuy: {
+		'middle_dom': ['beige'],
+		'top_dom': primaryColors.filter( i => i !== 'yellow'),
+	}
 }

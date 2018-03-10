@@ -32,12 +32,13 @@ const init = () => {
     scene.add(spotLight);
 
     // let charData = getRandomCharacterData();
-    let charData = getCharData('breadGuy');
+    let charData = getCharData('houseGuy');
     user_data.character = charData;
     
     testMesh = new Avatar(charData);
     testMesh.castShadow = true;
-    testMesh.position.y = GLOBE_RADIUS+5;
+    testMesh.position.add(testMesh.offset);
+    testMesh.position.y += GLOBE_RADIUS;
     let s = 1;
     testMesh.scale.multiplyScalar(s);
 
