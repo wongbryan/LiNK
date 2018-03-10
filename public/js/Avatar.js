@@ -29,6 +29,8 @@ function buildParts(data){
 		let min = sectionBoundingBox.min;
 		magnitude = max.sub(min);
 
+		console.log(data);
+
 		for (let k in sectionData){
 
 			if (k === 'offset'){
