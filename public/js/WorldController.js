@@ -132,7 +132,7 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
 	function update(){
 
-		TWEEN.update();
+	    TWEEN.update();
 	    var d = clock.getDelta();
 	    let globalTime = clock.elapsedTime;
 
@@ -143,7 +143,7 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 	}
 
 	function animate(){
-
+	    TWEEN.update()
 	    window.requestAnimationFrame(animate)
 	    update();
 

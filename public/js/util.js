@@ -236,3 +236,10 @@ function round(geom, n){
     return geom;
 
   }
+
+var MOUSE_POS = {x:0.5, y:0.5};
+
+const mouse_monitor = (e) => {
+    MOUSE_POS.x = (e.clientX / window.innerWidth) * 2 -1
+    MOUSE_POS.y = (e.clientY / window.innerHeight) * 2  - 1
+}

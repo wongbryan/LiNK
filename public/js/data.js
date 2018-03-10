@@ -265,8 +265,8 @@ const initData = () => {
 					rotation: new THREE.Vector3(-Math.PI/16, 0, Math.PI/2),
 				},
 			},
-			leftUpper: {
-				offset: new THREE.Vector3(-3.5, 1.3, 0),
+			upperLeft: {
+				offset: new THREE.Vector3(-1.5, 1.3, 0),
 				dom: {
 					dom: true,
 					name: 'armLeft',
@@ -274,12 +274,12 @@ const initData = () => {
 					geom: new THREE.SphereGeometry(.5, 32, 32),
 					// geom: new THREE.BoxGeometry(1, 2, 1),
 					mat: 'lightgray',
-					offset: new THREE.Vector3(0, 0, 0),
+					offset: new THREE.Vector3(-2, 0, 0),
 					rotation: new THREE.Vector3(0, 0, -Math.PI/12)
 				},
 			},
-			rightUpper: {
-				offset: new THREE.Vector3(3.5, 1.3, 0),
+			upperRight: {
+				offset: new THREE.Vector3(1.5, 1.3, 0),
 				dom: {
 					dom: true,
 					name: 'armLeft',
@@ -287,12 +287,12 @@ const initData = () => {
 					geom: new THREE.SphereGeometry(.5, 32, 32),
 					// geom: new THREE.BoxGeometry(1, 2, 1),
 					mat: 'lightgray',
-					offset: new THREE.Vector3(0, 0, 0),
+					offset: new THREE.Vector3(2, 0, 0),
 					rotation: new THREE.Vector3(0, 0, -Math.PI/12)
 				},
 			},
-			leftLower: {
-				offset: new THREE.Vector3(-2, -3.5, 0),
+			lowerLeft: {
+				offset: new THREE.Vector3(-2, -1.5, 0),
 				dom: {
 					dom: true,
 					name: 'legLeft',
@@ -300,12 +300,12 @@ const initData = () => {
 					round: 4,
 					geom: new THREE.BoxGeometry(1, 2, 1, 3, 3),
 					mat: 'gray',
-					offset: new THREE.Vector3(0, 0, 0),
+					offset: new THREE.Vector3(0, -1, 0),
 					rotation: new THREE.Vector3(0, 0, Math.PI/2)
 				},
 			},
-			rightLower: {
-				offset: new THREE.Vector3(2, -3.5, 0),
+			lowerRight: {
+				offset: new THREE.Vector3(2, -1.5, 0),
 				dom: {
 					dom: true,
 					name: 'legRight',
@@ -313,7 +313,7 @@ const initData = () => {
 					round: 4,
 					geom: new THREE.BoxGeometry(1, 2, 1, 3, 3),
 					mat: 'gray',
-					offset: new THREE.Vector3(0, 0, 0),
+					offset: new THREE.Vector3(0, -1, 0),
 					rotation: new THREE.Vector3(0, 0, Math.PI/2)
 				},
 			}
@@ -474,7 +474,7 @@ const initData = () => {
 				},
 			},
 			upperLeft: {
-				offset: new THREE.Vector3(-3, 1, 0),
+				offset: new THREE.Vector3(-1.5, 1, 0),
 				dom: {
 					dom: true,
 					name: 'armLeft',
@@ -482,12 +482,12 @@ const initData = () => {
 					geom: new THREE.SphereGeometry(.5, 32, 32),
 					// geom: new THREE.BoxGeometry(1, 2, 1),
 					mat: 'darkgray',
-					offset: new THREE.Vector3(0, 0, 0),
+					offset: new THREE.Vector3(-1.5, 0, 0),
 					rotation: new THREE.Vector3(0, 0, -Math.PI/12)
 				},
 			},
 			upperRight: {
-				offset: new THREE.Vector3(3, 1, 0),
+				offset: new THREE.Vector3(1.5, 1, 0),
 				dom: {
 					dom: true,
 					name: 'armRight',
@@ -495,7 +495,7 @@ const initData = () => {
 					geom: new THREE.SphereGeometry(.5, 32, 32),
 					// geom: new THREE.BoxGeometry(1, 2, 1),
 					mat: 'darkgray',
-					offset: new THREE.Vector3(0, 0, 0),
+					offset: new THREE.Vector3(1.5, 0, 0),
 					rotation: new THREE.Vector3(0, 0, -Math.PI/12)
 				},
 			},
@@ -571,7 +571,7 @@ const initData = () => {
 				},
 			},
 			lowerLeft: {
-				offset: new THREE.Vector3(-2, -3.5, 0),
+				offset: new THREE.Vector3(-2, -1.5, 0),
 				dom: {
 					dom: true,
 					name: 'legLeft',
@@ -579,12 +579,12 @@ const initData = () => {
 					round: 4,
 					geom: new THREE.BoxGeometry(1, 2, 1, 3, 3),
 					mat: 'darkgray',
-					offset: new THREE.Vector3(0, 0, 0),
+					offset: new THREE.Vector3(0, -1, 0),
 					rotation: new THREE.Vector3(0, 0, Math.PI/2)
 				},
 			},
 			lowerRight: {
-				offset: new THREE.Vector3(2, -3.5, 0),
+				offset: new THREE.Vector3(2, -1.5, 0),
 				dom: {
 					dom: true,
 					name: 'legRight',
@@ -592,7 +592,7 @@ const initData = () => {
 					round: 4,
 					geom: new THREE.BoxGeometry(1, 2, 1, 3, 3),
 					mat: 'darkgray',
-					offset: new THREE.Vector3(0, 0, 0),
+					offset: new THREE.Vector3(0, -1, 0),
 					rotation: new THREE.Vector3(0, 0, Math.PI/2)
 				},
 			},
