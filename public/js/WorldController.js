@@ -55,29 +55,41 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
     }
 
-    function expandStarField(delay){
+    function sizeStarField(dir, delay){
 
     	setTimeout(function(){
-    		let s = 1.5;
+    		let s = (dir === 1) ? 1.5 : 1;
 	    	let t = new THREE.Vector3(s, s, s);
 
 	    	let tween = new TWEEN.Tween(globe.scale).to(t, 1000);
 	    	tween.easing(TWEEN.Easing.Exponential.Out);
-	    	tween.onUpdate( () => {
 
-	    		globe.material.uniforms['maxDist'].value += 10;
-	    		globe.material.uniforms['size'].value += .001;
+	    	let targetDist = (dir === 1) ? 500 : 40;
+	    	let targetSize = (dir === 1) ? .2 : .1;
 
-	    	});
-	    	tween.onComplete(()=>{	
-
-	    		turnOffPostProcessing();
-	    		globe.material.uniforms['maxDist'].value = 10000;
-
-	    	});
+	    	let distTime = (dir === 1) ? 600 : 300;
+	    	let easing = (dir === 1) ? TWEEN.Easing.Quadratic.InOut : TWEEN.Easing.Quintic.In;
+	    	// globe.material.uniforms['maxDist'].value = targetDist;
+	    	let tw = tweenScalar(globe.material.uniforms['maxDist'], 'value', targetDist, distTime, easing);
+	    	// tw.onUpdate(function(){
+	    	// 	console.log(globe.material.uniforms['maxDist'].value);
+	    	// })
+	    	tweenScalar(globe.material.uniforms['size'], 'value', targetSize);
 
 	    	tween.start();
     	}, delay);
+
+    }
+
+    function expandStarField(delay){
+
+    	sizeStarField(1, delay);
+
+    }
+
+    function shrinkStarField(delay){
+
+    	sizeStarField(-1, delay);
 
     }
 
@@ -156,6 +168,7 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 		setAvatarOpacity: setAvatarOpacity,
 		fadeToColor: fadeToColor,
 		expandStarField: expandStarField,
+		shrinkStarField: shrinkStarField,
 		moveCamera: moveCamera,
 		update: update,
 		animate: animate,

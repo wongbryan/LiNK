@@ -150,14 +150,14 @@ const getEdgesGeom = (geom) => { //use w THREE.LineSegments or THREE.Line and li
 
 }
 
-const tweenScalar = (source, propName, target, easing=TWEEN.Easing.Quadratic.InOut) => { //tween for scalar target
+const tweenScalar = (source, propName, target, time = 500, easing=TWEEN.Easing.Quadratic.InOut) => { //tween for scalar target
 
   let o = {};
   o[propName] = source[propName]; //value
   let t = {};
   t[propName] = target;
 
-  let tw = new TWEEN.Tween(o).to(t);
+  let tw = new TWEEN.Tween(o).to(t, time);
   tw.onUpdate(function(){
     source[propName] = o[propName];
   });

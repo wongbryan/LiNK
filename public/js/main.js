@@ -60,7 +60,7 @@ const init = () => {
         specular: 0xffffff,
         shininess: 0
     });
-    let innerGlobe = new THREE.Mesh(sGeom, sMat);
+    innerGlobe = new THREE.Mesh(sGeom, sMat);
     scene.add(innerGlobe);
 
     clock = new THREE.Clock();
