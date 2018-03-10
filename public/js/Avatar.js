@@ -9,7 +9,7 @@ function buildParts(data){
 
 		let sectionData = data[key];
 
-		if(Object.keys(sectionData).length === 0)
+		if(Object.keys(sectionData).length === 0 || key === 'scale')
 			continue;
 
 		let section = obj.clone();
@@ -28,8 +28,6 @@ function buildParts(data){
 		let max = sectionBoundingBox.max;
 		let min = sectionBoundingBox.min;
 		magnitude = max.sub(min);
-
-		console.log(data);
 
 		for (let k in sectionData){
 
@@ -56,7 +54,7 @@ function buildParts(data){
 
 			}
 
-			let n = d.name;
+			let n = d.name || k;
 			let offset = d.offset.clone() || z;
 			let rot = d.rotation || z;
 			let opacity = d.opacity || 1;
@@ -83,6 +81,9 @@ function buildParts(data){
 		g.add(section);	
 
 	}
+
+	let scale = data['scale'] || 1.;
+	g.scale.multiplyScalar(scale);
 
 	return g;
 

@@ -114,6 +114,13 @@ const MAT_DATA = {
         flatShading: false,
         roughness: .06
     },
+    lightbeige: {
+        color: 0xebfffb,
+        emissive: 0xf9efb4,
+        metalness: .5,
+        flatShading: false,
+        roughness: .06
+    },
 };
 
 /* Dynamic data */
@@ -599,28 +606,31 @@ const initData = () => {
 		},
 
 		breadGuy: {
+			scale: 3.,
 			upper: {},
 			middle: {
 				offset: new THREE.Vector3(0, 0, 0),
 				dom: {
 					mesh: MODEL_DATA['bread'].bread.mesh,
-					mat: 'beige',
+					mat: 'lightbeige',
 					offset: new THREE.Vector3(0, -.5, 0),
 					rotation: new THREE.Vector3(0, 0, 0),
-					scale: 1.5
+					scale: 2.
 				},
 				crust: {
 					mesh: MODEL_DATA['bread'].crust.mesh,
-					mat: 'darkbrown',
-					offset: new THREE.Vector3(0, 0, 0),
-					rotation: new THREE.Vector3(0, 0, 0),
-				},
-				crust: {
-					mesh: MODEL_DATA['bread'].backing.mesh,
 					mat: 'lightbrown',
-					offset: new THREE.Vector3(0, 0, 0),
+					offset: new THREE.Vector3(0, -.45, 0),
 					rotation: new THREE.Vector3(0, 0, 0),
+					scale: 1.98
 				},
+				// backing: {
+				// 	mesh: MODEL_DATA['bread'].backing.mesh,
+				// 	mat: 'lightbrown',
+				// 	offset: new THREE.Vector3(0, 0, 0),
+				// 	rotation: new THREE.Vector3(0, 0, 0),
+
+				// },
 				eggWhite: {
 					mesh: MODEL_DATA['egg']['egg white'].mesh,
 					mat: 'white',
@@ -782,7 +792,7 @@ const CHAR_DATA_OVERRIDES = {
 		'upperRight_dom': ['lightblue', 'red'], 
 	},
 	breadGuy: {
-		'middle_dom': ['lightbrown'],
+		'middle_dom': ['lightbeige'],
 		'middle_eyeRight': ['black'],
 		'middle_eyeLeft': ['black'],
 		'middle_eggYolk': ['yellow'],
