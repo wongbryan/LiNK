@@ -74,6 +74,14 @@ const init = () => {
     var curve = setArc3D(pointStart, pointEnd, 3000, "lime", true);
     // scene.add(curve);
 
+    //Good for poop dude
+    let anim = simpleBob(testMesh, 1.4, 800)
+    let anim2 = accordionEffect(testMesh, 1, 800)
+    //let anim2 = starSplit(testMesh, 45, 800)
+    
+    anim.start()
+    anim2.start()
+    
     testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
 
     WORLD_CONTROLLER = createController(renderer, scene, camera, testMesh, globe);
