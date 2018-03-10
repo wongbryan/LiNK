@@ -185,9 +185,9 @@ const stylizeQuote = function(string){
 const getRandomCharacterData = function(){
 
   let keys = Object.keys(CHAR_DATA_OVERRIDES);
-    //let charName = keys[Math.floor(Math.random() * keys.length)];
-
-    let charName = 'poopGuy'
+  let charName = keys[Math.floor(Math.random() * keys.length)];
+//    charName = "dice"
+//    let charName = 'breadGuy'
   let overrides = CHAR_DATA_OVERRIDES[charName];
 
   let data = {};
@@ -234,3 +234,10 @@ function round(geom, n){
     return geom;
 
   }
+
+var MOUSE_POS = {x:0.5, y:0.5};
+
+const mouse_monitor = (e) => {
+    MOUSE_POS.x = (e.clientX / window.innerWidth) * 2 -1
+    MOUSE_POS.y = (e.clientY / window.innerHeight) * 2  - 1
+}

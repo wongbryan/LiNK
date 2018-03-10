@@ -115,6 +115,9 @@ var Avatar = function(data){
 	let g = new THREE.Group();
 	g = buildParts(charData);
 
+    //Named for animations
+    this.name = data['name'];
+    
 	this.__proto__ = g;
 
 }

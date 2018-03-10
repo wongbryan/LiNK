@@ -33,7 +33,7 @@ const init = () => {
 
     let charData = getRandomCharacterData();
     user_data.character = charData;
-
+    
     testMesh = new Avatar(charData);
     testMesh.castShadow = true;
     testMesh.position.y = GLOBE_RADIUS+5;
@@ -67,6 +67,9 @@ const init = () => {
 
     window.addEventListener('resize', resize);
 
+    //Monitor the mouse position
+    window.addEventListener('mousemove', mouse_monitor);
+    
     let x = 0, y = 1, z = 0;
 
     var pointStart = new THREE.Vector3(x, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
@@ -75,12 +78,18 @@ const init = () => {
     // scene.add(curve);
 
     //Good for poop dude
-    let anim = simpleBob(testMesh, 1.4, 800)
-    let anim2 = accordionEffect(testMesh, 1, 800)
-    //let anim2 = starSplit(testMesh, 45, 800)
+    let idleAnims = getIdleAnim(testMesh)
     
-    anim.start()
-    anim2.start()
+    //Start animations
+    idleAnims.forEach( elem => {
+	elem.start()
+    })
+
+    //Make head follow the mouse
+    
+    //let followMouse = lookAtMouse(testMesh, MOUSE_POS, camera)
+    //followMouse.start()
+    
     
     testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
 
