@@ -191,6 +191,7 @@ const getRandomCharName = function(){
 const getCharData = function(charName){
 
   let overrides = CHAR_DATA_OVERRIDES[charName];
+  console.log(overrides);
 
   let data = {};
 
@@ -199,6 +200,7 @@ const getCharData = function(charName){
   for(let key in overrides){
 
     let mats = overrides[key];
+    console.log(mats);
     let matName = mats[Math.floor(Math.random() * mats.length)];
 
     data[key] = matName;
@@ -223,6 +225,8 @@ const getMat = function(name){
     mat = new THREE.MeshStandardMaterial(data);
 
   }
+
+  mat.side = THREE.DoubleSide;
 
   return mat;
 

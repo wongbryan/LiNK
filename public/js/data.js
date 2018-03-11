@@ -137,6 +137,9 @@ let MODEL_DATA = {
     },
     'house': {
 
+    },
+    'ricecooker': {
+
     }
 }
 
@@ -612,10 +615,10 @@ const initData = () => {
 		},
 
 		breadGuy: {
-			scale: 3.,
+			scale: 2.5,
 			upper: {},
 			middle: {
-				offset: new THREE.Vector3(0, 0, 0),
+				offset: new THREE.Vector3(0, 2, 0),
 				dom: {
 					mesh: MODEL_DATA['bread'].bread.mesh,
 					mat: 'lightbeige',
@@ -743,6 +746,8 @@ const initData = () => {
 		},
 
 		houseGuy: {
+			scale: 2.,
+			offset: new THREE.Vector3(0, 0, 0),
 			top: {
 				offset: new THREE.Vector3(0, 2.3, 0),
 				dom: {
@@ -809,6 +814,107 @@ const initData = () => {
 					rotation: new THREE.Vector3(-Math.PI/2, 0, -Math.PI/2)
 				},
 			}
+		},
+
+		ricecookerGuy: {
+			offset: new THREE.Vector3(0, 2, 0),
+			middle: {
+				offset: new THREE.Vector3(0, 0, 0),
+				dom:{
+					mesh: MODEL_DATA['ricecooker'].base.mesh,
+					mat: 'lightgray',
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(-Math.PI/2, 0, Math.PI),
+				},
+				bottom:{
+					mesh: MODEL_DATA['ricecooker'].bottom.mesh,
+					mat: 'darkgray',
+					offset: new THREE.Vector3(0, -.03, 0),
+					rotation: new THREE.Vector3(-Math.PI/2, 0, 0),
+				},
+				bottomofcover:{
+					mesh: MODEL_DATA['ricecooker'].bottomofcover.mesh,
+					mat: 'darkgray',
+					offset: new THREE.Vector3(0, .05, 0),
+					rotation: new THREE.Vector3(-Math.PI/2, 0, 0),
+					scale: 1.025
+				},
+				line1: {	
+					name: 'line1',
+					geom: new THREE.BoxGeometry(.1, .5, .08),
+					mat: 'black',
+					offset: new THREE.Vector3(-.23, .65, .57),
+					rotation: new THREE.Vector3(0, 0, Math.PI/4),
+					scale: .5
+				},
+				line2: {	
+					name: 'line2',
+					geom: new THREE.BoxGeometry(.1, .5, .08),
+					mat: 'black',
+					offset: new THREE.Vector3(-.3, .65, .57),
+					rotation: new THREE.Vector3(0, 0, -Math.PI/4),
+					scale: .5
+				},
+				line3: {	
+					name: 'line3',
+					geom: new THREE.BoxGeometry(.1, .5, .08),
+					mat: 'black',
+					offset: new THREE.Vector3(.3, .65, .57),
+					rotation: new THREE.Vector3(0, 0, Math.PI/4),
+					scale: .5,
+				},
+				line4: {	
+					name: 'line4',
+					geom: new THREE.BoxGeometry(.1, .5, .08),
+					mat: 'black',
+					offset: new THREE.Vector3(.23, .65, .57),
+					rotation: new THREE.Vector3(0, 0, -Math.PI/4),
+					scale: .5
+				},
+			},
+			upper: {
+				offset: new THREE.Vector3(0, .15, 0),
+				dom: {
+					mesh: MODEL_DATA['ricecooker'].cover.mesh,
+					mat: 'lightgray',
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(-Math.PI/2, 0, 0),
+				},
+				handle: {
+					mesh: MODEL_DATA['ricecooker'].handle.mesh,
+					mat: 'lightgray',
+					offset: new THREE.Vector3(0, 1.075, 0),
+					rotation: new THREE.Vector3(-Math.PI/2, 0, 0),
+				},
+			},
+			lowerLeft: {
+				offset: new THREE.Vector3(0, 1.05, 2),
+				dom: {
+					mesh: MODEL_DATA['ricecooker'].buttonbase.mesh,
+					mat: 'darkgray',
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(Math.PI/2, 0, Math.PI),
+					scale: .8,
+				},
+				button1: {
+					mesh: MODEL_DATA['ricecooker'].button1.mesh,
+					mat: 'lightblue',
+					offset: new THREE.Vector3(0, -2, -.90),
+					rotation: new THREE.Vector3(Math.PI/2, 0, 0),
+				},
+				button2: {
+					mesh: MODEL_DATA['ricecooker'].button2.mesh,
+					mat: 'green',
+					offset: new THREE.Vector3(.15, -3.3, -.90),
+					rotation: new THREE.Vector3(Math.PI/2, 0, 0),
+				},
+				button3: {
+					mesh: MODEL_DATA['ricecooker'].button3.mesh,
+					mat: 'orange',
+					offset: new THREE.Vector3(-.15, -3.3, -.90),
+					rotation: new THREE.Vector3(Math.PI/2, 0, 0),
+				},
+			}
 		}
 	}
 
@@ -842,7 +948,8 @@ const initData = () => {
 
 const excludeColors = ['black', 'lightgray', 'gray', 'white', 'lightgray2', 'darkgray', 'blackline', 'redline'];
 const allColors = (Object.keys(MAT_DATA)).filter( k => (excludeColors.indexOf(k) === -1) );
-const primaryColors = ['red', 'green', 'lightblue',' orange', 'yellow'];
+const primaryColors = ['red', 'green', 'lightblue', 'orange', 'yellow'];
+const baseColors = ['beige', 'lightbeige', 'lightbrown', 'darkbrown',];
 
 const CHAR_DATA_OVERRIDES = {
 	astronaut: {
@@ -878,5 +985,10 @@ const CHAR_DATA_OVERRIDES = {
 	houseGuy: {
 		'middle_dom': ['beige'],
 		'top_dom': primaryColors.filter( i => i !== 'yellow'),
-	}
+		'upperLeft_dom': ['darkgray'],
+		'upperRight_dom': ['darkgray'],
+		'lowerLeft_dom': ['darkgray'],
+		'lowerRight_dom': ['darkgray'],
+	},
+
 }
