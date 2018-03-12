@@ -7,7 +7,8 @@ const checkpointActions = [
 	0,
 
 	function(){
-		
+
+		AudioController.setVolumeNight(1);
 		WORLD_CONTROLLER.sizeStarField(1, 1300, 100, .2, 300);
 		checkpointIndex++;
 
@@ -15,6 +16,7 @@ const checkpointActions = [
 
 	function(){
 
+		AudioController.setVolumeNight(1);
 		WORLD_CONTROLLER.sizeStarField(1, 800, 200, .3, 300);
 		checkpointIndex++;
 
@@ -22,8 +24,11 @@ const checkpointActions = [
 
 	function(){
 
+		AudioController.stopNight();
+		AudioController.playDay();
 		WORLD_CONTROLLER.fadeToColor(1600);
 		WORLD_CONTROLLER.sizeStarField(1.5, 1200, 500, .4, 600);
+		WORLD_CONTROLLER.resetGlobe();
 		setTimeout(UIController.showDonation, 1800);
 		paused = true;
 		checkpointIndex = 1; //start over?

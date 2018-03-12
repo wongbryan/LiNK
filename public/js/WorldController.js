@@ -161,6 +161,7 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 		    		hit = false;
 		    		paused = true;
 		    		const data = entries[checkpointIndex-1];
+		    		AudioController.setVolumeNight(.5);
 		    		UIController.showQuoteMain(data);
 		    	});
 
@@ -182,36 +183,10 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
 	}
 
-	function stopRotation(){
+	function resetGlobe(){
 
-		const callback =  function(){
+		tweenScalar(innerGlobe.rotation, 'x', 0, 3500, TWEEN.Easing.Quadratic.InOut);
 
-			console.log('rotation stopped');
-			UIController.showQuoteMain(dummy_data);
-
-    	};
-
-    	setRotationFactor(0, callback);
-
-	}
-
-	function continueRotation(){
-
-		const callback = function(){
-
-			console.log('rotation continued');
-
-			if(stopped){ //if it was stopped after being started
-
-				checkpointIndex++;
-
-			}
-		
-			stopped = false;
-
-    	}
-
-		setRotationFactor(-.002, callback);
 	}
 
 	function animate(){
@@ -245,8 +220,7 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 		shrinkStarField: shrinkStarField,
 		sizeStarField: sizeStarField,
 		moveCamera: moveCamera,
-		continueRotation: continueRotation,
-		stopRotation: stopRotation,
+		resetGlobe: resetGlobe,
 		setRotationFactor: setRotationFactor,
 		executeAction: executeAction,
 		update: update,

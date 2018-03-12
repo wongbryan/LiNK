@@ -222,6 +222,9 @@ const init = () => {
     document.body.addEventListener('keydown', UIController.handleKeyDown);
     document.body.addEventListener('keyup', UIController.handleKeyUp);
 
+    AudioController = CreateAudioController();
+    // AudioController.playNight();
+
     clock.start();
     WORLD_CONTROLLER.animate();
 

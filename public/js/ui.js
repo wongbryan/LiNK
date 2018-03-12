@@ -105,7 +105,7 @@ const UIController = (function(){
 
 		if(ans.length === 0){
 
-			const err = "answer must be longer than 0 characters.";
+			const err = "Answer must be longer than 0 characters.";
 			const elem = document.getElementById('quoteInputErr');
 
 			elem.innerHTML = err;
@@ -114,6 +114,7 @@ const UIController = (function(){
 			return;
 
 		}
+
 		user_data.text = ans;
 		ans = stylizeQuote(ans);
 		donationQuoteAnswer.innerHTML = ans;
@@ -136,7 +137,9 @@ const UIController = (function(){
 
 		}, 800);
 
+		AudioController.playNight();
 		APIController.postEntry(user_data);
+
 
 		return false;
 	}
@@ -205,7 +208,7 @@ const UIController = (function(){
 
 		if(name.length === 0){
 
-			const err = "surely you must go by something...";
+			const err = "Surely you must go by something...";
 			const elem = document.getElementById('nameInputErr');
 
 			elem.innerHTML = err;

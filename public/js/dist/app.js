@@ -398,6 +398,66 @@ var APIController = function (fetch) {
 }(window.fetch);
 'use strict';
 
+var CreateAudioController = function CreateAudioController() {
+
+	var nightAudio = document.createElement('audio');
+	var dayAudio = document.createElement('audio');
+
+	nightAudio.src = "/assets/sounds/bg_night.mp3";
+	dayAudio.src = "/assets/sounds/bg_day.mp3";
+
+	function stop(audio) {
+
+		pause(audio);
+		audio.currentTime = 0;
+	}
+
+	function pause(audio) {
+
+		audio.pause();
+	}
+
+	function play(audio) {
+
+		audio.play();
+	}
+
+	function fade(audio, dir) {
+
+		audio.volume = 0;
+		audio.play();
+
+		var cur = {
+			value: dir === 1 ? 0 : 1
+		};
+
+		var target = {
+			value: 1
+		};
+
+		var t = new TWEEN.Tween(cur).to(target, 800);
+		t.easing(TWEEN.Easing.Quadratic.In);
+		t.onUpdate(function () {
+			audio.volume = cur.value;
+		});
+		t.start();
+	}
+
+	function playNight() {
+
+		fadeIn(nightAudio);
+	}
+
+	function stopNight() {}
+
+	return {
+
+		playNight: playNight
+
+	};
+};
+'use strict';
+
 function buildParts(data) {
 
 	var createGeom = function createGeom(type, args) {
@@ -2331,6 +2391,9 @@ var init = function init() {
 
     document.body.addEventListener('keydown', UIController.handleKeyDown);
     document.body.addEventListener('keyup', UIController.handleKeyUp);
+
+    AudioController = CreateAudioController();
+    // AudioController.playNight();
 
     clock.start();
     WORLD_CONTROLLER.animate();
