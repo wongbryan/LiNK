@@ -102,6 +102,18 @@ const UIController = (function(){
 			e.preventDefault();
 
 		let ans = quoteInputAnswer.value;
+
+		if(ans.length === 0){
+
+			const err = "answer must be longer than 0 characters.";
+			const elem = document.getElementById('quoteInputErr');
+
+			elem.innerHTML = err;
+			elem.style.opacity = 1;
+
+			return;
+
+		}
 		user_data.text = ans;
 		ans = stylizeQuote(ans);
 		donationQuoteAnswer.innerHTML = ans;
@@ -190,6 +202,19 @@ const UIController = (function(){
 		e.preventDefault();
 
 		let name = nameInputAnswer.value;
+
+		if(name.length === 0){
+
+			const err = "surely you must go by something...";
+			const elem = document.getElementById('nameInputErr');
+
+			elem.innerHTML = err;
+			elem.style.opacity = 1;;
+
+			return;
+
+		}
+
 		user_data.name = name;
 
 		hideNameInput();
@@ -266,7 +291,6 @@ const UIController = (function(){
 
 	/* DONATION BOX STUFF */
 	let card_token = "";
-
 
 	function errorDisplay(errors){
 

@@ -144,6 +144,17 @@ h1, h2, header, p, a, span{
 		}
 
 	}
+
+	.inputErr{
+		margin-top: 40px;
+		font-family: $Brandon;
+		font-weight: lighter;
+		font-size: 15px;
+		color: $gray;
+		margin-bottom: 20px;
+		transition: all .3s ease;
+		opacity: 0;
+	}
 }
 
 #nameInput{

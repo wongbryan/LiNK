@@ -1,3 +1,243 @@
+"use strict";
+
+//Util function
+var toRad = function toRad(degrees) {
+			return Math.PI / 180 * degrees;
+};
+
+var getByName = function getByName(name) {
+			return function (elem) {
+						return elem.name == name;
+			};
+};
+
+var simpleBob = function simpleBob(mesh, offset, duration) {
+
+			//Move up and down a bit
+			var current = {
+						yOff: mesh.position.y
+			};
+
+			var target = {
+						yOff: mesh.position.y + offset
+			};
+
+			return new TWEEN.Tween(current).to(target, duration).onUpdate(function () {
+						mesh.position.y = current.yOff;
+			}).easing(TWEEN.Easing.Quadratic.InOut).repeat(Infinity).yoyo(true);
+};
+
+var accordionEffect = function accordionEffect(mesh, offset, duration) {
+
+			var top = mesh.children[0];
+			var mid = mesh.children[1];
+			var bot = mesh.children[2];
+
+			var prop = {
+						ring0: 1,
+						ring1: 0.75,
+						ring2: 0.5,
+						ring3: 0.25
+			};
+
+			var current = {
+						ring0Y: mid.children[0].position.y,
+						ring1Y: mid.children[1].position.y,
+						ring2Y: mid.children[2].position.y,
+						ring3Y: mid.children[3].position.y,
+						topY: top.position.y
+			};
+
+			var target = {
+						ring0Y: mid.children[0].position.y + offset * prop.ring0,
+						ring1Y: mid.children[1].position.y + offset * prop.ring1,
+						ring2Y: mid.children[2].position.y + offset * prop.ring2,
+						ring3Y: mid.children[3].position.y + offset * prop.ring3,
+						topY: top.position.y + offset
+			};
+			return new TWEEN.Tween(current).to(target, duration).onUpdate(function () {
+						mid.children[0].position.y = current.ring0Y;
+						mid.children[1].position.y = current.ring1Y;
+						mid.children[2].position.y = current.ring2Y;
+						mid.children[3].position.y = current.ring3Y;
+						top.position.y = current.topY;
+			}).easing(TWEEN.Easing.Cubic.InOut).repeat(Infinity).yoyo(true);
+};
+
+var starSplit = function starSplit(mesh, rotOffset, duration) {
+
+			var radOffset = toRad(rotOffset);
+
+			var upperLeft = mesh.children.find(getByName("upperLeft"));
+			var upperRight = mesh.children.find(getByName("upperRight"));
+			var lowerLeft = mesh.children.find(getByName("lowerLeft"));
+			var lowerRight = mesh.children.find(getByName("lowerRight"));
+
+			var current = {
+						lRotZ: upperLeft.rotation.z,
+						rRotZ: upperRight.rotation.z
+			};
+
+			var headProp = 0.6;
+
+			var target = {
+						lRotZ: upperLeft.rotation.z - radOffset,
+						rRotZ: upperRight.rotation.z + radOffset
+			};
+			return new TWEEN.Tween(current).to(target, duration).onUpdate(function () {
+						upperLeft.rotation.z = current.lRotZ;
+						upperRight.rotation.z = current.rRotZ;
+						lowerLeft.rotation.z = current.lRotZ;
+						lowerRight.rotation.z = current.rRotZ;
+			}).easing(TWEEN.Easing.Cubic.InOut).repeat(Infinity).yoyo(true);
+};
+
+var starSplitHead = function starSplitHead(mesh, rotOffset, duration) {
+			var radOffset = toRad(rotOffset);
+
+			var upperLeft = mesh.children.find(getByName("upperLeft"));
+			var upperRight = mesh.children.find(getByName("upperRight"));
+			var lowerLeft = mesh.children.find(getByName("lowerLeft"));
+			var lowerRight = mesh.children.find(getByName("lowerRight"));
+
+			//Head look up on star split
+			var upper = mesh.children.find(getByName("upper"));
+
+			var current = {
+						lRotZ: upperLeft.rotation.z,
+						rRotZ: upperRight.rotation.z,
+						upRotX: upper.rotation.x
+			};
+
+			var headProp = 0.6;
+
+			var target = {
+						lRotZ: upperLeft.rotation.z - radOffset,
+						rRotZ: upperRight.rotation.z + radOffset,
+						upRotX: upper.rotation.x - radOffset * headProp
+			};
+			return new TWEEN.Tween(current).to(target, duration).onUpdate(function () {
+						upperLeft.rotation.z = current.lRotZ;
+						upperRight.rotation.z = current.rRotZ;
+						lowerLeft.rotation.z = current.lRotZ;
+						lowerRight.rotation.z = current.rRotZ;
+						upper.rotation.x = current.upRotX;
+			}).easing(TWEEN.Easing.Cubic.InOut).repeat(Infinity).yoyo(true);
+};
+
+var lookAtMouse = function lookAtMouse(mesh, mouse, camera) {
+			var curr = {};
+			var end = {};
+			var upper = mesh.children.find(getByName("upper"));
+
+			var magnitude = 10;
+
+			return new TWEEN.Tween(curr).to(end).onUpdate(function () {
+
+						var width = window.innerWidth;
+						var height = window.innerHeight;
+
+						var vecToMouse = new THREE.Vector3().subVectors(camera.position, upper.getWorldPosition());
+
+						//Get camera basis ==> Trying to make it work if camera rotates... but struggling
+						var camX = new THREE.Vector3();
+						var camY = new THREE.Vector3();
+						var camZ = new THREE.Vector3();
+
+						var xMag = width * (1 / 2.0) * 0.8;
+						var yMag = height * (1 / 2.0) * 0.8;
+
+						camera.lookAt(upper.getWorldPosition());
+						camera.matrixWorldInverse.extractBasis(camX, camY, camZ);
+
+						vecToMouse.add(camX.multiplyScalar(mouse.x * xMag));
+						vecToMouse.sub(camY.multiplyScalar(mouse.y * yMag));
+
+						upper.lookAt(vecToMouse);
+			}).repeat(Infinity);
+};
+
+var diceFlip = function diceFlip(mesh, duration) {
+			var upLeft = mesh.children.find(getByName("upperLeft"));
+
+			var upRight = mesh.children.find(getByName("upperRight"));
+
+			var curr = {
+						baseRotZ: 0, //This should be the axis that points at camera --> shouldnt be a hard vec to get?
+						baseRotY: mesh.rotation.y, // Also could be from an offset?
+						rotFaceX: 0,
+						rotFaceZ: 0
+			};
+
+			var end = {
+						baseRotZ: 2 * Math.PI,
+						baseRotY: mesh.rotation.y + 3 * Math.PI,
+						rotFaceX: 5 * Math.PI,
+						rotFaceZ: Math.PI
+			};
+
+			return new TWEEN.Tween(curr).to(end, duration).onUpdate(function () {
+
+						mesh.rotation.z = curr.baseRotZ;
+						mesh.rotation.y = curr.baseRotY;
+						upLeft.rotation.z = curr.rotFaceZ;
+						upRight.rotation.z = curr.rotFaceZ;
+						upLeft.rotation.x = curr.rotFaceX;
+						upRight.rotation.x = curr.rotFaceX;
+			}).easing(TWEEN.Easing.Cubic.InOut).delay(2500).repeat(Infinity).yoyo(true);
+};
+
+//Doesnt work correctly... yet...
+var diceFlipColor = function diceFlipColor(mesh, duration) {
+			var upLeftHeadMat = mesh.children.find(getByName("upperLeft")).children.find(getByName("head")).material;
+			var upRightHeadMat = mesh.children.find(getByName("upperRight")).children.find(getByName("head")).material;
+
+			var getRandom = function getRandom() {
+
+						var rand = (Math.random() - 0.5) * 2;
+						console.log(rand);
+						return rand;
+			};
+
+			var curr = {
+						colLeftR: upLeftHeadMat.color.r,
+						colLeftG: upLeftHeadMat.color.g,
+						colLeftB: upLeftHeadMat.color.b,
+						colRightR: upRightHeadMat.color.r,
+						colRightG: upRightHeadMat.color.g,
+						colRightB: upRightHeadMat.color.b
+			};
+
+			var end = {
+						colLeftR: upLeftHeadMat.color.r + getRandom(),
+						colLeftG: upLeftHeadMat.color.g + getRandom(),
+						colLeftB: upLeftHeadMat.color.b + getRandom(),
+						colRightR: upRightHeadMat.color.r + getRandom(),
+						colRightG: upRightHeadMat.color.g + getRandom(),
+						colRightB: upRightHeadMat.color.b + getRandom()
+			};
+
+			return new TWEEN.Tween(curr).to(end, duration).onUpdate(function () {
+						upLeftHeadMat.color = new THREE.Color(curr.colLeftR, curr.ColLeftG, curr.colLeftB, 1.0);
+						upRightHeadMat.color = new THREE.Color(curr.colRightR, curr.ColRightG, curr.colRightB, 1.0);
+			}).easing(TWEEN.Easing.Cubic.InOut).delay(10000).repeat(Infinity);
+};
+
+//Returns an array of functions that should be used as an idle anim for
+//the mesh
+var getIdleAnim = function getIdleAnim(mesh) {
+			switch (mesh.name) {
+						case "astronaut":
+						case "robot":
+									return [simpleBob(mesh, 1.4, 800), starSplitHead(mesh, 45, 800)];
+						case "poopGuy":
+									return [simpleBob(mesh, 1.4, 800), accordionEffect(mesh, 1, 800)];
+						case "dice":
+									return [simpleBob(mesh, 1.4, 800), diceFlip(mesh, 1600)]; // diceFlipColor(mesh, 1600)]
+						default:
+									return [simpleBob(mesh, 1.4, 800)];
+			}
+};
 'use strict';
 
 var apibase = 'http://159.203.117.240/api/';
@@ -13,9 +253,9 @@ var APIController = function (fetch) {
 				body: JSON.stringify(data)
 			});
 
-			var status = await response.status;
+			var status = response.status;
 			if (status >= 200 && status < 300) {
-				var json = await response.json;
+				var json = await response.json();
 				console.log("This is your entry: ", json);
 			} else {
 				throw new Error(status);
@@ -34,9 +274,9 @@ var APIController = function (fetch) {
 				body: JSON.stringify(data)
 			});
 
-			var status = await response.status;
+			var status = response.status;
 			if (status >= 200 && status < 300) {
-				var json = await response.json;
+				var json = await response.json();
 				console.log("This is your updated entry: ", json);
 			} else {
 				throw new Error(status);
@@ -54,9 +294,9 @@ var APIController = function (fetch) {
 				headers: { "Content-Type": "application/json" }
 			});
 
-			var status = await response.status;
+			var status = response.status;
 			if (status >= 200 && status < 300) {
-				var json = await response.json;
+				var json = await response.json();
 				console.log("This is all of the latest donor entries: ", json.entries);
 			} else {
 				throw new Error(status);
@@ -67,17 +307,17 @@ var APIController = function (fetch) {
 	}
 
 	async function getRecentEntries(n) {
-
 		try {
 			var response = await fetch(apibase + "recent/" + n, {
 				method: 'GET',
 				headers: { "Content-Type": "application/json" }
 			});
 
-			var status = await response.status;
+			var status = response.status;
 			if (status >= 200 && status < 300) {
-				var json = await response.json;
+				var json = await response.json();
 				console.log("This is all of the recent entries: ", json.entries);
+				return json.entries;
 			} else {
 				throw new Error(status);
 			}
@@ -94,9 +334,9 @@ var APIController = function (fetch) {
 				headers: { "Content-Type": "application/json" }
 			});
 
-			var status = await response.status;
+			var status = response.status;
 			if (status >= 200 && status < 300) {
-				var json = await response.json;
+				var json = await response.json();
 				console.log("This is all of the top donors in order: ", json.entries);
 			} else {
 				throw new Error(status);
@@ -114,9 +354,9 @@ var APIController = function (fetch) {
 				headers: { "Content-Type": "application/json" }
 			});
 
-			var status = await response.status;
+			var status = response.status;
 			if (status >= 200 && status < 300) {
-				var json = await response.json;
+				var json = await response.json();
 				console.log("This is the entry you searched for: ", json);
 			} else {
 				throw new Error(status);
@@ -134,9 +374,9 @@ var APIController = function (fetch) {
 				headers: { "Content-Type": "application/json" }
 			});
 
-			var status = await response.status;
+			var status = response.status;
 			if (status >= 200 && status < 300) {
-				var json = await response.json;
+				var json = await response.json();
 				console.log("This is the total donations in cents: ", json.total);
 			} else {
 				throw new Error(status);
@@ -160,6 +400,20 @@ var APIController = function (fetch) {
 
 function buildParts(data) {
 
+	var createGeom = function createGeom(type, args) {
+
+		var obj = THREE[type]; //constructor 
+
+		function F(args) {
+
+			return obj.apply(this, args);
+		}
+
+		F.prototype = obj.prototype;
+
+		return new F(args);
+	};
+
 	var obj = new THREE.Object3D();
 	var g = new THREE.Group();
 	var z = new THREE.Vector3();
@@ -168,18 +422,33 @@ function buildParts(data) {
 
 		var sectionData = data[key];
 
-		if (Object.keys(sectionData).length === 0) continue;
+		if (Object.keys(sectionData).length === 0 || !sectionData.hasOwnProperty('dom')) continue;
 
 		var section = obj.clone();
 		section.name = key;
 		var sectionBoundingBox = void 0;
 		var magnitude = void 0;
 
-		var o = sectionData['offset'];
+		var o = sectionData['offset'] || z;
 		section.position.copy(o);
 
 		var dom = sectionData['dom']; //dominant part
-		var geom = dom.geom || dom.mesh.geometry;
+
+		var geom = void 0;
+
+		if (dom.hasOwnProperty('mesh')) {
+
+			geom = dom.mesh.geometry;
+		} else if (dom.geom.type === "TextGeometry") {
+
+			var gArgs = dom.geom.args;
+			geom = getFontGeom.apply(null, gArgs);
+		} else {
+
+			var gType = dom.geom.type;
+			var _gArgs = dom.geom.args;
+			geom = createGeom(gType, _gArgs);
+		}
 
 		geom.computeBoundingBox();
 		sectionBoundingBox = geom.boundingBox;
@@ -199,26 +468,75 @@ function buildParts(data) {
 
 			if (d.hasOwnProperty('mesh')) {
 
-				console.log(sectionData);
-				d.mesh.material = d.matOverride || d.mat.clone();
+				var mat = getMat(d.mat);
+				d.mesh.material = mat;
 				part = d.mesh;
+			} else if (d.geom.type === "TextGeometry") {
+
+				var _gArgs2 = d.geom.args;
+				geom = getFontGeom.apply(null, _gArgs2);
+				var _mat = getMat(d.mat);
+
+				part = new THREE.Mesh(geom, _mat);
 			} else {
 
-				var _geom = d.geom;
-				var mat = d.matOverride || d.mat.clone();
+				var _gType = d.geom.type;
+				var _gArgs3 = d.geom.args;
 
-				part = new THREE.Mesh(_geom, mat);
+				func = THREE[_gType];
+				var _geom = createGeom(_gType, _gArgs3);
+
+				// geom = d.round ? round(geom, d.round) : geom;
+
+				if (d.round) {
+
+					var geomExists = false;
+
+					if (ROUNDED_GEOMS.hasOwnProperty(_gType)) {
+						(function () {
+
+							var params = JSON.stringify(_geom.parameters);
+
+							ROUNDED_GEOMS[_gType].forEach(function (g) {
+
+								var existingParams = JSON.stringify(g.parameters);
+
+								if (params === existingParams) {
+
+									geomExists = true;
+									_geom = g;
+								}
+							});
+						})();
+					}
+
+					if (!geomExists) {
+
+						var roundedGeom = round(_geom, d.round);
+						_geom = roundedGeom;
+						ROUNDED_GEOMS[_gType] = [];
+						ROUNDED_GEOMS[_gType].push(roundedGeom);
+					}
+				}
+
+				var _mat2 = getMat(d.mat);
+
+				part = new THREE.Mesh(_geom, _mat2);
 			}
 
-			var n = d.name;
-			var offset = d.offset.clone() || z;
+			console.log(part);
+
+			var n = d.name || k;
+			var _offset = d.offset || z;
 			var rot = d.rotation || z;
 			var opacity = d.opacity || 1;
+			var _scale = d.scale || 1;
 
-			offset = offset.multiply(magnitude);
+			_offset = _offset.multiply(magnitude);
 
-			part.position.add(offset);
+			part.position.add(_offset);
 			part.rotation.set(rot.x, rot.y, rot.z);
+			part.scale.multiplyScalar(_scale);
 
 			if (d.opacity) {
 
@@ -233,24 +551,29 @@ function buildParts(data) {
 		g.add(section);
 	}
 
+	var scale = data['scale'] || 1.;
+	var offset = data['offset'] || z;
+	g.scale.multiplyScalar(scale);
+	g.offset = offset;
+
 	return g;
 }
 
 var Avatar = function Avatar(data) {
 
-	console.log(data);
-
 	var char = data['name'];
-	var charData = Object.assign({}, CHAR_DATA[char]);
+	var charData = CHAR_DATA[char];
 
 	var _loop = function _loop(str) {
 
 		var mKey = data[str];
 		var keys = str.split('_');
 
+		console.log(charData);
+
 		if (keys.length < 2) return 'continue';
 
-		var m = MAT_DATA[mKey];
+		var m = mKey;
 		var obj = charData;
 
 		keys.forEach(function (k) {
@@ -262,151 +585,176 @@ var Avatar = function Avatar(data) {
 	};
 
 	for (var str in data) {
-		var _ret = _loop(str);
+		var _ret2 = _loop(str);
 
-		if (_ret === 'continue') continue;
+		if (_ret2 === 'continue') continue;
 	}
 
 	var g = new THREE.Group();
 	g = buildParts(charData);
 
+	//Named for animations
+	this.name = data['name'];
+
 	this.__proto__ = g;
 };
 "use strict";
+
+var checkpoints = [0];
+var checkpointIndex = 1;
+var paused = false;
+
+var checkpointActions = [0, function () {
+
+	WORLD_CONTROLLER.sizeStarField(1, 1300, 100, .2, 300);
+	checkpointIndex++;
+}, function () {
+
+	WORLD_CONTROLLER.sizeStarField(1, 800, 200, .3, 300);
+	checkpointIndex++;
+}, function () {
+
+	WORLD_CONTROLLER.fadeToColor(1600);
+	WORLD_CONTROLLER.sizeStarField(1.5, 1200, 500, .4, 600);
+	setTimeout(UIController.showDonation, 1800);
+	paused = true;
+	checkpointIndex = 1; //start over?
+}];
 
 var user_data = {
 	name: "",
 	id: 0,
 	text: "",
-	votes: 0,
 	donation: 0,
 	character: null
 };
 
 var other_users_data = [];
 
+var ROUNDED_GEOMS = {};
+
 var MAT_DATA = {
-	'yellow': new THREE.MeshStandardMaterial({
+	'yellow': {
 		color: 0x89918c,
 		emissive: 0xf0d93d,
 		roughness: .4,
 		flatShading: false,
 		metalness: .6
-	}),
-	'lightblue': new THREE.MeshStandardMaterial({
+	},
+	'lightblue': {
 		color: 0x89918c,
 		emissive: 0x2baff7,
 		roughness: .4,
 		flatShading: false,
 		metalness: .6
-	}),
-	'black': new THREE.MeshStandardMaterial({
+	},
+	'black': {
 		color: 0xffffff,
 		emissive: 0x040709,
 		roughness: .0,
 		flatShading: false,
 		metalness: .24
-	}),
-	'white': new THREE.MeshStandardMaterial({
+	},
+	'white': {
 		color: 0x1e2023,
 		emissive: 0xf4f8ff,
 		roughness: .0,
 		flatShading: false,
 		metalness: .24
-	}),
-	'blackline': new THREE.LineBasicMaterial({
+	},
+	'blackline': {
 		color: 0x000000
-	}),
-	'redline': new THREE.LineBasicMaterial({
+	},
+	'redline': {
 		color: 0xf7312a
-	}),
-	'lightgray': new THREE.MeshStandardMaterial({
+	},
+	'lightgray': {
 		color: 0xf7faff,
 		emissive: 0xe8eaef,
 		roughness: .0,
 		flatShading: false,
 		metalness: .75
-	}),
-	'lightgray2': new THREE.MeshStandardMaterial({
+	},
+	'lightgray2': {
 		color: 0xf7faff,
 		emissive: 0xdbdcdd,
 		roughness: .0,
 		flatShading: false,
 		metalness: .75
-	}),
-	'red': new THREE.MeshStandardMaterial({
+	},
+	'red': {
 		color: 0xd9486b,
 		emissive: 0xf7312a,
 		roughness: .0,
 		flatShading: false,
 		metalness: .3
-	}),
-	green: new THREE.MeshStandardMaterial({
+	},
+	green: {
 		color: 0xf7faff,
 		emissive: 0x29d025,
 		metalness: .5,
 		flatShading: false,
 		roughness: .06
-	}),
-	darkgray: new THREE.MeshStandardMaterial({
+	},
+	darkgray: {
 		color: 0xf7faff,
 		emissive: 0x75777c,
 		roughness: .0,
 		flatShading: false,
 		metalness: .75
-	}),
-	gray: new THREE.MeshStandardMaterial({
+	},
+	gray: {
 		color: 0xf7faff,
 		emissive: 0x86888c,
 		roughness: .0,
 		flatShading: false,
 		metalness: .75
-	}),
-	orange: new THREE.MeshStandardMaterial({
+	},
+	orange: {
 		color: 0xebfffb,
 		emissive: 0xfda638,
 		metalness: .5,
 		flatShading: false,
 		roughness: .06
-	}),
-	darkbrown: new THREE.MeshStandardMaterial({
+	},
+	darkbrown: {
 		color: 0xebfffb,
 		emissive: 0x75472c,
 		metalness: .5,
 		flatShading: false,
 		roughness: .06
-	}),
-	lightbrown: new THREE.MeshStandardMaterial({
+	},
+	lightbrown: {
 		color: 0xebfffb,
 		emissive: 0xa36636,
 		metalness: .5,
 		flatShading: false,
 		roughness: .06
-	}),
-	beige: new THREE.MeshStandardMaterial({
+	},
+	beige: {
 		color: 0xebfffb,
 		emissive: 0xf8da84,
 		metalness: .5,
 		flatShading: false,
 		roughness: .06
-	})
+	},
+	lightbeige: {
+		color: 0xebfffb,
+		emissive: 0xf9efb4,
+		metalness: .5,
+		flatShading: false,
+		roughness: .06
+	}
 };
 
 /* Dynamic data */
 
 var MODEL_DATA = {
-	'bread': {
-		backing: {},
-		bread: {},
-		crust: {}
-	},
-	'poop': {
-		top: {},
-		ring1: {},
-		ring2: {},
-		ring3: {},
-		ring4: {}
-	}
+	'bread': {},
+	'egg': {},
+	'poop': {},
+	'house': {},
+	'ricecooker': {}
 };
 
 var FONT_DATA = {
@@ -420,65 +768,83 @@ var FONT_DATA = {
 
 var initData = function initData() {
 
-	function round(geom, n) {
-		var modifier = new THREE.SubdivisionModifier(n);
-		modifier.modify(geom);
-		return geom;
-	}
-
 	//offset calculated in relation to torso
 	//use 'part' property so we don't recursively iterate through 
 	//threejs objects
 	CHAR_DATA = {
 
 		robot: {
+			scale: 2.75,
+			offset: new THREE.Vector3(0, 10, 0),
 			upper: {
 				offset: new THREE.Vector3(0, 4.75, 0),
 				dom: {
 					name: 'head',
 					dom: true, //if dom, use to calculate position of other parts
-					geom: round(new THREE.BoxGeometry(5, 5, 5, 3, 3), 4),
-					mat: MAT_DATA['orange'],
+					round: 4,
+					geom: {
+						type: 'BoxGeometry',
+						args: [5, 5, 5, 3, 3]
+					},
+					mat: 'orange',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, 0)
 				},
 				eyeLeft: {
 					name: 'eyeLeft',
-					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
-					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['black'],
+					geom: {
+						type: 'CircleGeometry',
+						args: [.2, 32, 32]
+					},
+					mat: 'black',
 					offset: new THREE.Vector3(-.2, .1, .51)
 				},
 				eyeRight: {
 					name: 'eyeRight',
-					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
-					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['black'],
+					geom: {
+						type: 'CircleGeometry',
+						args: [.2, 32, 32]
+					},
+					mat: 'black',
 					offset: new THREE.Vector3(.2, .1, .51)
 				},
 				antennae: {
 					name: 'antennae',
-					geom: new THREE.CylinderGeometry(.03, .05, 3),
-					mat: MAT_DATA['black'],
+					geom: {
+						type: 'CylinderGeometry',
+						args: [.03, .05, 3]
+					},
+					mat: 'black',
 					offset: new THREE.Vector3(0, .45, 0)
 				},
 				bulb: {
 					name: 'bulb',
-					geom: new THREE.SphereGeometry(.25, 16, 16),
-					mat: MAT_DATA['red'],
+					geom: {
+						type: 'SphereGeometry',
+						args: [.25, 16, 16]
+					},
+					mat: 'red',
 					offset: new THREE.Vector3(0, .75, 0)
 				},
 				mouth: {
 					name: 'mouth',
-					geom: round(new THREE.BoxGeometry(1, 2.5, .1, 3, 3), 4),
-					mat: MAT_DATA['white'],
+					round: 4,
+					geom: {
+						type: 'BoxGeometry',
+						args: [1, 2.5, .1, 3, 3]
+					},
+					mat: 'white',
 					offset: new THREE.Vector3(0, -.2, .515),
 					rotation: new THREE.Vector3(0, 0, Math.PI / 2)
 				},
 				outline: {
 					name: 'outline',
-					geom: round(new THREE.BoxGeometry(1.075, 2.575, .1, 3, 3), 4),
-					mat: MAT_DATA['black'],
+					round: 4,
+					geom: {
+						type: 'BoxGeometry',
+						args: [1.075, 2.575, .1, 3, 3]
+					},
+					mat: 'black',
 					offset: new THREE.Vector3(0, -.2, .51),
 					rotation: new THREE.Vector3(0, 0, Math.PI / 2)
 				}
@@ -488,149 +854,205 @@ var initData = function initData() {
 				dom: {
 					dom: true,
 					name: 'torso',
-					geom: new THREE.CylinderGeometry(2.75, 3.7, 4, 4, 12),
-					mat: MAT_DATA['lightblue'],
+					geom: {
+						type: 'CylinderGeometry',
+						args: [2.75, 3.7, 4, 4, 12]
+					},
+					mat: 'lightblue',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, Math.PI / 4, 0)
 				},
 				outline: {
 					name: 'outline',
-					geom: round(new THREE.BoxGeometry(1.35, 2.85, .1, 3, 3), 4),
-					mat: MAT_DATA['red'],
+					round: 4,
+					geom: {
+						type: 'BoxGeometry',
+						args: [1.35, 2.85, .1, 3, 3]
+					},
+					mat: 'red',
 					offset: new THREE.Vector3(-.125, 0, .33),
 					rotation: new THREE.Vector3(-Math.PI / 16, 0, 0)
 				},
 				pad1: {
 					name: 'pad1',
-					geom: round(new THREE.BoxGeometry(1.25, 2.75, .1, 3, 3), 4),
-					mat: MAT_DATA['white'],
+					round: 4,
+					geom: {
+						type: 'BoxGeometry',
+						args: [1.25, 2.75, .1, 3, 3]
+					},
+					mat: 'white',
 					offset: new THREE.Vector3(-.125, 0, .335),
 					rotation: new THREE.Vector3(-Math.PI / 16, 0, 0)
 				},
 				pad2: {
 					name: 'pad2',
-					geom: new THREE.CircleGeometry(.6, 32, 32),
-					mat: MAT_DATA['orange'],
+					geom: {
+						type: 'CircleGeometry',
+						args: [.6, 32, 32]
+					},
+					mat: 'orange',
 					offset: new THREE.Vector3(.125, -.17, .34),
 					rotation: new THREE.Vector3(-Math.PI / 16, 0, 0)
 				},
 				light1: {
 					name: 'light1',
-					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['red'],
+					geom: {
+						type: 'CircleGeometry',
+						args: [.2, 32, 32]
+					},
+					mat: 'red',
 					offset: new THREE.Vector3(.05, .2, .31),
 					rotation: new THREE.Vector3(-Math.PI / 16, 0, 0)
 				},
 				light2: {
 					name: 'light2',
-					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['green'],
+					geom: {
+						type: 'CircleGeometry',
+						args: [.2, 32, 32]
+					},
+					mat: 'green',
 					offset: new THREE.Vector3(.125, .2, .31),
 					rotation: new THREE.Vector3(-Math.PI / 16, 0, 0)
 				},
 				light3: {
 					name: 'light3',
-					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['yellow'],
+					geom: {
+						type: 'CircleGeometry',
+						args: [.2, 32, 32]
+					},
+					mat: 'yellow',
 					offset: new THREE.Vector3(.2, .2, .31),
 					rotation: new THREE.Vector3(-Math.PI / 16, 0, 0)
 				},
 				tag: {
 					name: 'tag',
 					part: true,
-					geom: new THREE.PlaneGeometry(.3, 1.4),
-					mat: MAT_DATA['darkgray'],
+					geom: {
+						type: 'PlaneGeometry',
+						args: [.3, 1.4]
+					},
+					mat: 'darkgray',
 					offset: new THREE.Vector3(.125, .075, .31),
 					rotation: new THREE.Vector3(-Math.PI / 16, 0, Math.PI / 2)
 				}
 			},
-			leftUpper: {
-				offset: new THREE.Vector3(-3.5, 1.3, 0),
+			upperLeft: {
+				offset: new THREE.Vector3(-1.5, 1.3, 0),
 				dom: {
 					dom: true,
 					name: 'armLeft',
 					part: true,
-					geom: new THREE.SphereGeometry(.5, 32, 32),
-					// geom: new THREE.BoxGeometry(1, 2, 1),
-					mat: MAT_DATA['lightgray'],
-					offset: new THREE.Vector3(0, 0, 0),
+					geom: {
+						type: 'SphereGeometry',
+						args: [.5, 32, 32]
+					},
+					mat: 'lightgray',
+					offset: new THREE.Vector3(-2, 0, 0),
 					rotation: new THREE.Vector3(0, 0, -Math.PI / 12)
 				}
 			},
-			rightUpper: {
-				offset: new THREE.Vector3(3.5, 1.3, 0),
+			upperRight: {
+				offset: new THREE.Vector3(1.5, 1.3, 0),
 				dom: {
 					dom: true,
 					name: 'armLeft',
 					part: true,
-					geom: new THREE.SphereGeometry(.5, 32, 32),
-					// geom: new THREE.BoxGeometry(1, 2, 1),
-					mat: MAT_DATA['lightgray'],
-					offset: new THREE.Vector3(0, 0, 0),
+					geom: {
+						type: 'SphereGeometry',
+						args: [.5, 32, 32]
+					},
+					mat: 'lightgray',
+					offset: new THREE.Vector3(2, 0, 0),
 					rotation: new THREE.Vector3(0, 0, -Math.PI / 12)
 				}
 			},
-			leftLower: {
-				offset: new THREE.Vector3(-2, -3.5, 0),
+			lowerLeft: {
+				offset: new THREE.Vector3(-2, -1.5, 0),
 				dom: {
 					dom: true,
 					name: 'legLeft',
 					part: true,
-					geom: round(new THREE.BoxGeometry(1, 2, 1, 3, 3), 4),
-					mat: MAT_DATA['gray'],
-					offset: new THREE.Vector3(0, 0, 0),
+					round: 4,
+					geom: {
+						type: 'BoxGeometry',
+						args: [1, 2, 1, 3, 3]
+					},
+					mat: 'gray',
+					offset: new THREE.Vector3(0, -1, 0),
 					rotation: new THREE.Vector3(0, 0, Math.PI / 2)
 				}
 			},
-			rightLower: {
-				offset: new THREE.Vector3(2, -3.5, 0),
+			lowerRight: {
+				offset: new THREE.Vector3(2, -1.5, 0),
 				dom: {
 					dom: true,
 					name: 'legRight',
 					part: true,
-					geom: round(new THREE.BoxGeometry(1, 2, 1, 3, 3), 4),
-					mat: MAT_DATA['gray'],
-					offset: new THREE.Vector3(0, 0, 0),
+					round: 4,
+					geom: {
+						type: 'BoxGeometry',
+						args: [1, 2, 1, 3, 3]
+					},
+					mat: 'gray',
+					offset: new THREE.Vector3(0, -1, 0),
 					rotation: new THREE.Vector3(0, 0, Math.PI / 2)
 				}
 			}
 		},
 
 		dice: {
+			scale: 4.,
+			offset: new THREE.Vector3(0, 20, 0),
 			upper: {},
 			upperLeft: {
 				offset: new THREE.Vector3(-3, 0, 0),
 				dom: {
 					name: 'head',
 					dom: true,
-					geom: round(new THREE.BoxGeometry(3, 3, 3, 3, 3), 4),
-					mat: MAT_DATA['orange'],
+					round: 4,
+					geom: {
+						type: 'BoxGeometry',
+						args: [3, 3, 3, 3, 3]
+					},
+					mat: 'orange',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, 0)
 				},
 				eye1: {
 					name: 'eye1',
-					geom: new THREE.CircleGeometry(.1, 32, 32),
-					mat: MAT_DATA['black'],
+					geom: {
+						type: 'CircleGeometry',
+						args: [.1, 32, 32]
+					},
+					mat: 'black',
 					offset: new THREE.Vector3(-.2, .1, .51)
 				},
 				eye2: {
 					name: 'eye2',
-					geom: new THREE.CircleGeometry(.1, 32, 32),
-					mat: MAT_DATA['black'],
+					geom: {
+						type: 'CircleGeometry',
+						args: [.1, 32, 32]
+					},
+					mat: 'black',
 					offset: new THREE.Vector3(.2, .1, .51)
 				},
 				mouth: {
 					name: 'mouth',
-					geom: new THREE.CircleGeometry(.4, 32, 0, Math.PI),
-					mat: MAT_DATA['black'],
+					geom: {
+						type: 'CircleGeometry',
+						args: [.4, 32, 0, Math.PI]
+					},
+					mat: 'black',
 					offset: new THREE.Vector3(0, -.1, .51),
 					rotation: new THREE.Vector3(0, 0, Math.PI)
 				},
 				letter1: {
 					name: 'letter1',
-					geom: getFontGeom('6', FONT_DATA['fugue'], 1.5),
-					mat: MAT_DATA['black'],
+					geom: {
+						type: 'TextGeometry',
+						args: [6, FONT_DATA['fugue'], 1.5]
+					},
+					mat: 'black',
 					offset: new THREE.Vector3(0, .51, 0),
 					rotation: new THREE.Vector3(-Math.PI / 2, 0, 0)
 				}
@@ -640,50 +1062,72 @@ var initData = function initData() {
 				dom: {
 					name: 'head',
 					dom: true,
-					geom: round(new THREE.BoxGeometry(3, 3, 3, 3, 3), 4),
-					mat: MAT_DATA['green'],
+					round: 4,
+					geom: {
+						type: 'BoxGeometry',
+						args: [3, 3, 3, 3, 3]
+					},
+					mat: 'green',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, 0)
 				},
 				line1: {
 					name: 'line1',
-					geom: new THREE.PlaneGeometry(.1, .5),
-					mat: MAT_DATA['black'],
+					geom: {
+						type: 'PlaneGeometry',
+						args: [.1, .5]
+					},
+					mat: 'black',
 					offset: new THREE.Vector3(-.2, .15, .51),
 					rotation: new THREE.Vector3(0, 0, Math.PI / 4)
 				},
 				line2: {
 					name: 'line2',
-					geom: new THREE.PlaneGeometry(.1, .5),
-					mat: MAT_DATA['black'],
+					geom: {
+						type: 'PlaneGeometry',
+						args: [.1, .5]
+					},
+					mat: 'black',
 					offset: new THREE.Vector3(-.2, .15, .51),
 					rotation: new THREE.Vector3(0, 0, -Math.PI / 4)
 				},
 				line3: {
 					name: 'line3',
-					geom: new THREE.PlaneGeometry(.1, .5),
-					mat: MAT_DATA['black'],
+					geom: {
+						type: 'PlaneGeometry',
+						args: [.1, .5]
+					},
+					mat: 'black',
 					offset: new THREE.Vector3(.2, .15, .51),
 					rotation: new THREE.Vector3(0, 0, Math.PI / 4)
 				},
 				line4: {
 					name: 'line4',
-					geom: new THREE.PlaneGeometry(.1, .5),
-					mat: MAT_DATA['black'],
+					geom: {
+						type: 'PlaneGeometry',
+						args: [.1, .5]
+					},
+					mat: 'black',
 					offset: new THREE.Vector3(.2, .15, .51),
 					rotation: new THREE.Vector3(0, 0, -Math.PI / 4)
 				},
 				mouth: {
 					name: 'mouth',
-					geom: new THREE.CircleGeometry(.4, 32, 0, -Math.PI),
-					mat: MAT_DATA['black'],
+					geom: {
+						type: 'CircleGeometry',
+						args: [.4, 32, 0, -Math.PI]
+					},
+					mat: 'black',
 					offset: new THREE.Vector3(0, -.175, .51),
 					rotation: new THREE.Vector3(0, Math.PI, Math.PI)
 				},
 				letter1: {
 					name: 'letter1',
-					geom: getFontGeom('9', FONT_DATA['fugue'], 1.5),
-					mat: MAT_DATA['black'],
+					geom: {
+						type: 'TextGeometry',
+						args: [9, FONT_DATA['fugue'], 1.5]
+					},
+					mat: 'black',
 					offset: new THREE.Vector3(0, .51, 0),
 					rotation: new THREE.Vector3(-Math.PI / 2, 0, 0)
 				}
@@ -694,14 +1138,19 @@ var initData = function initData() {
 		},
 
 		astronaut: {
+			scale: 2.75,
+			offset: new THREE.Vector3(0, 12, 0),
 			upper: {
 				offset: new THREE.Vector3(0, 5.5, 0),
 				dom: {
 					dom: true,
 					name: 'helmet',
-					// geom: round(new THREE.BoxGeometry(5.2, 5.2, 5.2, 3, 3), 4),
-					geom: new THREE.SphereGeometry(3.5, 32, 32),
-					mat: MAT_DATA['white'],
+					round: 4,
+					geom: {
+						type: 'SphereGeometry',
+						args: [3.5, 32, 32]
+					},
+					mat: 'white',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, 0),
 					opacity: .5
@@ -709,64 +1158,83 @@ var initData = function initData() {
 				head: {
 					name: 'head',
 					// dom: true, //if dom, use to calculate position of other parts
-					geom: round(new THREE.BoxGeometry(4.5, 4.5, 5.3, 3, 3), 4),
-					// geom: new THREE.SphereGeometry(3, 32, 32),
-					mat: MAT_DATA['orange'],
+					round: 4,
+					geom: {
+						type: 'BoxGeometry',
+						args: [4.5, 4.5, 5.3, 3, 3]
+					},
+					mat: 'orange',
 					offset: new THREE.Vector3(0, 0, 0),
 					rotation: new THREE.Vector3(0, 0, 0)
 				},
 				eyeLeft: {
 					name: 'eyeLeft',
-					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
-					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['black'],
+					geom: {
+						type: 'CircleGeometry',
+						args: [.2, 32, 32]
+					},
+					mat: 'black',
 					offset: new THREE.Vector3(-.2, .1, .4)
 				},
 				eyeRight: {
 					name: 'eyeRight',
-					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
-					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['black'],
+					geom: {
+						type: 'CircleGeometry',
+						args: [.2, 32, 32]
+					},
+					mat: 'black',
 					offset: new THREE.Vector3(.2, .1, .4)
 				},
 				pad1: {
 					name: 'pad1',
-					geom: round(new THREE.CylinderGeometry(1.2, 1.2, .8, 32, 1), 4),
-					mat: MAT_DATA['lightgray'],
+					round: 4,
+					geom: {
+						type: 'CylinderGeometry',
+						args: [1.2, 1.2, .8, 32, 1]
+					},
+					mat: 'lightgray',
 					offset: new THREE.Vector3(-.55, 0, 0),
 					rotation: new THREE.Vector3(0, 0, Math.PI / 2)
 				},
 				pad2: {
 					name: 'pad2',
-					geom: round(new THREE.CylinderGeometry(1.2, 1.2, .8, 32, 1), 4),
-					mat: MAT_DATA['lightgray'],
+					round: 4,
+					geom: {
+						type: 'CylinderGeometry',
+						args: [1.2, 1.2, .8, 32, 1]
+					},
+					mat: 'lightgray',
 					offset: new THREE.Vector3(.55, 0, 0),
 					rotation: new THREE.Vector3(0, 0, Math.PI / 2)
 				}
 			},
 			upperLeft: {
-				offset: new THREE.Vector3(-3, 1, 0),
+				offset: new THREE.Vector3(-1.5, 1, 0),
 				dom: {
 					dom: true,
 					name: 'armLeft',
 					part: true,
-					geom: new THREE.SphereGeometry(.5, 32, 32),
-					// geom: new THREE.BoxGeometry(1, 2, 1),
-					mat: MAT_DATA['darkgray'],
-					offset: new THREE.Vector3(0, 0, 0),
+					geom: {
+						type: 'SphereGeometry',
+						args: [.5, 32, 32]
+					},
+					mat: 'darkgray',
+					offset: new THREE.Vector3(-1.5, 0, 0),
 					rotation: new THREE.Vector3(0, 0, -Math.PI / 12)
 				}
 			},
 			upperRight: {
-				offset: new THREE.Vector3(3, 1, 0),
+				offset: new THREE.Vector3(1.5, 1, 0),
 				dom: {
 					dom: true,
 					name: 'armRight',
 					part: true,
-					geom: new THREE.SphereGeometry(.5, 32, 32),
-					// geom: new THREE.BoxGeometry(1, 2, 1),
-					mat: MAT_DATA['darkgray'],
-					offset: new THREE.Vector3(0, 0, 0),
+					geom: {
+						type: 'SphereGeometry',
+						args: [.5, 32, 32]
+					},
+					mat: 'darkgray',
+					offset: new THREE.Vector3(1.5, 0, 0),
 					rotation: new THREE.Vector3(0, 0, -Math.PI / 12)
 				}
 			},
@@ -775,114 +1243,185 @@ var initData = function initData() {
 				dom: {
 					dom: true,
 					name: 'torso1',
-					geom: round(new THREE.CylinderGeometry(1.75, 1.75, .8, 32, 1), 4),
-					mat: MAT_DATA['lightgray2'],
+					round: 4,
+					geom: {
+						type: 'CylinderGeometry',
+						args: [1.75, 1.75, .8, 32, 1]
+					},
+					mat: 'lightgray2',
 					offset: new THREE.Vector3(0, 2, 0),
 					rotation: new THREE.Vector3(0, Math.PI / 4, 0)
 				},
 				torso2: {
 					name: 'torso2',
-					geom: round(new THREE.CylinderGeometry(2.3, 2.3, .8, 32, 1), 4),
-					mat: MAT_DATA['lightgray2'],
+					round: 4,
+					geom: {
+						type: 'CylinderGeometry',
+						args: [2.3, 2.3, .8, 32, 1]
+					},
+					mat: 'lightgray2',
 					offset: new THREE.Vector3(0, 1.25, 0),
 					rotation: new THREE.Vector3(0, Math.PI / 4, 0)
 				},
 				torso3: {
 					name: 'torso3',
-					geom: round(new THREE.CylinderGeometry(2.3, 2.3, .8, 32, 1), 4),
-					mat: MAT_DATA['lightgray2'],
+					round: 4,
+					geom: {
+						type: 'CylinderGeometry',
+						args: [2.3, 2.3, .8, 32, 1]
+					},
+					mat: 'lightgray2',
 					offset: new THREE.Vector3(0, .5, 0),
 					rotation: new THREE.Vector3(0, Math.PI / 4, 0)
 				},
 				torso4: {
 					name: 'torso4',
-					geom: round(new THREE.CylinderGeometry(2.5, 2.5, .8, 32, 1), 4),
-					mat: MAT_DATA['lightgray2'],
+					round: 4,
+					geom: {
+						type: 'CylinderGeometry',
+						args: [2.5, 2.5, .8, 32, 1]
+					},
+					mat: 'lightgray2',
 					offset: new THREE.Vector3(0, .5, 0),
 					rotation: new THREE.Vector3(0, Math.PI / 4, 0)
 				},
 				torso5: {
 					name: 'torso5',
-					geom: new THREE.BoxGeometry(4.76, 1.75, 4, 3, 3),
-					mat: MAT_DATA['lightgray'],
+					geom: {
+						type: 'BoxGeometry',
+						args: [4.76, 1.75, 4, 3, 3]
+					},
+					mat: 'lightgray',
 					offset: new THREE.Vector3(0, -1.3, 0),
 					rotation: new THREE.Vector3(0, 0, 0)
 				},
 				light1: {
 					name: 'light1',
-					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['lightblue'],
+					geom: {
+						type: 'CircleGeometry',
+						args: [.2, 32, 32]
+					},
+					mat: 'lightblue',
 					offset: new THREE.Vector3(.15, -1.3, .6),
 					rotation: new THREE.Vector3(0, 0, 0)
 				},
 				light2: {
 					name: 'light2',
-					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['green'],
+					geom: {
+						type: 'CircleGeometry',
+						args: [.2, 32, 32]
+					},
+					mat: 'green',
 					offset: new THREE.Vector3(.30, -1.3, .6),
 					rotation: new THREE.Vector3(0, 0, 0)
 				},
 				light3: {
 					name: 'light3',
-					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['orange'],
+					geom: {
+						type: 'CircleGeometry',
+						args: [.2, 32, 32]
+					},
+					mat: 'orange',
 					offset: new THREE.Vector3(.45, -1.3, .6),
 					rotation: new THREE.Vector3(0, 0, 0)
 				},
 				light4: {
 					name: 'light4',
-					geom: new THREE.PlaneGeometry(.9, .9),
-					mat: MAT_DATA['black'],
+					geom: {
+						type: 'PlaneGeometry',
+						args: [.9, .9]
+					},
+					mat: 'black',
 					offset: new THREE.Vector3(-.4, -1.3, .6),
 					rotation: new THREE.Vector3(0, 0, 0)
 				}
 			},
 			lowerLeft: {
-				offset: new THREE.Vector3(-2, -3.5, 0),
+				offset: new THREE.Vector3(-2, -1.5, 0),
 				dom: {
 					dom: true,
 					name: 'legLeft',
 					part: true,
-					geom: round(new THREE.BoxGeometry(1, 2, 1, 3, 3), 4),
-					mat: MAT_DATA['darkgray'],
-					offset: new THREE.Vector3(0, 0, 0),
+					round: 4,
+					geom: {
+						type: 'BoxGeometry',
+						args: [1, 2, 1, 3, 3]
+					},
+					mat: 'darkgray',
+					offset: new THREE.Vector3(0, -1, 0),
 					rotation: new THREE.Vector3(0, 0, Math.PI / 2)
 				}
 			},
 			lowerRight: {
-				offset: new THREE.Vector3(2, -3.5, 0),
+				offset: new THREE.Vector3(2, -1.5, 0),
 				dom: {
 					dom: true,
 					name: 'legRight',
 					part: true,
-					geom: round(new THREE.BoxGeometry(1, 2, 1, 3, 3), 4),
-					mat: MAT_DATA['darkgray'],
-					offset: new THREE.Vector3(0, 0, 0),
+					round: 4,
+					geom: {
+						type: 'BoxGeometry',
+						args: [1, 2, 1, 3, 3]
+					},
+					mat: 'darkgray',
+					offset: new THREE.Vector3(0, -1, 0),
 					rotation: new THREE.Vector3(0, 0, Math.PI / 2)
 				}
 			}
 		},
 
 		breadGuy: {
+			scale: 5,
 			upper: {},
 			middle: {
-				offset: new THREE.Vector3(0, 0, 0),
+				offset: new THREE.Vector3(0, 2, 0),
 				dom: {
-					mesh: MODEL_DATA['bread'].backing.mesh,
-					mat: MAT_DATA['beige'],
-					offset: new THREE.Vector3(0, 0, 0),
-					rotation: new THREE.Vector3(0, 0, 0)
+					mesh: MODEL_DATA['bread'].bread.mesh,
+					mat: 'lightbeige',
+					offset: new THREE.Vector3(0, -.5, 0),
+					rotation: new THREE.Vector3(0, 0, 0),
+					scale: 2.
+				},
+				crust: {
+					mesh: MODEL_DATA['bread'].crust.mesh,
+					mat: 'lightbrown',
+					offset: new THREE.Vector3(0, -.45, 0),
+					rotation: new THREE.Vector3(0, 0, 0),
+					scale: 1.98
+				},
+				// backing: {
+				// 	mesh: MODEL_DATA['bread'].backing.mesh,
+				// 	mat: 'lightbrown',
+				// 	offset: new THREE.Vector3(0, 0, 0),
+				// 	rotation: new THREE.Vector3(0, 0, 0),
+
+				// },
+				eggWhite: {
+					mesh: MODEL_DATA['egg']['egg white'].mesh,
+					mat: 'white',
+					offset: new THREE.Vector3(0, 1., 0),
+					rotation: new THREE.Vector3(-Math.PI / 2, 0, 0)
+				},
+				eggYolk: {
+					mesh: MODEL_DATA['egg'].yolk.mesh,
+					mat: 'yellow',
+					offset: new THREE.Vector3(0, 1.2, 0),
+					rotation: new THREE.Vector3(0, -Math.PI / 2, 0)
 				},
 				eyeLeft: {
-					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
-					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['orange'],
+					geom: {
+						type: 'CircleGeometry',
+						args: [.2, 32, 32]
+					},
+					mat: 'orange',
 					offset: new THREE.Vector3(-.5, 2, .55)
 				},
 				eyeRight: {
-					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
-					geom: new THREE.CircleGeometry(.2, 32, 32),
-					mat: MAT_DATA['orange'],
+					geom: {
+						type: 'CircleGeometry',
+						args: [.2, 32, 32]
+					},
+					mat: 'orange',
 					offset: new THREE.Vector3(.5, 2, .55)
 				}
 			},
@@ -894,34 +1433,44 @@ var initData = function initData() {
 		},
 
 		poopGuy: {
+			scale: 7.,
+			offset: new THREE.Vector3(0, 20., 0),
 			upper: {
 				offset: new THREE.Vector3(0, .5, 0),
 				dom: {
-					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
-					geom: new THREE.CylinderGeometry(.2, .2, .1, 32, 32),
-					mat: MAT_DATA['orange'],
+					geom: {
+						type: 'CylinderGeometry',
+						args: [.2, .2, .1, 32, 32]
+					},
+					mat: 'orange',
 					offset: new THREE.Vector3(-2.5, -7, .4),
 					rotation: new THREE.Vector3(Math.PI / 2, 0, 0)
 				},
 				eyeRight: {
 					name: 'eyeRight',
-					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
-					geom: new THREE.CylinderGeometry(.2, .2, .1, 32, 32),
-					mat: MAT_DATA['orange'],
+					geom: {
+						type: 'CylinderGeometry',
+						args: [.2, .2, .1, 32, 32]
+					},
+					mat: 'orange',
 					offset: new THREE.Vector3(2.5, -7, .4),
 					rotation: new THREE.Vector3(Math.PI / 2, 0, 0)
 				},
 				browLeft: {
 					dom: true,
-					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
-					geom: new THREE.TorusGeometry(.25, .075, 16, 20, Math.PI),
-					mat: MAT_DATA['orange'],
+					geom: {
+						type: 'TorusGeometry',
+						args: [.25, .075, 16, 20, Math.PI]
+					},
+					mat: 'orange',
 					offset: new THREE.Vector3(-1.5, -1, .4)
 				},
 				browRight: {
-					// geom: new THREE.TorusGeometry(.2, .05, 16, 32),
-					geom: new THREE.TorusGeometry(.25, .075, 16, 20, Math.PI),
-					mat: MAT_DATA['orange'],
+					geom: {
+						type: 'TorusGeometry',
+						args: [.25, .075, 16, 20, Math.PI]
+					},
+					mat: 'orange',
 					offset: new THREE.Vector3(1.5, -1, .4)
 				}
 			},
@@ -929,31 +1478,31 @@ var initData = function initData() {
 				offset: new THREE.Vector3(0, 0, 0),
 				dom: {
 					mesh: MODEL_DATA['poop'].top.mesh,
-					mat: MAT_DATA['lightbrown'],
+					mat: 'lightbrown',
 					offset: new THREE.Vector3(0, -.25, 0),
 					rotation: new THREE.Vector3(Math.PI / 2, 0, 0)
 				},
 				ring1: {
 					mesh: MODEL_DATA['poop'].ring1.mesh,
-					mat: MAT_DATA['darkbrown'],
+					mat: 'darkbrown',
 					offset: new THREE.Vector3(0, -.35, 0),
 					rotation: new THREE.Vector3(Math.PI / 2, 0, 0)
 				},
 				ring2: {
 					mesh: MODEL_DATA['poop'].ring2.mesh,
-					mat: MAT_DATA['lightbrown'],
+					mat: 'lightbrown',
 					offset: new THREE.Vector3(0, -.55, 0),
 					rotation: new THREE.Vector3(Math.PI / 2, 0, 0)
 				},
 				ring3: {
 					mesh: MODEL_DATA['poop'].ring3.mesh,
-					mat: MAT_DATA['darkbrown'],
+					mat: 'darkbrown',
 					offset: new THREE.Vector3(0, -.75, 0),
 					rotation: new THREE.Vector3(Math.PI / 2, 0, 0)
 				},
 				ring4: {
 					mesh: MODEL_DATA['poop'].ring4.mesh,
-					mat: MAT_DATA['darkbrown'],
+					mat: 'darkbrown',
 					offset: new THREE.Vector3(0, -1, 0),
 					rotation: new THREE.Vector3(Math.PI / 2, 0, 0)
 				}
@@ -962,7 +1511,197 @@ var initData = function initData() {
 			// upperRight: [],
 			// lowerLeft: [],
 			// lowerRight: [],
+		},
 
+		houseGuy: {
+			scale: 8,
+			offset: new THREE.Vector3(0, 0, 0),
+			top: {
+				offset: new THREE.Vector3(0, 2.3, 0),
+				dom: {
+					mesh: MODEL_DATA['house'].roof.mesh,
+					mat: 'lightbrown',
+					offset: new THREE.Vector3(0, .51, 0),
+					rotation: new THREE.Vector3(-Math.PI / 2, 0, 0)
+				}
+			},
+			middle: {
+				offset: new THREE.Vector3(0, 2.5, 0),
+				dom: {
+					mesh: MODEL_DATA['house'].base.mesh,
+					mat: 'beige',
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(-Math.PI / 2, 0, 0)
+				},
+				eyeLeft: {
+					geom: {
+						type: 'CylinderGeometry',
+						args: [.15, .15, .2, 32, 32]
+					},
+					mat: 'black',
+					offset: new THREE.Vector3(-.35, 0, .4),
+					rotation: new THREE.Vector3(Math.PI / 2, 0, 0)
+				},
+				eyeRight: {
+					geom: {
+						type: 'CylinderGeometry',
+						args: [.15, .15, .2, 32, 32]
+					},
+					mat: 'black',
+					offset: new THREE.Vector3(.35, 0, .4),
+					rotation: new THREE.Vector3(Math.PI / 2, 0, 0)
+				}
+			},
+			upperLeft: {
+				offset: new THREE.Vector3(-1.5, 2, 0),
+				dom: {
+					mesh: MODEL_DATA['house'].leftArm.mesh,
+					mat: 'lightblue',
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(-Math.PI / 2, -Math.PI / 2, 0)
+				}
+			},
+			upperRight: {
+				offset: new THREE.Vector3(1.5, 2, 0),
+				dom: {
+					mesh: MODEL_DATA['house'].rightArm.mesh,
+					mat: 'lightblue',
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(Math.PI / 2, Math.PI / 2, 0)
+				}
+			},
+			lowerLeft: {
+				offset: new THREE.Vector3(-.65, .75, .5),
+				dom: {
+					mesh: MODEL_DATA['house'].leftLeg.mesh,
+					mat: 'lightblue',
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(-Math.PI / 2, 0, Math.PI / 2)
+				}
+			},
+			lowerRight: {
+				offset: new THREE.Vector3(.65, .75, .5),
+				dom: {
+					mesh: MODEL_DATA['house'].rightLeg.mesh,
+					mat: 'lightblue',
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(-Math.PI / 2, 0, -Math.PI / 2)
+				}
+			}
+		},
+
+		ricecookerGuy: {
+			scale: 7,
+			offset: new THREE.Vector3(0, 2, 0),
+			middle: {
+				offset: new THREE.Vector3(0, 0, 0),
+				dom: {
+					mesh: MODEL_DATA['ricecooker'].base.mesh,
+					mat: 'lightgray',
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(-Math.PI / 2, 0, Math.PI)
+				},
+				bottom: {
+					mesh: MODEL_DATA['ricecooker'].bottom.mesh,
+					mat: 'darkgray',
+					offset: new THREE.Vector3(0, -.03, 0),
+					rotation: new THREE.Vector3(-Math.PI / 2, 0, 0)
+				},
+				bottomofcover: {
+					mesh: MODEL_DATA['ricecooker'].bottomofcover.mesh,
+					mat: 'darkgray',
+					offset: new THREE.Vector3(0, .05, 0),
+					rotation: new THREE.Vector3(-Math.PI / 2, 0, 0),
+					scale: 1.025
+				},
+				line1: {
+					name: 'line1',
+					geom: {
+						type: 'BoxGeometry',
+						args: [.1, .5, .08]
+					},
+					mat: 'black',
+					offset: new THREE.Vector3(-.23, .65, .57),
+					rotation: new THREE.Vector3(0, 0, Math.PI / 4),
+					scale: .5
+				},
+				line2: {
+					name: 'line2',
+					geom: {
+						type: 'BoxGeometry',
+						args: [.1, .5, .08]
+					},
+					mat: 'black',
+					offset: new THREE.Vector3(-.3, .65, .57),
+					rotation: new THREE.Vector3(0, 0, -Math.PI / 4),
+					scale: .5
+				},
+				line3: {
+					name: 'line3',
+					geom: {
+						type: 'BoxGeometry',
+						args: [.1, .5, .08]
+					},
+					mat: 'black',
+					offset: new THREE.Vector3(.3, .65, .57),
+					rotation: new THREE.Vector3(0, 0, Math.PI / 4),
+					scale: .5
+				},
+				line4: {
+					name: 'line4',
+					geom: {
+						type: 'BoxGeometry',
+						args: [.1, .5, .08]
+					},
+					mat: 'black',
+					offset: new THREE.Vector3(.23, .65, .57),
+					rotation: new THREE.Vector3(0, 0, -Math.PI / 4),
+					scale: .5
+				}
+			},
+			upper: {
+				offset: new THREE.Vector3(0, .15, 0),
+				dom: {
+					mesh: MODEL_DATA['ricecooker'].cover.mesh,
+					mat: 'lightgray',
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(-Math.PI / 2, 0, 0)
+				},
+				handle: {
+					mesh: MODEL_DATA['ricecooker'].handle.mesh,
+					mat: 'lightgray',
+					offset: new THREE.Vector3(0, 1.075, 0),
+					rotation: new THREE.Vector3(-Math.PI / 2, 0, 0)
+				}
+			},
+			lowerLeft: {
+				offset: new THREE.Vector3(0, 1.05, 2),
+				dom: {
+					mesh: MODEL_DATA['ricecooker'].buttonbase.mesh,
+					mat: 'darkgray',
+					offset: new THREE.Vector3(0, 0, 0),
+					rotation: new THREE.Vector3(Math.PI / 2, 0, Math.PI),
+					scale: .8
+				},
+				button1: {
+					mesh: MODEL_DATA['ricecooker'].button1.mesh,
+					mat: 'lightblue',
+					offset: new THREE.Vector3(0, -2, -.90),
+					rotation: new THREE.Vector3(Math.PI / 2, 0, 0)
+				},
+				button2: {
+					mesh: MODEL_DATA['ricecooker'].button2.mesh,
+					mat: 'green',
+					offset: new THREE.Vector3(.15, -3.3, -.90),
+					rotation: new THREE.Vector3(Math.PI / 2, 0, 0)
+				},
+				button3: {
+					mesh: MODEL_DATA['ricecooker'].button3.mesh,
+					mat: 'orange',
+					offset: new THREE.Vector3(-.15, -3.3, -.90),
+					rotation: new THREE.Vector3(Math.PI / 2, 0, 0)
+				}
+			}
 		}
 
 		//custom tweaks so I don't have to copy and paste data
@@ -976,8 +1715,11 @@ var initData = function initData() {
 
 		var t = {
 			name: 'line' + i,
-			geom: new THREE.BoxGeometry(.03, height - .05, .03),
-			mat: MAT_DATA['black'],
+			geom: {
+				type: 'BoxGeometry',
+				args: [.03, height - .05, .03]
+			},
+			mat: 'black',
 			offset: new THREE.Vector3(0, 0, 0),
 			rotation: new THREE.Vector3(0, 0, 0)
 		};
@@ -992,39 +1734,68 @@ var initData = function initData() {
 	}
 };
 
-var excludeColors = ['black', 'lightgray', 'gray', 'white', 'lightgray2', 'darkgray'];
+var excludeColors = ['black', 'lightgray', 'gray', 'white', 'lightgray2', 'darkgray', 'blackline', 'redline'];
 var allColors = Object.keys(MAT_DATA).filter(function (k) {
 	return excludeColors.indexOf(k) === -1;
 });
+var primaryColors = ['red', 'green', 'lightblue', 'orange', 'yellow'];
+var baseColors = ['beige', 'lightbeige', 'lightbrown', 'darkbrown'];
 
 var CHAR_DATA_OVERRIDES = {
 	astronaut: {
+		name: 'astronaut',
 		'upper_eyeLeft': ['black'],
 		'upper_eyeRight': ['black'],
-		'upper_head': ['orange', 'yellow']
+		'upper_head': ['orange', 'beige']
 	},
 	poopGuy: {
+		name: 'poopGuy',
 		'upper_dom': ['lightblue'],
 		'upper_eyeRight': ['lightblue'],
-		'middle_dom': allColors,
-		'middle_ring1': allColors,
-		'middle_ring2': allColors,
-		'middle_ring3': allColors,
-		'middle_ring4': allColors
+		'middle_dom': primaryColors,
+		'middle_ring1': primaryColors,
+		'middle_ring2': primaryColors,
+		'middle_ring3': primaryColors,
+		'middle_ring4': primaryColors
 	},
 	robot: {
+		name: 'robot',
 		'upper_eyeLeft': ['black', 'lightgray'],
 		'upper_eyeRight': ['black', 'lightgray'],
 		'upper_dom': ['orange', 'yellow']
 	},
 	dice: {
+		name: 'dice',
 		'upperLeft_dom': ['orange', 'yellow'],
 		'upperRight_dom': ['lightblue', 'red']
+	},
+	breadGuy: {
+		name: 'breadGuy',
+		'middle_dom': ['lightbeige'],
+		'middle_eyeRight': ['black'],
+		'middle_eyeLeft': ['black'],
+		'middle_eggYolk': ['yellow'],
+		'middle_eggWhite': ['white']
+	},
+	houseGuy: {
+		name: 'houseGuy',
+		'middle_dom': ['beige'],
+		'top_dom': primaryColors.filter(function (i) {
+			return i !== 'yellow';
+		}),
+		'upperLeft_dom': ['darkgray'],
+		'upperRight_dom': ['darkgray'],
+		'lowerLeft_dom': ['darkgray'],
+		'lowerRight_dom': ['darkgray']
+	},
+	ricecookerGuy: {
+		name: 'ricecookerGuy'
 	}
+
 };
 'use strict';
 
-var GLOBE_RADIUS = 500;
+var GLOBE_RADIUS = 250;
 
 var Globe = function Globe(radius, color, avatarPos) {
 
@@ -1054,8 +1825,9 @@ var Globe = function Globe(radius, color, avatarPos) {
   var mat = new THREE.ShaderMaterial({
     uniforms: {
       'avatarPos': { value: avatarPos },
-      'appearAmt': { value: 0 },
-      'maxDist': { value: 200. }
+      'appearAmt': { value: 0. },
+      'maxDist': { value: 40. },
+      'size': { value: .1 }
     },
     blending: THREE.AdditiveBlending,
     transparent: true,
@@ -1177,9 +1949,9 @@ var Loader = function () {
                     c.position.set(0, 0, 0); //reset any position changes, position them later
                     c.rotation.set(0, 0, 0);
                     var n = c.name;
-                    var d = MODEL_DATA[file][n];
+                    MODEL_DATA[file][n] = {};
 
-                    d.mesh = c;
+                    MODEL_DATA[file][n].mesh = c;
                 }
             });
         });
@@ -1336,7 +2108,7 @@ var animate = function animate() {
 };
 //Run the update call for the first time, registering
 //it for every animation frame.
-"use strict";
+'use strict';
 
 //Main Script
 
@@ -1371,44 +2143,172 @@ var init = function init() {
     spotLight.position.set(-10, 30, 0);
     scene.add(spotLight);
 
-    var charData = getRandomCharacterData();
-    user_data.character = charData;
+    // let charData = getRandomCharacterData();
+    // let charData = getCharData('houseGuy');
+    // user_data.character = charData;
+    // testMesh = new Avatar(charData);
 
-    testMesh = new Avatar(charData);
+    // let pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(0), GLOBE_RADIUS * Math.sin(0));
+    // testMesh.position.copy(pos);
+    // testMesh.position.add(testMesh.offset);
+    // scene.add(testMesh);
+
+    var sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 32, 32);
+    var sMat = new THREE.MeshPhongMaterial({
+        emissive: COLORS.teal,
+        specular: 0xffffff,
+        shininess: 0
+    });
+    innerGlobe = new THREE.Mesh(sGeom, sMat);
+    scene.add(innerGlobe);
+
+    // userEntries = APIController.getRecentEntries(3);
+    // console.log(userEntries);
+
+    var charName = getRandomCharName(Object.keys(CHAR_DATA));
+    // console.log(charName);
+    var data = getCharData(charName);
+    console.log(data);
+    var a = new Avatar(data);
+    var angle = 2 * Math.PI / 4 * 0;
+    var pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
+
+    a.position.copy(pos);
+    a.position.add(a.offset);
+    a.rotation.x = angle;
+
+    user_data.character = data;
+    testMesh = a;
     testMesh.castShadow = true;
-    testMesh.position.y = GLOBE_RADIUS + 5;
-    var s = .5;
-    testMesh.scale.multiplyScalar(s);
+    // testMesh.scale.set(7, 7, 7);
+    scene.add(testMesh);
 
     spotLight.target = testMesh;
     var container = new THREE.Object3D();
     container.add(spotLight);
-    container.scale.divideScalar(s);
+    container.scale.divide(testMesh.scale);
     testMesh.add(container);
     testMesh.light = spotLight;
 
-    // WORLD_CONTROLLER.setMainLightIntensity(0);
-    // WORLD_CONTROLLER.setAvatarOpacity(0);
+    APIController.getRecentEntries(3).then(function (res) {
 
-    scene.add(testMesh);
+        entries = res;
 
-    globe = new Globe(GLOBE_RADIUS + 5, new THREE.Color(0xffe877), testMesh.position);
+        var numPoints = 4;
+        entries.forEach(function (e, i) {
+
+            var charData = e.character;
+            var a = new Avatar(charData);
+            var angle = 2 * Math.PI / numPoints * (i + 1);
+            var pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
+            var box = new THREE.Box3().setFromObject(a);
+            var height = Math.abs(box.max.y - box.min.y);
+            var factor = height / pos.length();
+
+            console.log(factor);
+
+            pos.multiplyScalar(1 + factor / 1.25);
+
+            a.position.copy(pos);
+            a.position.add(a.offset);
+
+            a.rotation.x = angle;
+            a.rotation.y += Math.PI;
+
+            var c = {};
+            c.name = e.name;
+            c.text = e.text;
+            c.character = a;
+            checkpoints.push(c);
+
+            innerGlobe.add(a);
+        });
+    });
+
+    //Set checkpoints
+    // const numPoints = 4;
+
+    // for(let i=0; i<numPoints; i++){
+
+    // let keys = Object.keys(CHAR_DATA);
+    // console.log(keys);
+    // keys = keys.filter( k => {  
+
+    //     let ex = false;
+
+    //     for(let i=0; i<checkpoints.length; i++){
+
+    //         if(checkpoints[i].name === k){
+
+    //             ex = true;
+    //             break;
+
+    //         }
+
+    //     }
+
+    //     return !ex;
+
+    // } );
+
+    // const charName = getRandomCharName(keys);
+    // // console.log(charName);
+    // const data = getCharData(charName);
+    // console.log(data);
+    // const a = new Avatar(data);
+    // const angle = 2*Math.PI / numPoints * i;
+    // let pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
+
+    // a.position.copy(pos);
+    // a.position.add(a.offset);
+    // a.rotation.x = angle;
+
+    // if( i === 0){
+
+    //     user_data.character = data;
+    //     testMesh = a;
+    //     testMesh.castShadow = true;
+    //     // testMesh.scale.set(7, 7, 7);
+    //     scene.add(testMesh);
+
+    //     spotLight.target = testMesh;
+    //     let container = new THREE.Object3D();
+    //     container.add(spotLight);
+    //     container.scale.divide(testMesh.scale);
+    //     testMesh.add(container);
+    //     testMesh.light = spotLight;
+
+    // } else{
+
+    //     a.rotation.y = Math.PI;
+    //     innerGlobe.add(a);
+
+    // }
+
+    // let c = {};
+    // c.name = a.name;
+    // c.hit = false;
+    // c.character = a;
+    // checkpoints.push(c);
+
+    // }
+
+    globe = new Globe(GLOBE_RADIUS + 2.5, new THREE.Color(0xffe877), testMesh.position);
     // globe.position.y = -GLOBE_RADIUS;
     // globe.receiveShadow = true;
     scene.add(globe);
 
-    var sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 32, 32);
-    var sMat = new THREE.MeshPhongMaterial({
-        emissive: COLORS.black,
-        specular: COLORS.black,
-        shininess: 0
-    });
-    var innerGlobe = new THREE.Mesh(sGeom, sMat);
-    scene.add(innerGlobe);
+    // testMesh.position.add(testMesh.offset);
+    // testMesh.position.y += GLOBE_RADIUS;
+    // let s = 1;
+    // testMesh.scale.multiplyScalar(s);
 
     clock = new THREE.Clock();
 
     window.addEventListener('resize', resize);
+
+    //Monitor the mouse position
+    window.addEventListener('mousemove', mouse_monitor);
 
     var x = 0,
         y = 1,
@@ -1421,47 +2321,20 @@ var init = function init() {
 
     testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
 
-    // let a = new THREE.AmbientLight();
-    // scene.add(a);
+    WORLD_CONTROLLER = createController(renderer, scene, camera, testMesh, globe);
+    WORLD_CONTROLLER.setWorldLights(1);
+    WORLD_CONTROLLER.setMainLightIntensity(.3);
+    WORLD_CONTROLLER.expandStarField(100);
+    WORLD_CONTROLLER.moveCamera('side');
+
+    // UIController = createUIController();
+
+    document.body.addEventListener('keydown', UIController.handleKeyDown);
+    document.body.addEventListener('keyup', UIController.handleKeyUp);
 
     clock.start();
-    animate();
+    WORLD_CONTROLLER.animate();
 };
-
-var update = function update() {
-    TWEEN.update();
-    var d = clock.getDelta();
-    var globalTime = clock.elapsedTime;
-
-    var elipsePathPoint = testMesh.movementFunc(globalTime);
-
-    // camera.lookAt(testMesh);
-    // testMesh.position.x = elipsePathPoint.x
-    // testMesh.position.y = elipsePathPoint.y
-    // testMesh.position.z = elipsePathPoint.z;
-
-    // camera.position.copy(testMesh.position);
-    // camera.position.z = 5;
-    // testMesh.update(d);
-
-    globe.frustumCulled = false;
-    globe.rotation.x += .0005;
-    controls.update();
-};
-
-var animate = function animate() {
-
-    window.requestAnimationFrame(animate);
-    update();
-
-    //Animation should be extracted into its own function
-    //but you get the point for now.
-
-    //Render the frame
-    renderer.render(scene, camera);
-};
-//Run the update call for the first time, registering
-//it for every animation frame.
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -1558,6 +2431,28 @@ var RiggedAvatar2 = function () {
 }();
 "use strict";
 
+var SHADERS = {
+
+	monochrome: {
+
+		uniforms: {
+
+			"tDiffuse": { value: null },
+			"magnitude": { value: 1. },
+			"darkness": { value: .33 },
+			"delta": { value: null }
+
+		},
+
+		vertexShader: ["varying highp vec2 vUv;", "void main(){", "vUv = uv;", "gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );", "}"].join('\n'),
+
+		fragmentShader: ["uniform float darkness;", "uniform float magnitude;", "uniform sampler2D tDiffuse;", "varying highp vec2 vUv;", "void main(){", "vec3 color = texture2D(tDiffuse, vUv).rgb;", "vec3 amt = vec3(0.3, .11, 0.59);", "vec3 gray = vec3(dot(amt, color));", "gl_FragColor = vec4(mix(color, gray, magnitude)-darkness, 1.0);", "}"].join('\n')
+
+	}
+
+};
+"use strict";
+
 var TIMELINE = function () {
 	//may be necessary later on?
 
@@ -1571,6 +2466,8 @@ var TIMELINE = function () {
 	}
 }();
 'use strict';
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var UIController = function () {
 
@@ -1599,7 +2496,11 @@ var UIController = function () {
 	    name = document.getElementById('name'),
 	    cvv = document.getElementById('cvv'),
 	    number = document.getElementById('number'),
-	    expiration = document.getElementById('expiration');
+	    expiration = document.getElementById('expiration'),
+	    amount = document.getElementById('amount'),
+	    email = document.getElementById('email');
+
+	var errorList = document.querySelector('#error');
 
 	/* TITLE SCREEN */
 
@@ -1667,12 +2568,39 @@ var UIController = function () {
 		if (e) e.preventDefault();
 
 		var ans = quoteInputAnswer.value;
+
+		if (ans.length === 0) {
+
+			var err = "answer must be longer than 0 characters.";
+			var elem = document.getElementById('quoteInputErr');
+
+			elem.innerHTML = err;
+			elem.style.opacity = 1;
+
+			return;
+		}
 		user_data.text = ans;
 		ans = stylizeQuote(ans);
 		donationQuoteAnswer.innerHTML = ans;
 
 		hideQuoteInput();
-		showDonation();
+		// WORLD_CONTROLLER.shrinkStarField(1200);
+		WORLD_CONTROLLER.sizeStarField(1, 100, 60, .1, 300);
+		WORLD_CONTROLLER.moveCamera('side');
+		paused = false;
+
+		setTimeout(function () {
+
+			//Good for poop dude
+			var idleAnims = getIdleAnim(testMesh);
+
+			//Start animations
+			idleAnims.forEach(function (elem) {
+				elem.start();
+			});
+		}, 800);
+
+		APIController.postEntry(user_data);
 
 		return false;
 	}
@@ -1696,6 +2624,32 @@ var UIController = function () {
 		el.focus();
 	}
 
+	var fired = false;
+
+	function handleKeyDown(e) {
+
+		if (paused || fired) {
+
+			return;
+		}
+
+		if (e.keyCode === 32 && e.target === document.body) {
+			//space
+
+			fired = true;
+			WORLD_CONTROLLER.setRotationFactor(-.005);
+		}
+	}
+
+	function handleKeyUp(e) {
+
+		if (e.keyCode === 32) {
+
+			fired = false;
+			WORLD_CONTROLLER.setRotationFactor(0);
+		}
+	}
+
 	quoteInputButton.addEventListener('mousedown', onAnswerSubmit);
 	quoteInputAnswer.addEventListener('keydown', ansKeyDown);
 	quoteInputAnswer.addEventListener('blur', keepBlur);
@@ -1707,6 +2661,18 @@ var UIController = function () {
 		e.preventDefault();
 
 		var name = nameInputAnswer.value;
+
+		if (name.length === 0) {
+
+			var err = "surely you must go by something...";
+			var elem = document.getElementById('nameInputErr');
+
+			elem.innerHTML = err;
+			elem.style.opacity = 1;;
+
+			return;
+		}
+
 		user_data.name = name;
 
 		hideNameInput();
@@ -1744,10 +2710,10 @@ var UIController = function () {
 		var answer = document.getElementById('quoteMainAnswer'),
 		    username = document.getElementById('quoteMainUser');
 
-		otherAns.innerHTML = data.quote;
-		username.innerHTML = "-" + data.username;
+		answer.innerHTML = data.text;
+		username.innerHTML = "-" + data.name;
 
-		quoteMain.classList.add('fadeIn');
+		show(quoteMain);
 	}
 
 	function hideQuoteMain() {
@@ -1773,33 +2739,141 @@ var UIController = function () {
 	}
 
 	quoteMainClose.addEventListener('mousedown', hideQuoteMain);
+	quoteMainClose.addEventListener('mousedown', function () {
+
+		WORLD_CONTROLLER.executeAction(checkpointIndex);
+		paused = false;
+	});
 
 	/* DONATION BOX STUFF */
+	var card_token = "";
 
-	function submitDonation(e) {
+	function errorDisplay(errors) {
+
+		if (Object.keys(errors).length != 0) errorList.innerHTML = "detected error(s):";
+
+		var _iteratorNormalCompletion = true;
+		var _didIteratorError = false;
+		var _iteratorError = undefined;
+
+		try {
+			for (var _iterator = Object.entries(errors)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+				var _step$value = _slicedToArray(_step.value, 2),
+				    key = _step$value[0],
+				    err = _step$value[1];
+
+				var errorItem = document.createElement('li');
+				errorItem.innerHTML = err.message;
+				errorList.appendChild(errorItem);
+			}
+		} catch (err) {
+			_didIteratorError = true;
+			_iteratorError = err;
+		} finally {
+			try {
+				if (!_iteratorNormalCompletion && _iterator.return) {
+					_iterator.return();
+				}
+			} finally {
+				if (_didIteratorError) {
+					throw _iteratorError;
+				}
+			}
+		}
+	}
+
+	function checkDonation(card) {
+		var result = [];
+
+		var dollar_regex = /^\d+(?:\.\d{0,2})$/;
+
+		if (!dollar_regex.test(card.amount)) {
+			var resultItem = {
+				message: 'Invalid dollar amount'
+			};
+			result[0] = resultItem;
+		}
+
+		errorDisplay(result);
+		return Object.keys(result).length == 0;
+	}
+
+	async function submitDonation(card_token) {
+		/* clear error display */
+		while (errorList.firstChild) {
+			errorList.removeChild(errorList.firstChild);
+		}
+
 		var nameVal = name.value,
 		    numberVal = number.value,
 		    cvvVal = cvv.value,
-		    expirationVal = expiration.value;
+		    expirationVal = expiration.value,
+		    amountVal = amount.value,
+		    emailVal = email.value;
 
 		var card = {
 			'name': nameVal,
 			'number': numberVal,
 			'cvv': cvvVal,
-			'expiration': expirationVal
+			'expiration': expirationVal,
+			'amount': amountVal
 		};
+
+		if (checkDonation(card)) {
+
+			var _donation = amountVal * 100;
+			var destination = "73-1710135";
+			var currency = "usd";
+			var payload = {
+				"source": card_token,
+				"amount": _donation,
+				"destination": destination,
+				"receipt_email": emailVal,
+				"currency": currency
+			};
+
+			try {
+				var response = await fetch("https://api.pandapay.io/v1/donations", {
+					method: 'POST',
+					headers: {
+						'Content-Type': "application/json; charset=utf-8",
+						'Authorization': 'Basic ' + btoa('sk_test_ehg1TY6M9ACY8k13VKgyAw' + ':')
+					},
+					body: JSON.stringify(payload)
+				});
+				var status = await response.status;
+				if (status >= 200 && status < 300) {
+					var json = await response.json();
+					console.log(json);
+					return true;
+				} else {
+					throw new Error(status);
+				}
+			} catch (e) {
+				var err = {};
+				if (e.message >= 500) err[0] = { message: 'The service we use for payments is down/undermaintennance.  Come back another time! Error: ' + e.message };else err[0] = { message: 'Your request could not be sent :( ' + e.message };
+
+				errorDisplay(err);
+				throw new Error(e.message);
+			}
+		}
+		return false;
 	}
 
 	donationClose.addEventListener('mousedown', hideDonation);
-	donationSubmit.addEventListener('mousedown', submitDonation);
 
 	return {
 		showTitle: showTitle,
 		hideTitle: hideTitle,
 		showQuoteMain: showQuoteMain,
 		hideQuoteMain: hideQuoteMain,
+		showDonation: showDonation,
 		showQuoteInput: showQuoteInput,
-		hideQuoteInput: hideQuoteInput
+		hideQuoteInput: hideQuoteInput,
+		handleKeyDown: handleKeyDown,
+		handleKeyUp: handleKeyUp,
+		submitDonation: submitDonation,
+		errorDisplay: errorDisplay
 	};
 }();
 'use strict';
@@ -1807,7 +2881,9 @@ var UIController = function () {
 /* WORLD RELATED DATA */
 
 var COLORS = {
-  'black': new THREE.Color(0x00010c)
+  'black': new THREE.Color(0x00010c),
+  'yellow': new THREE.Color(0xffce3d),
+  'teal': new THREE.Color(0x0d759b)
 
   //Some example curves to test curve movement
   //Pulled from THREEJS Docs : https://threejs.org/docs/#api/extras/curves/EllipseCurve
@@ -1879,7 +2955,8 @@ var initializeRenderer = function initializeRenderer() {
   renderer.shadowMap.type = THREE.PCSoftShadowMap;
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setClearColor(COLORS.black);
+  // renderer.setClearColor(COLORS.black)
+  renderer.setClearColor(COLORS.yellow);
 
   container.appendChild(renderer.domElement);
 
@@ -1890,7 +2967,8 @@ var initializeRenderer = function initializeRenderer() {
 var initializeCamera = function initializeCamera() {
   //Set camera to requested position
   var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
-  camera.position.set(30, GLOBE_RADIUS + 5, 50);
+  // camera.position.set(-GLOBE_RADIUS/3, GLOBE_RADIUS+7.5, 0)
+  camera.position.set(0, GLOBE_RADIUS + 30, GLOBE_RADIUS / 3);
   //Similar to above
   return camera;
 };
@@ -1918,6 +2996,8 @@ var getFontGeom = function getFontGeom(letter, fontData, size) {
   var height = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : .1;
 
 
+  console.log(fontData);
+
   var textGeometry = new THREE.TextGeometry(letter, {
     font: fontData,
     size: size,
@@ -1939,7 +3019,9 @@ var getEdgesGeom = function getEdgesGeom(geom) {
 };
 
 var tweenScalar = function tweenScalar(source, propName, target) {
-  var easing = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : TWEEN.Easing.Quadratic.InOut;
+  var time = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 500;
+  var easing = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : TWEEN.Easing.Quadratic.InOut;
+  var callback = arguments[5];
   //tween for scalar target
 
   var o = {};
@@ -1947,9 +3029,13 @@ var tweenScalar = function tweenScalar(source, propName, target) {
   var t = {};
   t[propName] = target;
 
-  var tw = new TWEEN.Tween(o).to(t);
+  var tw = new TWEEN.Tween(o).to(t, time);
   tw.onUpdate(function () {
     source[propName] = o[propName];
+  });
+  if (callback) tw.onComplete(function () {
+    console.log('callback');
+    callback();
   });
 
   tw.start();
@@ -1970,11 +3056,12 @@ var stylizeQuote = function stylizeQuote(string) {
   return newStr;
 };
 
-var getRandomCharacterData = function getRandomCharacterData() {
+var getRandomCharName = function getRandomCharName(keys) {
 
-  var keys = Object.keys(CHAR_DATA_OVERRIDES);
-  var charName = keys[Math.floor(Math.random() * keys.length)];
-  // let charName = 'robot';
+  return keys[Math.floor(Math.random() * keys.length)];
+};
+var getCharData = function getCharData(charName) {
+
   var overrides = CHAR_DATA_OVERRIDES[charName];
 
   var data = {};
@@ -1982,6 +3069,8 @@ var getRandomCharacterData = function getRandomCharacterData() {
   data['name'] = charName;
 
   for (var key in overrides) {
+
+    if (key === 'name') continue;
 
     var mats = overrides[key];
     var matName = mats[Math.floor(Math.random() * mats.length)];
@@ -1991,23 +3080,142 @@ var getRandomCharacterData = function getRandomCharacterData() {
 
   return data;
 };
+
+var getMat = function getMat(name) {
+
+  var data = MAT_DATA[name];
+  var mat = void 0;
+
+  if (name.substr(name.length - 4) === 'line') {
+
+    mat = new THREE.LineBasicMaterial(data);
+  } else {
+
+    mat = new THREE.MeshStandardMaterial(data);
+  }
+
+  mat.side = THREE.DoubleSide;
+
+  return mat;
+};
+
+function round(geom, n) {
+
+  var modifier = new THREE.SubdivisionModifier(n);
+  modifier.modify(geom);
+
+  return geom;
+}
+
+var MOUSE_POS = { x: 0.5, y: 0.5 };
+
+var mouse_monitor = function mouse_monitor(e) {
+  MOUSE_POS.x = e.clientX / window.innerWidth * 2 - 1;
+  MOUSE_POS.y = e.clientY / window.innerHeight * 2 - 1;
+};
 'use strict';
 
-var WORLD_CONTROLLER = function () {
+var createController = function createController(renderer, scene, camera, mainAvatar, globe) {
+
+	var cameraPositions = {
+		front: new THREE.Vector3(0, GLOBE_RADIUS + 7.5, GLOBE_RADIUS / 3),
+		side: new THREE.Vector3(-(GLOBE_RADIUS / 3 + 75), GLOBE_RADIUS + 35, 75),
+		diagonal: new THREE.Vector3(-GLOBE_RADIUS / 3, GLOBE_RADIUS + 7.5, GLOBE_RADIUS / 3)
+	};
+
+	camera.currentPos = 'front';
+
+	var clock = new THREE.Clock();
+	clock.start();
+
+	/* Post processing stuff */
+
+	var composer = new THREE.EffectComposer(renderer);
+	composer.addPass(new THREE.RenderPass(scene, camera));
+
+	var monochromePass = new THREE.ShaderPass(SHADERS.monochrome);
+	composer.addPass(monochromePass);
+
+	var shaderPasses = {
+
+		'monochrome': monochromePass
+
+	};
+
+	turnOnPostProcessing('monochrome');
+
+	function turnOnPostProcessing(name) {
+
+		var pass = shaderPasses[name];
+		pass.renderToScreen = true;
+		postprocessing = pass;
+	}
+
+	function turnOffPostProcessing(passName) {
+
+		if (passName) {
+
+			var pass = shaderPasses[passName];
+			pass.renderToScreen = false;
+		} else if (postprocessing) {
+
+			postprocessing.renderToScreen = false;
+			postprocessing = null;
+		}
+	}
+
+	function fadeToColor(delay) {
+
+		setTimeout(function () {
+			tweenScalar(monochromePass.uniforms['darkness'], 'value', 0, 500, TWEEN.Easing.Quadratic.InOut, turnOffPostProcessing);
+			tweenScalar(monochromePass.uniforms['magnitude'], 'value', 0);
+		}, delay);
+	}
+
+	function sizeStarField(s, delay, targetDist, targetSize, distTime) {
+
+		setTimeout(function () {
+
+			var t = new THREE.Vector3(s, s, s);
+
+			var tween = new TWEEN.Tween(globe.scale).to(t, 1000);
+			tween.easing(TWEEN.Easing.Exponential.Out);
+
+			var easing = TWEEN.Easing.Quadratic.InOut;
+			// globe.material.uniforms['maxDist'].value = targetDist;
+			var tw = tweenScalar(globe.material.uniforms['maxDist'], 'value', targetDist, distTime, easing);
+			// tw.onUpdate(function(){
+			// 	console.log(globe.material.uniforms['maxDist'].value);
+			// })
+			tweenScalar(globe.material.uniforms['size'], 'value', targetSize);
+
+			tween.start();
+		}, delay);
+	}
+
+	function expandStarField(delay) {
+
+		sizeStarField(1.5, delay, 500, .2, 600);
+	}
+
+	function shrinkStarField(delay) {
+
+		sizeStarField(1, delay, 100, .2, 300);
+	}
 
 	function setMainLightIntensity(n) {
 
-		tweenScalar(testMesh.light, 'intensity', n);
+		tweenScalar(mainAvatar.light, 'intensity', n);
 	}
 
-	function seWorldLights(appearAmt) {
+	function setWorldLights(appearAmt) {
 
 		globe.material.uniforms['appearAmt'].value = appearAmt;
 	}
 
 	function setAvatarOpacity(n) {
 
-		testMesh.traverse(function (c) {
+		mainAvatar.traverse(function (c) {
 
 			if (c.hasOwnProperty('material')) {
 
@@ -2016,9 +3224,124 @@ var WORLD_CONTROLLER = function () {
 		});
 	}
 
-	return {
-		setMainLightIntensity: setMainLightIntensity,
-		seWorldLights: seWorldLights,
-		setAvatarOpacity: setAvatarOpacity
+	function moveCamera(pos) {
+
+		var p = cameraPositions[pos];
+		var t = new TWEEN.Tween(camera.position).to(p, 800);
+		t.easing(TWEEN.Easing.Quadratic.InOut);
+		t.start();
+
+		camera.currentPos = pos;
+	}
+
+	var rot = {
+		val: 0
 	};
-}();
+	var hit = false;
+
+	function update() {
+
+		TWEEN.update();
+		var d = clock.getDelta();
+		var globalTime = clock.elapsedTime;
+
+		globe.frustumCulled = false;
+		globe.rotation.x += .0001;
+		controls.update();
+
+		if (rot.val && !paused) {
+
+			innerGlobe.rotation.x += rot.val;
+			var angle = 2 * Math.PI / checkpoints.length * checkpointIndex;
+			console.log(angle);
+
+			if (innerGlobe.rotation.x <= -angle + Math.PI / 12 && !hit) {
+				//stop rotation and only set tween once
+
+				hit = true;
+
+				setRotationFactor(0, function () {
+					hit = false;
+					paused = true;
+					var data = entries[checkpointIndex - 1];
+					UIController.showQuoteMain(data);
+				});
+			}
+		}
+	}
+
+	function executeAction(index) {
+
+		checkpointActions[index]();
+	}
+
+	function setRotationFactor(val, callback) {
+
+		tweenScalar(rot, 'val', val, 1000, TWEEN.Easing.Quadratic.InOut, callback);
+	}
+
+	function stopRotation() {
+
+		var callback = function callback() {
+
+			console.log('rotation stopped');
+			UIController.showQuoteMain(dummy_data);
+		};
+
+		setRotationFactor(0, callback);
+	}
+
+	function continueRotation() {
+
+		var callback = function callback() {
+
+			console.log('rotation continued');
+
+			if (stopped) {
+				//if it was stopped after being started
+
+				checkpointIndex++;
+			}
+
+			stopped = false;
+		};
+
+		setRotationFactor(-.002, callback);
+	}
+
+	function animate() {
+		TWEEN.update();
+		window.requestAnimationFrame(animate);
+		update();
+
+		//Animation should be extracted into its own function
+		//but you get the point for now.
+
+		if (postprocessing) {
+
+			composer.render();
+		} else {
+
+			renderer.render(scene, camera);
+		}
+	}
+
+	return {
+		turnOnPostProcessing: turnOnPostProcessing,
+		turnOffPostProcessing: turnOffPostProcessing,
+		setMainLightIntensity: setMainLightIntensity,
+		setWorldLights: setWorldLights,
+		setAvatarOpacity: setAvatarOpacity,
+		fadeToColor: fadeToColor,
+		expandStarField: expandStarField,
+		shrinkStarField: shrinkStarField,
+		sizeStarField: sizeStarField,
+		moveCamera: moveCamera,
+		continueRotation: continueRotation,
+		stopRotation: stopRotation,
+		setRotationFactor: setRotationFactor,
+		executeAction: executeAction,
+		update: update,
+		animate: animate
+	};
+};

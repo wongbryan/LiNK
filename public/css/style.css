@@ -99,6 +99,15 @@ h1, h2, header, p, a, span {
       font-size: 15px;
       color: #808285;
       margin-bottom: 20px; }
+  #quoteInput .inputErr, #nameInput .inputErr {
+    margin-top: 40px;
+    font-family: "Brandon Text";
+    font-weight: lighter;
+    font-size: 15px;
+    color: #808285;
+    margin-bottom: 20px;
+    transition: all .3s ease;
+    opacity: 0; }
 
 #nameInput {
   z-index: 2; }
