@@ -156,10 +156,10 @@ const init = () => {
     WORLD_CONTROLLER.expandStarField(100);
     WORLD_CONTROLLER.moveCamera('side');
 
-    UIController = createUIController();
+    // UIController = createUIController();
 
-    document.body.addEventListener('keydown', UIController.handleKeyDown);
-    document.body.addEventListener('keyup', UIController.handleKeyUp);
+    // document.body.addEventListener('keydown', UIController.handleKeyDown);
+    // document.body.addEventListener('keyup', UIController.handleKeyUp);
 
     clock.start();
     WORLD_CONTROLLER.animate();

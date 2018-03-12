@@ -1,4 +1,4 @@
-const createUIController = function(){
+const UIController = (function(){
 
 	var title = document.getElementById('title');
 
@@ -355,4 +355,4 @@ const createUIController = function(){
 		handleKeyUp: handleKeyUp,
 	}
 
-};
+})();
