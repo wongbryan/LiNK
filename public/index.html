@@ -4,18 +4,19 @@
 	<link rel="stylesheet" type="text/css" href="/assets/fonts/caslon-web/stylesheet.css"/>
 	<link rel="stylesheet" type="text/css" href="/assets/fonts/brandon-text-web/stylesheet.css"/>
 	<link rel="stylesheet" type="text/css" href="/assets/fonts/itc-grouch-web/stylesheet.css"/>
+	<script src="//d2t45z63lq9zlh.cloudfront.net/panda-v0.0.5.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="/css/style.css"/>
 	<title>LiNK (dev page)</title>
 </head>
 <body>
-	<div id="title" class="screen" style="display: none;">
+	<div id="title" class="screen">
 		<div class="main">
 			<h1 class="glow">Home</h1>
 			<h2>a charity project for Liberty in North Korea.</h2>
 			<p class="blinkAnim">CLICK AND HOLD</p>
 		</div>
 	</div>
-	<div id="nameInput" class="screen"" style="display: none;">
+	<div id="nameInput" class="screen">
 		<div class="main">
 			<h1 class="glow">What's your name?</h1>
 			<form id="prompt">
@@ -24,7 +25,7 @@
 			<div class="submitButton glowBorder"></div>
 		</div>
 	</div>
-	<div id="quoteInput" class="screen" style="display: none;">
+	<div id="quoteInput" class="screen">
 		<div class="main">
 			<h1 class="glow">Home is...</h1>
 			<form id="prompt">
@@ -34,7 +35,7 @@
 			<div class="submitButton glowBorder"></div>
 		</div>
 	</div>
-	<div id="quoteMain" class="screen" style="display: none;">
+	<div id="quoteMain" class="screen" >
 		<div class="main">
 			<h1 id="quoteMainAnswer">"Home is where I can eat a peanut banana sandwich."</h1>
 			<p id="quoteMainUser">Bryan Wong, Los Angeles</p>
@@ -53,45 +54,49 @@
 				<form id="donationForm" spellcheck="false">
 					<div class="form-group name">
 						<label for="name">first name</label>
-						<input type="text" class="form-control" id="name" autocomplete="nope"></input>
+						<input type="text" class="form-control" id="name" autocomplete="nope" data-panda="first_name" ></input>
 					</div>
 					<div class="form-group name">
 						<label for="name">last name</label>
-						<input type="text" class="form-control" id="name" autocomplete="nope"></input>
+						<input type="text" class="form-control" id="name" autocomplete="nope" data-panda="last_name" ></input>
 					</div>
 					<div class="form-group number">
 						<label for="number">card number</label>
-						<input type="text" class="form-control" id="number" autocomplete="nope"></input>
+						<input type="text" class="form-control" id="number" autocomplete="nope" data-panda="credit_card" ></input>
 					</div>
 					<div class="form-group cvv">
 						<label for="cvv">cvv</label>
-						<input maxlength="4" type="text" class="form-control" id="cvv" autocomplete="nope"></input>
+						<input maxlength="4" type="text" class="form-control" id="cvv" autocomplete="nope" data-panda="cvv"></input>
 					</div>
 					<div class="form-group expiration">
 						<label for="expiration">expiration</label>
-						<input maxlength="7" type="text" class="form-control" id="expiration" autocomplete="nope"></input>
+						<input maxlength="7" type="text" class="form-control" id="expiration" autocomplete="nope" data-panda="expiration" ></input>
 						<h1 class="description">mm/yyyy</h1>
 					</div>
 					<div class="form-group amount">
 						<label for="amount">amount</label>
 						<input type="text" class="form-control" id="amount" autocomplete="nope"></input>
-						<h1 class="description">usd</h1>
+						<h1 class="description">usd (i.e: 10.00)</h1>
 					</div>
 					<div class="form-group email">
 						<label for="email">email</label>
-						<input type="text" class="form-control" id="amount" autocomplete="nope"></input>
+						<input type="text" class="form-control" id="email" autocomplete="nope"></input>
 						<h1 class="description">for your tax-deductible email receipt</h1>
 					</div>
 					<div id="donationSubmit">
-						<button type="button" onsubmit="UIController.donationSubmit">submit</button>
+						<button type="submit">submit</button>
+					</div>
+					<div class="form-group error">
+						<ul id="error"></ul>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
-	<div id="container" style="display: none;"></div>
+	<div id="container" ></div>
+
 </body>
-<!-- <script type="vsh" id="vertexShader">
+<script type="vsh" id="vertexShader">
 	
 	varying vec3 vNormal;
 	void main() 
@@ -159,7 +164,7 @@
 		// gl_FragColor = vec4( normalize(testColor), opacity );
 	}
 
-</script> -->
+</script>
 
 <script type="text/javascript" src="/js/lib/three.js"></script>
 <script type="text/javascript" src="/js/lib/OrbitControls.js"></script>
