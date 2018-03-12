@@ -11,6 +11,10 @@ const user_data = {
 
 const other_users_data = [];
 
+const ROUNDED_GEOMS = {
+	
+}
+
 const MAT_DATA = {
 	'yellow': {
         color: 0x89918c,

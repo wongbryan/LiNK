@@ -129,6 +129,8 @@ const resize = () => {
 
 const getFontGeom = (letter, fontData, size, height=.1) => {
 
+  console.log(fontData);
+
   var textGeometry = new THREE.TextGeometry(letter, {
       font: fontData,
       size: size,

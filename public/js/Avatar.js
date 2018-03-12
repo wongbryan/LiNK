@@ -79,15 +79,39 @@ function buildParts(data){
 				d.mesh.material = mat;
 				part = d.mesh;
 
-			} else {
+			} else if(d.geom.type === "TextGeometry"){
+
+				const gArgs = d.geom.args;
+				geom = getFontGeom.apply(null, gArgs);
+				const mat = getMat(d.mat);
+
+				part = new THREE.Mesh(geom, mat);
+
+			} else{
 
 				const gType = d.geom.type;
 				const gArgs = d.geom.args;
 
 				func = THREE[gType];
 				let geom = createGeom(gType, gArgs);
-				geom = d.round ? round(geom, d.round) : geom;
-				let mat = getMat(d.mat);
+
+				if(d.round){
+
+					if(ROUNDED_GEOMS.hasOwnProperty(gType)){
+
+						geom = ROUNDED_GEOMS[gType];
+
+					} else{
+
+						const roundedGeom = round(geom, d.round);
+						geom = roundedGeom;
+						ROUNDED_GEOMS[gType] = roundedGeom;
+
+					}
+
+				}
+
+				const mat = getMat(d.mat);
 
 				part = new THREE.Mesh(geom, mat);
 

@@ -32,7 +32,7 @@ const init = () => {
     scene.add(spotLight);
 
     // let charData = getRandomCharacterData();
-    let charData = getCharData('breadGuy');
+    let charData = getCharData('dice');
     user_data.character = charData;
     
     testMesh = new Avatar(charData);
