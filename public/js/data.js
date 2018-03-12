@@ -1180,5 +1180,6 @@ const CHAR_DATA_OVERRIDES = {
 		'lowerLeft_dom': ['darkgray'],
 		'lowerRight_dom': ['darkgray'],
 	},
+	ricecookerGuy: {}
 
 }
