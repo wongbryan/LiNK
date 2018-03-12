@@ -332,7 +332,7 @@ const UIController = (function(){
 					method: 'POST',
 					headers: {
 						'Content-Type': "application/json; charset=utf-8",
-						'Authorization': 'Basic ' + btoa('sk_test_ehg1TY6M9ACY8k13VKgyAw' + ':'),
+						'Authorization': 'Basic ' + btoa('PLACE_SECRET_KEY_HERE' + ':'),
 					},
 					body: JSON.stringify(payload),
 				});
