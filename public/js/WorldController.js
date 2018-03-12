@@ -2,7 +2,7 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
 	const cameraPositions = {
 		front: new THREE.Vector3(0, GLOBE_RADIUS + 7.5, GLOBE_RADIUS/3),
-		side: new THREE.Vector3(-GLOBE_RADIUS/3, GLOBE_RADIUS + 7.5, 0),
+		side: new THREE.Vector3(-(GLOBE_RADIUS/3 + 75), GLOBE_RADIUS + 7.5, 0),
 		diagonal: new THREE.Vector3(-GLOBE_RADIUS/3, GLOBE_RADIUS + 7.5, GLOBE_RADIUS/3),
 	}
 

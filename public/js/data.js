@@ -175,7 +175,8 @@ const initData = () => {
 	CHAR_DATA = {
 
 		robot: {
-			offset: new THREE.Vector3(0, 5, 0),
+			scale: 2.75,
+			offset: new THREE.Vector3(0, 10, 0),
 			upper: {
 				offset: new THREE.Vector3(0, 4.75, 0),
 				dom: {	
@@ -401,7 +402,8 @@ const initData = () => {
 		},
 
 		dice: {
-			offset: new THREE.Vector3(0, 5, 0),
+			scale: 4.,
+			offset: new THREE.Vector3(0, 20, 0),
 			upper: {},
 			upperLeft: {
 				offset: new THREE.Vector3(-3, 0, 0),
@@ -537,7 +539,8 @@ const initData = () => {
 		},
 
 		astronaut: {
-			offset: new THREE.Vector3(0, 5, 0),
+			scale: 2.75,
+			offset: new THREE.Vector3(0, 12, 0),
 			upper: {
 				offset: new THREE.Vector3(0, 5.5, 0),
 				dom: {
@@ -769,7 +772,7 @@ const initData = () => {
 		},
 
 		breadGuy: {
-			scale: 2.5,
+			scale: 5,
 			upper: {},
 			middle: {
 				offset: new THREE.Vector3(0, 2, 0),
@@ -831,8 +834,8 @@ const initData = () => {
 		},
 
 		poopGuy: {
-			scale: 3.,
-			offset: new THREE.Vector3(0, 10., 0),
+			scale: 7.,
+			offset: new THREE.Vector3(0, 20., 0),
 			upper: {
 				offset: new THREE.Vector3(0, .5, 0),
 				dom: {	
@@ -912,7 +915,7 @@ const initData = () => {
 		},
 
 		houseGuy: {
-			scale: 2.,
+			scale: 8,
 			offset: new THREE.Vector3(0, 0, 0),
 			top: {
 				offset: new THREE.Vector3(0, 2.3, 0),
@@ -933,19 +936,21 @@ const initData = () => {
 				},
 				eyeLeft: {	
 					geom: {
-						type: 'CircleGeometry',
-						args: [.15, 32, 32],
+						type: 'CylinderGeometry',
+						args: [.15, .15, .2, 32, 32],
 					},
 					mat: 'black',
-					offset: new THREE.Vector3(-.4, .8, .55)
+					offset: new THREE.Vector3(-.35, 0, .4),
+					rotation: new THREE.Vector3(Math.PI/2, 0, 0),
 				},
 				eyeRight: {
 					geom: {
-						type: 'CircleGeometry',
-						args: [.15, 32, 32],
+						type: 'CylinderGeometry',
+						args: [.15, .15, .2, 32, 32],
 					},
 					mat: 'black',
-					offset: new THREE.Vector3(.4, .8, .55)
+					offset: new THREE.Vector3(.35, 0, .4),
+					rotation: new THREE.Vector3(Math.PI/2, 0, 0),
 				},
 			},
 			upperLeft: {
