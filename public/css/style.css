@@ -117,6 +117,18 @@ h1, h2, header, p, a, span {
   z-index: 2;
   visibility: hidden;
   opacity: 0; }
+  #quoteMain .submitButton.info {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 25px; }
+    #quoteMain .submitButton.info:before {
+      content: "?";
+      position: absolute;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); }
   #quoteMain .main {
     position: absolute;
     top: 50%;
@@ -124,6 +136,12 @@ h1, h2, header, p, a, span {
     transform: translate(-50%, -50%);
     text-align: center; }
     #quoteMain .main h1 {
+      font-family: "Univers";
+      font-style: italic;
+      font-weight: 300;
+      color: #808285;
+      font-size: .7rem; }
+    #quoteMain .main h2 {
       font-family: "Brandon Text";
       color: #f4f5f7;
       font-size: 2rem;

@@ -137,8 +137,6 @@ function buildParts(data){
 
 			}
 
-			console.log(part);
-
 			let n = d.name || k;
 			let offset = d.offset || z;
 			let rot = d.rotation || z;

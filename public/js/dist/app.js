@@ -400,12 +400,19 @@ var APIController = function (fetch) {
 
 var CreateAudioController = function CreateAudioController() {
 
-	var nightAudio = document.createElement('audio');
-	nightAudio.loop = true;
+	var nightAudios = [];
+
+	for (var i = 0; i < 3; i++) {
+
+		var nightAudio = document.createElement('audio');
+		nightAudio.loop = true;
+		var path = '/assets/sounds/bg_night' + i + '.mp3';
+		nightAudio.src = path;
+		nightAudios.push(nightAudio);
+	}
+
 	var dayAudio = document.createElement('audio');
 	dayAudio.loop = true;
-
-	nightAudio.src = "/assets/sounds/bg_night.mp3";
 	dayAudio.src = "/assets/sounds/bg_day.mp3";
 
 	function stop(audio) {
@@ -448,14 +455,14 @@ var CreateAudioController = function CreateAudioController() {
 		t.start();
 	}
 
-	function playNight() {
+	function playNight(n) {
 
-		fade(nightAudio, 1);
+		fade(nightAudios[n], 1);
 	}
 
-	function stopNight() {
+	function stopNight(n) {
 
-		fade(nightAudio, 0);
+		fade(nightAudios[n], 0);
 	}
 
 	function playDay() {
@@ -468,9 +475,9 @@ var CreateAudioController = function CreateAudioController() {
 		fade(dayAudio, 0);
 	}
 
-	function setVolumeNight(level) {
+	function setVolumeNight(n, level) {
 
-		setVolume(nightAudio, level);
+		setVolume(nightAudios[n], level);
 	}
 
 	function setVolume(audio, level) {
@@ -629,8 +636,6 @@ function buildParts(data) {
 				part = new THREE.Mesh(_geom, _mat2);
 			}
 
-			console.log(part);
-
 			var n = d.name || k;
 			var _offset = d.offset || z;
 			var rot = d.rotation || z;
@@ -711,17 +716,19 @@ var paused = false;
 
 var checkpointActions = [0, function () {
 
-	AudioController.setVolumeNight(1);
+	AudioController.stopNight(0);
+	AudioController.playNight(1);
 	WORLD_CONTROLLER.sizeStarField(1, 1300, 100, .2, 300);
 	checkpointIndex++;
 }, function () {
 
-	AudioController.setVolumeNight(1);
+	AudioController.stopNight(1);
+	AudioController.playNight(2);
 	WORLD_CONTROLLER.sizeStarField(1, 800, 200, .3, 300);
 	checkpointIndex++;
 }, function () {
 
-	AudioController.stopNight();
+	AudioController.stopNight(2);
 	AudioController.playDay();
 	WORLD_CONTROLLER.fadeToColor(1600);
 	WORLD_CONTROLLER.sizeStarField(1.5, 1200, 500, .4, 600);
@@ -885,7 +892,7 @@ var initData = function initData() {
 
 		robot: {
 			scale: 2.75,
-			offset: new THREE.Vector3(0, 10, 0),
+			offset: new THREE.Vector3(0, 0, 0),
 			upper: {
 				offset: new THREE.Vector3(0, 4.75, 0),
 				dom: {
@@ -1112,7 +1119,7 @@ var initData = function initData() {
 
 		dice: {
 			scale: 4.,
-			offset: new THREE.Vector3(0, 20, 0),
+			offset: new THREE.Vector3(0, 7.5, 0),
 			upper: {},
 			upperLeft: {
 				offset: new THREE.Vector3(-3, 0, 0),
@@ -1249,7 +1256,7 @@ var initData = function initData() {
 
 		astronaut: {
 			scale: 2.75,
-			offset: new THREE.Vector3(0, 20, 0),
+			offset: new THREE.Vector3(0, 0, 0),
 			upper: {
 				offset: new THREE.Vector3(0, 5.5, 0),
 				dom: {
@@ -1481,6 +1488,7 @@ var initData = function initData() {
 		},
 
 		breadGuy: {
+			offset: new THREE.Vector3(0, 2.5, 0),
 			scale: 5,
 			upper: {},
 			middle: {
@@ -1625,7 +1633,7 @@ var initData = function initData() {
 
 		houseGuy: {
 			scale: 8,
-			offset: new THREE.Vector3(0, 0, 0),
+			offset: new THREE.Vector3(0, -2.5, 0),
 			top: {
 				offset: new THREE.Vector3(0, 2.3, 0),
 				dom: {
@@ -2290,7 +2298,11 @@ var init = function init() {
     user_data.character = data;
     testMesh = a;
     testMesh.castShadow = true;
-    // testMesh.scale.set(7, 7, 7);
+
+    var testMeshBox = new THREE.Box3().setFromObject(testMesh);
+    var testMeshHeight = Math.abs(testMeshBox.max.y - testMeshBox.min.y);
+    testMesh.position.y += testMeshHeight / 2 + testMesh.offset.y;
+
     scene.add(testMesh);
 
     spotLight.target = testMesh;
@@ -2312,9 +2324,8 @@ var init = function init() {
             var angle = 2 * Math.PI / numPoints * (i + 1);
             var pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
             var box = new THREE.Box3().setFromObject(a);
-            // let height = Math.abs(box.max.y - box.min.y);
-            var height = a.offset.y;
-            var factor = height / pos.length();
+            var height = Math.abs(box.max.y - box.min.y);
+            var factor = (height / 2 + a.offset.y) / pos.length();
 
             console.log(factor);
 
@@ -2715,7 +2726,7 @@ var UIController = function () {
 			});
 		}, 800);
 
-		AudioController.playNight();
+		AudioController.playNight(0);
 		APIController.postEntry(user_data);
 
 		return false;
@@ -2826,8 +2837,8 @@ var UIController = function () {
 		var answer = document.getElementById('quoteMainAnswer'),
 		    username = document.getElementById('quoteMainUser');
 
-		answer.innerHTML = data.text;
-		username.innerHTML = "-" + data.name;
+		answer.innerHTML = '"' + data.text + '"';
+		username.innerHTML = data.name;
 
 		show(quoteMain);
 	}
@@ -3380,7 +3391,7 @@ var createController = function createController(renderer, scene, camera, mainAv
 					hit = false;
 					paused = true;
 					var data = entries[checkpointIndex - 1];
-					AudioController.setVolumeNight(.5);
+					AudioController.setVolumeNight(checkpointIndex - 1, .5);
 					UIController.showQuoteMain(data);
 				});
 			}

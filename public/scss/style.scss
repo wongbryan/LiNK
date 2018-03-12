@@ -91,6 +91,10 @@ h1, h2, header, p, a, span{
 	}
 }
 
+.infoButton{
+
+}
+
 #quoteInput, #nameInput{
 	z-index: 3;
 	visibility: hidden;
@@ -166,10 +170,30 @@ h1, h2, header, p, a, span{
 	z-index: 2;
 	visibility: hidden;
 	opacity: 0;
+
+	.submitButton.info{
+		position: absolute;
+		top: 0;
+		right: 0;
+		margin: 25px;
+		&:before{
+			content: "?";
+			position: absolute;
+			@include absolute-center;
+		}
+	}
+
 	.main{
 		@include absolute-center;
 		text-align: center;
 		h1{
+			font-family: $Univers;
+			font-style: italic;
+			font-weight: 300;
+			color: $gray;
+			font-size: .7rem;
+		}
+		h2{
 			font-family: $Brandon;
 			color: $white;
 			font-size: 2rem;

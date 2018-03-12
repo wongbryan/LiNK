@@ -256,8 +256,8 @@ const UIController = (function(){
 		let answer = document.getElementById('quoteMainAnswer'),
 		username = document.getElementById('quoteMainUser');
 
-		answer.innerHTML = data.text;
-		username.innerHTML = "-" + data.name;
+		answer.innerHTML = '"' + data.text + '"';
+		username.innerHTML = data.name;
 
 		show(quoteMain);
 	}
