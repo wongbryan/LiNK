@@ -8,21 +8,22 @@ const checkpointActions = [
 
 	function(){
 
-		WORLD_CONTROLLER.expandStarField(800);
-		WORLD_CONTROLLER.fadeToColor(800);
+		WORLD_CONTROLLER.sizeStarField(1, 1300, 100, .2, 300);
 		checkpointIndex++;
 
 	},
 
 	function(){
 
-		
+		WORLD_CONTROLLER.fadeToColor(1300);
+		WORLD_CONTROLLER.sizeStarField(1, 800, 200, .3, 300);
 		checkpointIndex++;
 
 	},
 
 	function(){
 
+		WORLD_CONTROLLER.sizeStarField(1.5, 800, 500, .4, 600);
 		console.log('check');
 		checkpointIndex++;
 
@@ -37,8 +38,8 @@ const dummy_data = {
 	votes: 0,
 	donation: 0,
 	character_name: null,
-
 }
+
 const user_data = {
 	name: "",
 	id: 0,

@@ -107,10 +107,23 @@ const UIController = (function(){
 		donationQuoteAnswer.innerHTML = ans;
 
 		hideQuoteInput();
-		WORLD_CONTROLLER.shrinkStarField(1200);
+		// WORLD_CONTROLLER.shrinkStarField(1200);
+		WORLD_CONTROLLER.sizeStarField(1, 100, 60, .1, 300);
 		WORLD_CONTROLLER.moveCamera('side');
 		paused = false;
-		
+
+		setTimeout(function(){
+
+			//Good for poop dude
+		    let idleAnims = getIdleAnim(testMesh)
+		    
+		    //Start animations
+		    idleAnims.forEach( elem => {
+			elem.start()
+		    });
+
+		}, 800);
+
 		return false;
 	}
 

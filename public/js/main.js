@@ -50,6 +50,9 @@ const init = () => {
     innerGlobe = new THREE.Mesh(sGeom, sMat);
     scene.add(innerGlobe);
 
+    // userEntries = APIController.getRecentEntries(3);
+    // console.log(userEntries);
+
     //Set checkpoints
     const numPoints = 4;
 
@@ -140,14 +143,6 @@ const init = () => {
     var pointEnd = new THREE.Vector3(x-.0001, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
     var curve = setArc3D(pointStart, pointEnd, 3000, "lime", true);
     // scene.add(curve);
-
-    //Good for poop dude
-    let idleAnims = getIdleAnim(testMesh)
-    
-    //Start animations
-    idleAnims.forEach( elem => {
-	elem.start()
-    })
     
     testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
 

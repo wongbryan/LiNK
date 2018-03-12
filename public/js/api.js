@@ -79,6 +79,7 @@ const APIController = (function(fetch){
 			if (status >= 200 && status < 300) {
 				const json = await response.json;
 				console.log("This is all of the recent entries: ", json.entries);
+				return json.entries;
 			} else {
 				throw new Error(status);
 			}

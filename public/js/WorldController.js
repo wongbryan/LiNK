@@ -61,20 +61,16 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
     }
 
-    function sizeStarField(dir, delay){
+    function sizeStarField(s, delay, targetDist, targetSize, distTime){
 
     	setTimeout(function(){
-    		let s = (dir === 1) ? 1.5 : 1;
+
 	    	let t = new THREE.Vector3(s, s, s);
 
 	    	let tween = new TWEEN.Tween(globe.scale).to(t, 1000);
 	    	tween.easing(TWEEN.Easing.Exponential.Out);
 
-	    	let targetDist = (dir === 1) ? 500 : 100;
-	    	let targetSize = (dir === 1) ? .2 : .2;
-
-	    	let distTime = (dir === 1) ? 600 : 300;
-	    	let easing = (dir === 1) ? TWEEN.Easing.Quadratic.InOut : TWEEN.Easing.Quintic.In;
+	    	let easing = TWEEN.Easing.Quadratic.InOut;
 	    	// globe.material.uniforms['maxDist'].value = targetDist;
 	    	let tw = tweenScalar(globe.material.uniforms['maxDist'], 'value', targetDist, distTime, easing);
 	    	// tw.onUpdate(function(){
@@ -89,13 +85,13 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
     function expandStarField(delay){
 
-    	sizeStarField(1, delay);
+    	sizeStarField(1.5, delay, 500, .2, 600);
 
     }
 
     function shrinkStarField(delay){
 
-    	sizeStarField(-1, delay);
+    	sizeStarField(1, delay, 100, .2, 300);
 
     }
 
@@ -241,6 +237,7 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 		fadeToColor: fadeToColor,
 		expandStarField: expandStarField,
 		shrinkStarField: shrinkStarField,
+		sizeStarField: sizeStarField,
 		moveCamera: moveCamera,
 		continueRotation: continueRotation,
 		stopRotation: stopRotation,
