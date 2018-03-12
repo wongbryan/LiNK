@@ -158,8 +158,8 @@ const init = () => {
 
     // UIController = createUIController();
 
-    // document.body.addEventListener('keydown', UIController.handleKeyDown);
-    // document.body.addEventListener('keyup', UIController.handleKeyUp);
+    document.body.addEventListener('keydown', UIController.handleKeyDown);
+    document.body.addEventListener('keyup', UIController.handleKeyUp);
 
     clock.start();
     WORLD_CONTROLLER.animate();

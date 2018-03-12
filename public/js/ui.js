@@ -135,7 +135,7 @@ const UIController = (function(){
 
 	function handleKeyDown(e){
 
-		if(e.keyCode === 32  && e.target == document.body ){ //space
+		if(e.keyCode === 32  && e.target === document.body ){ //space
 	        
 			WORLD_CONTROLLER.setRotationFactor(-.005);
 

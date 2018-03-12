@@ -992,6 +992,7 @@ const initData = () => {
 		},
 
 		ricecookerGuy: {
+			scale: 7,
 			offset: new THREE.Vector3(0, 2, 0),
 			middle: {
 				offset: new THREE.Vector3(0, 0, 0),
