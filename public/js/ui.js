@@ -25,7 +25,12 @@ const UIController = (function(){
 	name = document.getElementById('name'),
 	cvv = document.getElementById('cvv'),
 	number = document.getElementById('number'),
-	expiration = document.getElementById('expiration');
+	expiration = document.getElementById('expiration'),
+	amount = document.getElementById('amount'),
+	email = document.getElementById('email');
+
+	let errorList = document.querySelector('#error')
+
 
 	/* TITLE SCREEN */
 
@@ -44,19 +49,19 @@ const UIController = (function(){
 
 	function mouseup(event) {
 	   if(mousedownID!=-1) {  //Only stop if exists
-	     clearInterval(mousedownID);
-	     mousedownID=-1;
+		 clearInterval(mousedownID);
+		 mousedownID=-1;
 	   }
 
 	   let instr = this.getElementsByTagName('p')[0];
 	   instr.classList.add('blinkAnim');
 
 	   var interval = setInterval(function(){
-	   		if(titleBlur <= 0 && opacity >= 1){
-	   			clearInterval(interval);
-	   			return;
-	   		}
-		   	titleBlur--;
+			if(titleBlur <= 0 && opacity >= 1){
+				clearInterval(interval);
+				return;
+			}
+			titleBlur--;
 			var el = this;
 			el.style.filter = "blur(" + titleBlur + "px)";
 
@@ -70,12 +75,12 @@ const UIController = (function(){
 	function whilemousedown() {
 	   var el = this;
 	   if(opacity <= 0 || titleBlur >= 60){
-	    showNameInput();
-	   	WORLD_CONTROLLER.setMainLightIntensity(.3);
-	   	el.style.display = 'none';
-	   	clearInterval(mousedownID);
-	   	mousedownID = -1;
-	   	return;
+		showNameInput();
+		WORLD_CONTROLLER.setMainLightIntensity(.3);
+		el.style.display = 'none';
+		clearInterval(mousedownID);
+		mousedownID = -1;
+		return;
 	   }
 	   titleBlur++;
 	   el.style.filter = "blur(" + titleBlur + "px)";
@@ -111,15 +116,15 @@ const UIController = (function(){
 	function ansKeyDown(e){
 
 		if(e.which == 13) {
-            e.preventDefault();
-            onAnswerSubmit();
-        }
+			e.preventDefault();
+			onAnswerSubmit();
+		}
 
-        let el = e.target;
-    	el.style.height = el.scrollHeight + 'px';
+		let el = e.target;
+		el.style.height = el.scrollHeight + 'px';
 
-    	let amt = answerMax - el.value.length;
-    	remaining.innerHTML = amt;
+		let amt = answerMax - el.value.length;
+		remaining.innerHTML = amt;
 
 	}
 
@@ -208,24 +213,114 @@ const UIController = (function(){
 	quoteMainClose.addEventListener('mousedown', hideQuoteMain);
 
 	/* DONATION BOX STUFF */
+	let card_token = "";
 
-	function submitDonation(e){
+	Panda.init('pk_test_2C04UlQCKet4YoLtQVNkNQ', 'donationForm');
+
+	Panda.on('success', function(token){
+		submitDonation();
+	});
+	Panda.on('error', async function(errors){
+		console.log(errors);
+		errorDisplay(errors);
+	});
+
+	function errorDisplay(errors){
+
+		if (Object.keys(errors).length != 0)
+			errorList.innerHTML = "detected error(s):";
+
+		for (const [key, err] of Object.entries(errors)) {
+			let errorItem = document.createElement('li');
+			errorItem.innerHTML = err.message;
+			errorList.appendChild(errorItem);
+		}
+	}
+
+	function checkDonation(card){
+		let result = []
+
+		const dollar_regex = /^\d+(?:\.\d{0,2})$/;
+
+		if (!dollar_regex.test(card.amount)) {
+			let resultItem = {
+				message: 'Invalid dollar amount'
+			}
+			result[0] = resultItem;
+		}
+
+		errorDisplay(result);
+		return (Object.keys(result).length == 0)
+	}
+
+	async function submitDonation(){
+		/* clear error display */
+		while (errorList.firstChild) {
+			errorList.removeChild(errorList.firstChild);
+		}
+
 		let nameVal = name.value,
 		numberVal = number.value,
 		cvvVal = cvv.value,
-		expirationVal = expiration.value;
+		expirationVal = expiration.value,
+		amountVal = amount.value,
+		emailVal = email.value;
+
 
 		let card = {
 			'name': nameVal,
 			'number': numberVal,
 			'cvv': cvvVal,
-			'expiration': expirationVal
+			'expiration': expirationVal,
+			'amount': amountVal,
 		};
+
+		if (checkDonation(card)) {
+
+			const donation = amountVal * 100;
+			const destination = "73-1710135";
+			const currency = "usd";
+			const payload = {
+				"source": card_token,
+				"amount": donation,
+				"destination": destination,
+				"receipt_email": emailVal,
+				"currency": currency,
+			}
+
+			try {
+				const response = await fetch("https://api.pandapay.io/v1/donations/", {
+					type: 'POST',
+					headers: {
+						'Content-Type': "application/json",
+						'Authorization': 'Basic ' + btoa('YOUR SCRET KEY GOES HERE'),
+					},
+					data: JSON.stringify(payload),
+				});
+				const status = await response.status;
+				if (status >= 200 && status < 300) {
+					const json = await response.json();
+					console.log(json);
+					return true;
+				} else {
+					throw new Error(status);
+				}
+			}catch(e){
+				let err = {}
+				if (e.message >= 500)
+					err[0] = {message: 'The service we use for payments is down/undermaintennance.  Come back another time! Error: ' + e.message}
+				else
+					err[0] = {message: 'Your request could not be sent :( ' + e.message}
+
+				errorDisplay(err);
+				throw new Error(e.message);
+			}
+		}
+		return false
 
 	}
 
 	donationClose.addEventListener('mousedown', hideDonation);
-	donationSubmit.addEventListener('mousedown', submitDonation);
 
 	return{
 		showTitle: showTitle,

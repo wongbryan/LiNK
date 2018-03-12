@@ -18,6 +18,7 @@ $darkwhite: #cbcdd0;
 $black: #00010c;
 $gray: #808285;
 $lightgray: #929598;
+$red: #c14f49;
 
 body{
 	margin: 0;
@@ -412,20 +413,22 @@ h1, h2, header, p, a, span{
 	#donationForm{
 		width: 80%;
 		.name{
-			width: 64%;
+			width: 40%;
 			margin-right: 15px;
 		}
 		.cvv{
-			width: 32%;
+			width: 20%;
+			margin-right: 30px;
 		}
 		.number{
 			width: 100%;
+			margin-right: 20px;
 		}
 		.expiration{
 			font-size: .8rem;
 			min-width: 50px;
 			padding-left: 0;
-			width: 15%;
+			width: 30%;
 			margin-right: 40px;
 			input{
 				width: 100%;
@@ -443,9 +446,10 @@ h1, h2, header, p, a, span{
 			width: 100%;
 		}
 		#donationSubmit{
-			margin-top: 17px;
+			margin: 17px 0 17px 0;
 			display: inline-block;
 			width: 100%;
+
 			button{
 				border: none;
 				display: block;
@@ -462,6 +466,17 @@ h1, h2, header, p, a, span{
 					text-shadow: 0 0 15px rgba(255, 255, 255, 1);
 				}
 			}	
+		}
+
+		.error {
+			ul {
+				padding: 0;
+				color: $red;
+				font-family: $Brandon;
+				font-size: 1rem;
+				font-weight: lighter;
+				list-style: none;
+			}
 		}
 	}
 }
