@@ -1,4 +1,4 @@
-const checkpoints = [];
+const checkpoints = [0];
 let checkpointIndex = 1;
 let paused = true;
 
@@ -15,7 +15,6 @@ const checkpointActions = [
 
 	function(){
 
-		WORLD_CONTROLLER.fadeToColor(1300);
 		WORLD_CONTROLLER.sizeStarField(1, 800, 200, .3, 300);
 		checkpointIndex++;
 
@@ -23,8 +22,10 @@ const checkpointActions = [
 
 	function(){
 
+		WORLD_CONTROLLER.fadeToColor(1300);
 		WORLD_CONTROLLER.sizeStarField(1.5, 800, 500, .4, 600);
-		console.log('check');
+		UIController.showDonation();
+		paused = true;
 		checkpointIndex++;
 
 	},

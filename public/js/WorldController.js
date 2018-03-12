@@ -155,7 +155,7 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
 		    if( (innerGlobe.rotation.x <= (-angle + Math.PI/25)) && !stopped){ //stop rotation
 
-		    	const data = checkpoints[checkpointIndex];
+		    	const data = entries[checkpointIndex-1];
 		    	UIController.showQuoteMain(data);
 		    	paused = true;
 

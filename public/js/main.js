@@ -94,6 +94,7 @@ const init = () => {
             a.position.copy(pos);
             a.position.add(a.offset);
             a.rotation.x = angle;
+            a.rotation.y += Math.PI;
 
             let c = {};
             c.name = e.name;
@@ -101,7 +102,7 @@ const init = () => {
             c.character = a;
             checkpoints.push(c);
 
-            scene.add(a);
+            innerGlobe.add(a);
 
         });
 

@@ -376,6 +376,7 @@ const UIController = (function(){
 		hideTitle: hideTitle,
 		showQuoteMain: showQuoteMain,
 		hideQuoteMain: hideQuoteMain,
+		showDonation: showDonation,
 		showQuoteInput: showQuoteInput,
 		hideQuoteInput: hideQuoteInput,
 		handleKeyDown: handleKeyDown,
