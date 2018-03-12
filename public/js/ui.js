@@ -293,7 +293,7 @@ const UIController = (function(){
 					type: 'POST',
 					headers: {
 						'Content-Type': "application/json",
-						'Authorization': 'Basic ' + btoa('sk_test_ehg1TY6M9ACY8k13VKgyAw'),
+						'Authorization': 'Basic ' + btoa('YOUR SCRET KEY GOES HERE'),
 					},
 					data: JSON.stringify(payload),
 				});
