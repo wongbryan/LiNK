@@ -263,15 +263,6 @@ const UIController = (function(){
 	/* DONATION BOX STUFF */
 	let card_token = "";
 
-	Panda.init('pk_test_2C04UlQCKet4YoLtQVNkNQ', 'donationForm');
-
-	Panda.on('success', function(token){
-		submitDonation();
-	});
-	Panda.on('error', async function(errors){
-		console.log(errors);
-		errorDisplay(errors);
-	});
 
 	function errorDisplay(errors){
 
@@ -301,8 +292,7 @@ const UIController = (function(){
 		return (Object.keys(result).length == 0)
 	}
 
-	async function submitDonation(e){
-		
+	async function submitDonation(card_token){
 		/* clear error display */
 		while (errorList.firstChild) {
 			errorList.removeChild(errorList.firstChild);
@@ -334,17 +324,18 @@ const UIController = (function(){
 				"amount": donation,
 				"destination": destination,
 				"receipt_email": emailVal,
-				"currency": currency,
+				"currency": currency
 			}
 
 			try {
-				const response = await fetch("https://api.pandapay.io/v1/donations/", {
-					type: 'POST',
+				const response = await fetch("https://api.pandapay.io/v1/donations", {
+					method: 'POST',
+					mode: 'cors',
 					headers: {
-						'Content-Type': "application/json",
-						'Authorization': 'Basic ' + btoa('YOUR SCRET KEY GOES HERE'),
+						'Content-Type': "application/json; charset=utf-8",
+						'Authorization': 'Basic ' + btoa('SECRET KEY GOES HERE' + ':'),
 					},
-					data: JSON.stringify(payload),
+					body: JSON.stringify(payload),
 				});
 				const status = await response.status;
 				if (status >= 200 && status < 300) {
@@ -366,7 +357,6 @@ const UIController = (function(){
 			}
 		}
 		return false
-
 	}
 
 	donationClose.addEventListener('mousedown', hideDonation);
@@ -381,6 +371,8 @@ const UIController = (function(){
 		hideQuoteInput: hideQuoteInput,
 		handleKeyDown: handleKeyDown,
 		handleKeyUp: handleKeyUp,
+		submitDonation: submitDonation,
+		errorDisplay: errorDisplay,
 	}
 
 })();
