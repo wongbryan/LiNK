@@ -195,7 +195,6 @@ const getRandomCharName = function(){
 const getCharData = function(charName){
 
   let overrides = CHAR_DATA_OVERRIDES[charName];
-  console.log(overrides);
 
   let data = {};
 

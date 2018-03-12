@@ -1,6 +1,22 @@
 
 function buildParts(data){
 
+	const createGeom = (type, args) => {
+
+		const obj = THREE[type]; //constructor 
+
+		function F(args) {
+
+			return obj.apply(this, args);
+
+		}
+
+		F.prototype = obj.prototype;
+
+		return new F(args);
+
+	}
+
 	const obj = new THREE.Object3D();
 	const g = new THREE.Group();
 	const z = new THREE.Vector3();
@@ -21,8 +37,6 @@ function buildParts(data){
 		section.position.copy(o);
 
 		let dom = sectionData['dom']; //dominant part
-		const gType = dom.geom.type;
-		const gArgs = dom.geom.args;
 
 		let geom;
 
@@ -30,9 +44,16 @@ function buildParts(data){
 
 			geom = dom.mesh.geometry;
 
+		} else if(dom.geom.type === "TextGeometry"){
+
+			const gArgs = dom.geom.args;
+			geom = getFontGeom.apply(null, gArgs);
+
 		} else{
 
-			geom = new THREE[gType].apply(null, gArgs);
+			const gType = dom.geom.type;
+			const gArgs = dom.geom.args;
+			geom = createGeom(gType, gArgs);
 
 		}
 
@@ -60,7 +81,12 @@ function buildParts(data){
 
 			} else {
 
-				let geom = d.round ? round(d.geom, d.round):d.geom;
+				const gType = d.geom.type;
+				const gArgs = d.geom.args;
+
+				func = THREE[gType];
+				let geom = createGeom(gType, gArgs);
+				geom = d.round ? round(geom, d.round) : geom;
 				let mat = getMat(d.mat);
 
 				part = new THREE.Mesh(geom, mat);

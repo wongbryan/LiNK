@@ -436,8 +436,8 @@ const initData = () => {
 				letter1: {
 					name: 'letter1',
 					geom: {
-						type: ''6,
-						args: [ FONT_DATA['fugue'], 1.5],
+						type: 'TextGeometry',
+						args: [ 6, FONT_DATA['fugue'], 1.5],
 					},
 					mat: 'black',
 					offset: new THREE.Vector3(0, .51, 0),
@@ -511,8 +511,8 @@ const initData = () => {
 				letter1: {
 					name: 'letter1',
 					geom: {
-						type: ''9,
-						args: [ FONT_DATA['fugue'], 1.5],
+						type: 'TextGeometry',
+						args: [ 9, FONT_DATA['fugue'], 1.5],
 					},
 					mat: 'black',
 					offset: new THREE.Vector3(0, .51, 0),
