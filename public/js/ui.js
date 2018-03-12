@@ -137,7 +137,7 @@ const createUIController = function(){
 
 		if(e.keyCode === 32  && e.target == document.body ){ //space
 	        
-			WORLD_CONTROLLER.setRotationFactor(-.002);
+			WORLD_CONTROLLER.setRotationFactor(-.005);
 
 	    }
 
@@ -274,7 +274,8 @@ const createUIController = function(){
 		return (Object.keys(result).length == 0)
 	}
 
-	async function submitDonation(){
+	async function submitDonation(e){
+		
 		/* clear error display */
 		while (errorList.firstChild) {
 			errorList.removeChild(errorList.firstChild);
