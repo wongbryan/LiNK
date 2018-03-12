@@ -1,5 +1,13 @@
 const checkpoints = [];
+const dummy_data = {
+	name: "Michael",
+	id: 0,
+	text: "Hello",
+	votes: 0,
+	donation: 0,
+	character_name: null,
 
+}
 const user_data = {
 	name: "",
 	id: 0,

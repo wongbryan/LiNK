@@ -1,4 +1,4 @@
-const UIController = (function(){
+const createUIController = function(){
 
 	var title = document.getElementById('title');
 
@@ -102,7 +102,7 @@ const UIController = (function(){
 		donationQuoteAnswer.innerHTML = ans;
 
 		hideQuoteInput();
-		WORLD_CONTROLLER.expandStarField(1200);
+		WORLD_CONTROLLER.shrinkStarField(1200);
 		WORLD_CONTROLLER.moveCamera('side');
 
 		return false;
@@ -126,6 +126,26 @@ const UIController = (function(){
 	function keepBlur(){
 		var el = this;
 		el.focus();
+	}
+
+	function handleKeyDown(e){
+
+		if(e.keyCode === 32  && e.target == document.body ){ //space
+	        
+			WORLD_CONTROLLER.setRotationFactor(-.002);
+
+	    }
+
+	}
+
+	function handleKeyUp(e){
+
+		if(e.keyCode === 32){
+
+			WORLD_CONTROLLER.setRotationFactor(0);
+
+		}
+
 	}
 
 	quoteInputButton.addEventListener('mousedown', onAnswerSubmit);
@@ -177,10 +197,10 @@ const UIController = (function(){
 		let answer = document.getElementById('quoteMainAnswer'),
 		username = document.getElementById('quoteMainUser');
 
-		otherAns.innerHTML = data.quote;
-		username.innerHTML = "-" + data.username;
+		answer.innerHTML = data.text;
+		username.innerHTML = "-" + data.name;
 
-		quoteMain.classList.add('fadeIn');
+		show(quoteMain);
 	}
 
 	function hideQuoteMain(){
@@ -206,6 +226,7 @@ const UIController = (function(){
 	}
 
 	quoteMainClose.addEventListener('mousedown', hideQuoteMain);
+	// quoteMainClose.addEventListener('mousedown', WORLD_CONTROLLER.continueRotation);
 
 	/* DONATION BOX STUFF */
 
@@ -234,6 +255,8 @@ const UIController = (function(){
 		hideQuoteMain: hideQuoteMain,
 		showQuoteInput: showQuoteInput,
 		hideQuoteInput: hideQuoteInput,
+		handleKeyDown: handleKeyDown,
+		handleKeyUp: handleKeyUp,
 	}
 
-})();
+};

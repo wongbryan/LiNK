@@ -136,16 +136,75 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
 	}
 
+	let checkpointIndex = 1;
+	let rot = {
+		val: 0,
+	}
+	let stopped = false;
+
 	function update(){
 
 	    TWEEN.update();
-	    var d = clock.getDelta();
-	    let globalTime = clock.elapsedTime;
+	    const d = clock.getDelta();
+	    const globalTime = clock.elapsedTime;
 
 	    globe.frustumCulled = false;
 	    globe.rotation.x += .0001;
 	    controls.update();
 
+	    if(rot.val){
+
+	    	innerGlobe.rotation.x += rot.val;
+		    let angle = 2 * Math.PI / (checkpoints.length) * checkpointIndex; 
+		    console.log(angle);
+
+		    if( (innerGlobe.rotation.x <= (-angle + Math.PI/25)) && !stopped){ //stop rotation
+
+		    	UIController.showQuoteMain(dummy_data);
+		    	checkpointIndex++;
+
+		    }
+
+	    }
+
+	}
+
+	function setRotationFactor(val, callback){
+
+		tweenScalar(rot, 'val', val, 500, TWEEN.Easing.Quadratic.InOut, callback);
+
+	}
+
+	function stopRotation(){
+
+		const callback =  function(){
+
+			console.log('rotation stopped');
+			UIController.showQuoteMain(dummy_data);
+
+    	};
+
+    	setRotationFactor(0, callback);
+
+	}
+
+	function continueRotation(){
+
+		const callback = function(){
+
+			console.log('rotation continued');
+
+			if(stopped){ //if it was stopped after being started
+
+				checkpointIndex++;
+
+			}
+		
+			stopped = false;
+
+    	}
+
+		setRotationFactor(-.002, callback);
 	}
 
 	function animate(){
@@ -178,6 +237,9 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 		expandStarField: expandStarField,
 		shrinkStarField: shrinkStarField,
 		moveCamera: moveCamera,
+		continueRotation: continueRotation,
+		stopRotation: stopRotation,
+		setRotationFactor: setRotationFactor,
 		update: update,
 		animate: animate,
 	}

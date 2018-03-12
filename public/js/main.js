@@ -32,8 +32,17 @@ const init = () => {
     scene.add(spotLight);
 
     // let charData = getRandomCharacterData();
-    let charData = getCharData('poopGuy');
-    user_data.character = charData;
+    // let charData = getCharData('poopGuy');
+    // user_data.character = charData;
+
+    let sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 32, 32);
+    let sMat = new THREE.MeshPhongMaterial({
+        emissive: COLORS.teal, 
+        specular: 0xffffff,
+        shininess: 0
+    });
+    innerGlobe = new THREE.Mesh(sGeom, sMat);
+    scene.add(innerGlobe);
 
     //Set checkpoints
     const numPoints = 4;
@@ -74,21 +83,30 @@ const init = () => {
 
         if( i === 0){
 
+            user_data.character = data;
             testMesh = a;
             testMesh.castShadow = true;
+            scene.add(testMesh);
 
-        } 
+        } else{
+
+            a.rotation.y = Math.PI;
+            innerGlobe.add(a);
+
+        }
 
         let c = {};
         c.name = a.name;
         c.hit = false;
         c.character = a;
-
         checkpoints.push(c);
 
-        scene.add(a);
-
     }
+
+    globe = new Globe(GLOBE_RADIUS+2.5, new THREE.Color(0xffe877), testMesh.position);
+    // globe.position.y = -GLOBE_RADIUS;
+    // globe.receiveShadow = true;
+    scene.add(globe);
 
     // testMesh.position.add(testMesh.offset);
     // testMesh.position.y += GLOBE_RADIUS;
@@ -101,22 +119,6 @@ const init = () => {
     // container.scale.divideScalar(s);
     testMesh.add(container);
     testMesh.light = spotLight;
-
-    scene.add(testMesh);
-
-    globe = new Globe(GLOBE_RADIUS+2.5, new THREE.Color(0xffe877), testMesh.position);
-    // globe.position.y = -GLOBE_RADIUS;
-    // globe.receiveShadow = true;
-    scene.add(globe);
-
-    let sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 32, 32);
-    let sMat = new THREE.MeshPhongMaterial({
-        emissive: COLORS.teal, 
-        specular: 0xffffff,
-        shininess: 0
-    });
-    innerGlobe = new THREE.Mesh(sGeom, sMat);
-    scene.add(innerGlobe);
 
     clock = new THREE.Clock();
 
@@ -146,6 +148,11 @@ const init = () => {
     WORLD_CONTROLLER.setWorldLights(1);
     WORLD_CONTROLLER.setMainLightIntensity(.3);
     WORLD_CONTROLLER.expandStarField(100);
+
+    UIController = createUIController();
+
+    window.addEventListener('keydown', UIController.handleKeyDown);
+    window.addEventListener('keyup', UIController.handleKeyUp);
 
     clock.start();
     WORLD_CONTROLLER.animate();
