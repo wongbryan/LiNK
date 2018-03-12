@@ -265,7 +265,7 @@ const createUIController = function(){
 		return (Object.keys(result).length == 0)
 	}
 
-	async function submitDonation(e){
+	async function submitDonation(card_token){
 		/* clear error display */
 		while (errorList.firstChild) {
 			errorList.removeChild(errorList.firstChild);
@@ -297,18 +297,18 @@ const createUIController = function(){
 				"amount": donation,
 				"destination": destination,
 				"receipt_email": emailVal,
-				"currency": currency,
+				"currency": currency
 			}
 
 			try {
-				console.log('post');
-				const response = await fetch("https://api.pandapay.io/v1/donations/", {
-					type: 'POST',
+				const response = await fetch("https://api.pandapay.io/v1/donations", {
+					method: 'POST',
+					mode: 'cors',
 					headers: {
-						'Content-Type': "application/json",
-						'Authorization': 'Basic ' + btoa('YOUR SCRET KEY GOES HERE'),
+						'Content-Type': "application/json; charset=utf-8",
+						'Authorization': 'Basic ' + btoa('SECRET KEY GOES HERE' + ':'),
 					},
-					data: JSON.stringify(payload),
+					body: JSON.stringify(payload),
 				});
 				const status = await response.status;
 				if (status >= 200 && status < 300) {

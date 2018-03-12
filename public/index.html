@@ -75,12 +75,12 @@
 					</div>
 					<div class="form-group amount">
 						<label for="amount">amount</label>
-						<input type="text" class="form-control" id="amount" autocomplete="nope"></input>
+						<input type="text" class="form-control" id="amount" autocomplete="nope" ></input>
 						<h1 class="description">usd (i.e: 10.00)</h1>
 					</div>
 					<div class="form-group email">
 						<label for="email">email</label>
-						<input type="text" class="form-control" id="email" autocomplete="nope"></input>
+						<input type="text" class="form-control" id="email" autocomplete="nope" ></input>
 						<h1 class="description">for your tax-deductible email receipt</h1>
 					</div>
 					<div id="donationSubmit">
@@ -195,7 +195,7 @@
 	Panda.init('pk_test_2C04UlQCKet4YoLtQVNkNQ', 'donationForm');
 
 	Panda.on('success', function(token){
-		UIController.submitDonation();
+		UIController.submitDonation(token);
 	});
 	Panda.on('error', async function(errors){
 		UIController.errorDisplay(errors);

@@ -11,9 +11,9 @@ const APIController = (function(fetch){
 				body: JSON.stringify(data),
 			});
 
-			const status = await response.status;
+			const status = response.status;
 			if (status >= 200 && status < 300) {
-				const json = await response.json;
+				const json = await response.json();
 				console.log("This is your entry: ", json);
 			} else {
 				throw new Error(status);
@@ -33,9 +33,9 @@ const APIController = (function(fetch){
 				body: JSON.stringify(data),
 			});
 
-			const status = await response.status;
+			const status = response.status;
 			if (status >= 200 && status < 300) {
-				const json = await response.json;
+				const json = await response.json();
 				console.log("This is your updated entry: ", json);
 			} else {
 				throw new Error(status);
@@ -54,9 +54,9 @@ const APIController = (function(fetch){
 				headers: { "Content-Type": "application/json" },
 			});
 
-			const status = await response.status;
+			const status =  response.status;
 			if (status >= 200 && status < 300) {
-				const json = await response.json;
+				const json = await response.json();
 				console.log("This is all of the latest donor entries: ", json.entries);
 			} else {
 				throw new Error(status);
@@ -68,17 +68,17 @@ const APIController = (function(fetch){
 	}
 
 	async function getRecentEntries(n){
-
 		try {
 			const response = await fetch(apibase + "recent/" + n, {
 				method: 'GET',
 				headers: { "Content-Type": "application/json" },
 			});
 
-			const status = await response.status;
+			const status = response.status;
 			if (status >= 200 && status < 300) {
-				const json = await response.json;
+				const json = await response.json();
 				console.log("This is all of the recent entries: ", json.entries);
+				return json.entries;
 			} else {
 				throw new Error(status);
 			}
@@ -96,9 +96,9 @@ const APIController = (function(fetch){
 				headers: { "Content-Type": "application/json" },
 			});
 
-			const status = await response.status;
+			const status = response.status;
 			if (status >= 200 && status < 300) {
-				const json = await response.json;
+				const json = await response.json();
 				console.log("This is all of the top donors in order: ", json.entries);
 			} else {
 				throw new Error(status);
@@ -117,9 +117,9 @@ const APIController = (function(fetch){
 				headers: { "Content-Type": "application/json" },
 			});
 
-			const status = await response.status;
+			const status = response.status;
 			if (status >= 200 && status < 300) {
-				const json = await response.json;
+				const json = await response.json();
 				console.log("This is the entry you searched for: ", json);
 			} else {
 				throw new Error(status);
@@ -138,9 +138,9 @@ const APIController = (function(fetch){
 				headers: { "Content-Type": "application/json" },
 			});
 
-			const status = await response.status;
+			const status = response.status;
 			if (status >= 200 && status < 300) {
-				const json = await response.json;
+				const json = await response.json();
 				console.log("This is the total donations in cents: ", json.total);
 			} else {
 				throw new Error(status);
