@@ -139,9 +139,11 @@ h1, h2, header, p, a, span {
 @keyframes fadeOut {
   0% {
     opacity: 1; }
+
   99% {
     opacity: 0;
     visibility: visible; }
+
   100% {
     opacity: 0;
     visibility: hidden; } }
@@ -150,6 +152,7 @@ h1, h2, header, p, a, span {
   0% {
     opacity: 0;
     visibility: visible; }
+
   100% {
     opacity: 1;
     visibility: visible; } }
@@ -177,6 +180,7 @@ h1, h2, header, p, a, span {
 @keyframes blinkGlowBorder {
   0% {
     box-shadow: 0px 0px 5px white; }
+
   100% {
     box-shadow: 0px 0px 15px white; } }
 
@@ -188,6 +192,7 @@ h1, h2, header, p, a, span {
 @keyframes blinkGlow {
   0% {
     text-shadow: 0 0 15px white; }
+
   100% {
     text-shadow: 0 0 30px white; } }
 
@@ -204,10 +209,12 @@ h1, h2, header, p, a, span {
   0% {
     filter: blur(0px);
     opacity: 1; }
+
   99% {
     filter: blur(100px);
     opacity: 0;
     visibility: visible; }
+
   100% {
     filter: blur(100px);
     opacity: 0;
@@ -218,6 +225,7 @@ h1, h2, header, p, a, span {
     filter: blur(100px);
     opacity: 0;
     visibility: hidden; }
+
   100% {
     filter: blur(0px);
     opacity: 1;
@@ -335,17 +343,19 @@ h1, h2, header, p, a, span {
   #donation #donationForm {
     width: 80%; }
     #donation #donationForm .name {
-      width: 64%;
+      width: 40%;
       margin-right: 15px; }
     #donation #donationForm .cvv {
-      width: 32%; }
+      width: 20%;
+      margin-right: 30px; }
     #donation #donationForm .number {
-      width: 100%; }
+      width: 100%;
+      margin-right: 20px; }
     #donation #donationForm .expiration {
       font-size: .8rem;
       min-width: 50px;
       padding-left: 0;
-      width: 15%;
+      width: 30%;
       margin-right: 40px; }
       #donation #donationForm .expiration input {
         width: 100%; }

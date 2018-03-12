@@ -15,7 +15,7 @@
 			<p class="blinkAnim">CLICK AND HOLD</p>
 		</div>
 	</div>
-	<div id="nameInput" class="screen">
+	<div id="nameInput" class="screen"" style="display: none;">
 		<div class="main">
 			<h1 class="glow">What's your name?</h1>
 			<form id="prompt">
@@ -24,7 +24,7 @@
 			<div class="submitButton glowBorder"></div>
 		</div>
 	</div>
-	<div id="quoteInput" class="screen">
+	<div id="quoteInput" class="screen" style="display: none;">
 		<div class="main">
 			<h1 class="glow">Home is...</h1>
 			<form id="prompt">
@@ -34,7 +34,7 @@
 			<div class="submitButton glowBorder"></div>
 		</div>
 	</div>
-	<div id="quoteMain" class="screen">
+	<div id="quoteMain" class="screen" style="display: none;">
 		<div class="main">
 			<h1 id="quoteMainAnswer">"Home is where I can eat a peanut banana sandwich."</h1>
 			<p id="quoteMainUser">Bryan Wong, Los Angeles</p>
@@ -52,21 +52,25 @@
 				</div>
 				<form id="donationForm" spellcheck="false">
 					<div class="form-group name">
-						<label for="name">name</label>
+						<label for="name">first name</label>
 						<input type="text" class="form-control" id="name" autocomplete="nope"></input>
 					</div>
-					<div class="form-group cvv">
-						<label for="cvv">cvv</label>
-						<input maxlength="4" type="text" class="form-control" id="cvv" autocomplete="nope"></input>
+					<div class="form-group name">
+						<label for="name">last name</label>
+						<input type="text" class="form-control" id="name" autocomplete="nope"></input>
 					</div>
 					<div class="form-group number">
 						<label for="number">card number</label>
 						<input type="text" class="form-control" id="number" autocomplete="nope"></input>
 					</div>
+					<div class="form-group cvv">
+						<label for="cvv">cvv</label>
+						<input maxlength="4" type="text" class="form-control" id="cvv" autocomplete="nope"></input>
+					</div>
 					<div class="form-group expiration">
 						<label for="expiration">expiration</label>
-						<input maxlength="5" type="text" class="form-control" id="expiration" autocomplete="nope"></input>
-						<h1 class="description">mm/yy</h1>
+						<input maxlength="7" type="text" class="form-control" id="expiration" autocomplete="nope"></input>
+						<h1 class="description">mm/yyyy</h1>
 					</div>
 					<div class="form-group amount">
 						<label for="amount">amount</label>
@@ -76,18 +80,18 @@
 					<div class="form-group email">
 						<label for="email">email</label>
 						<input type="text" class="form-control" id="amount" autocomplete="nope"></input>
-						<h1 class="description">for an email receipt</h1>
+						<h1 class="description">for your tax-deductible email receipt</h1>
 					</div>
 					<div id="donationSubmit">
-						<button type="button">submit</button>
+						<button type="button" onsubmit="UIController.donationSubmit">submit</button>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
-	<div id="container"></div>
+	<div id="container" style="display: none;"></div>
 </body>
-<script type="vsh" id="vertexShader">
+<!-- <script type="vsh" id="vertexShader">
 	
 	varying vec3 vNormal;
 	void main() 
@@ -155,7 +159,7 @@
 		// gl_FragColor = vec4( normalize(testColor), opacity );
 	}
 
-</script>
+</script> -->
 
 <script type="text/javascript" src="/js/lib/three.js"></script>
 <script type="text/javascript" src="/js/lib/OrbitControls.js"></script>
@@ -178,6 +182,7 @@
 <script type="text/javascript" src="/js/API.js"></script>
 <script type="text/javascript" src="/js/WorldController.js"></script>
 <script type="text/javascript" src="/js/Animations.js"></script>
+<script type="text/javascript" src="/js/payment.js"></script>
 <script type="text/javascript" src="/js/ui.js"></script>
 <script type="text/javascript" src="/js/main.js"></script>
 </html>

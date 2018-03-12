@@ -412,20 +412,22 @@ h1, h2, header, p, a, span{
 	#donationForm{
 		width: 80%;
 		.name{
-			width: 64%;
+			width: 40%;
 			margin-right: 15px;
 		}
 		.cvv{
-			width: 32%;
+			width: 20%;
+			margin-right: 30px;
 		}
 		.number{
 			width: 100%;
+			margin-right: 20px;
 		}
 		.expiration{
 			font-size: .8rem;
 			min-width: 50px;
 			padding-left: 0;
-			width: 15%;
+			width: 30%;
 			margin-right: 40px;
 			input{
 				width: 100%;

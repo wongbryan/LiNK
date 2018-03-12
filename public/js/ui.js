@@ -25,7 +25,8 @@ const UIController = (function(){
 	name = document.getElementById('name'),
 	cvv = document.getElementById('cvv'),
 	number = document.getElementById('number'),
-	expiration = document.getElementById('expiration');
+	expiration = document.getElementById('expiration'),
+	amount = document.getElementById('amount');
 
 	/* TITLE SCREEN */
 
@@ -213,14 +214,20 @@ const UIController = (function(){
 		let nameVal = name.value,
 		numberVal = number.value,
 		cvvVal = cvv.value,
-		expirationVal = expiration.value;
+		expirationVal = expiration.value,
+		amountVal = amount.value;
 
 		let card = {
 			'name': nameVal,
 			'number': numberVal,
 			'cvv': cvvVal,
-			'expiration': expirationVal
+			'expiration': expirationVal,
+			'amount': amountVal,
 		};
+
+		let error = PaymentController.checkDonation(card)
+		if (error.err)
+			throw new Error(error.message);
 
 	}
 
