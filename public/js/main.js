@@ -32,14 +32,14 @@ const init = () => {
     scene.add(spotLight);
 
     // let charData = getRandomCharacterData();
-    let charData = getCharData('houseGuy');
-    user_data.character = charData;
-    testMesh = new Avatar(charData);
+    // let charData = getCharData('houseGuy');
+    // user_data.character = charData;
+    // testMesh = new Avatar(charData);
 
-    let pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(0), GLOBE_RADIUS * Math.sin(0));
-    testMesh.position.copy(pos);
-    testMesh.position.add(testMesh.offset);
-    scene.add(testMesh);
+    // let pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(0), GLOBE_RADIUS * Math.sin(0));
+    // testMesh.position.copy(pos);
+    // testMesh.position.add(testMesh.offset);
+    // scene.add(testMesh);
 
     let sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 32, 32);
     let sMat = new THREE.MeshPhongMaterial({
@@ -53,61 +53,61 @@ const init = () => {
     //Set checkpoints
     const numPoints = 4;
 
-    // for(let i=0; i<numPoints; i++){
+    for(let i=0; i<numPoints; i++){
 
-    //     let keys = Object.keys(CHAR_DATA);
-    //     console.log(keys);
-    //     keys = keys.filter( k => {  
+        let keys = Object.keys(CHAR_DATA);
+        console.log(keys);
+        keys = keys.filter( k => {  
 
-    //         let ex = false;
+            let ex = false;
 
-    //         for(let i=0; i<checkpoints.length; i++){
+            for(let i=0; i<checkpoints.length; i++){
 
-    //             if(checkpoints[i].name === k){
+                if(checkpoints[i].name === k){
 
-    //                 ex = true;
-    //                 break;
+                    ex = true;
+                    break;
 
-    //             }
+                }
 
-    //         }
+            }
 
-    //         return !ex;
+            return !ex;
 
-    //     } );
+        } );
 
-    //     const charName = getRandomCharName(keys);
-    //     // console.log(charName);
-    //     const data = getCharData(charName);
-    //     const a = new Avatar(data);
-    //     const angle = 2*Math.PI / numPoints * i;
-    //     let pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
+        const charName = getRandomCharName(keys);
+        // console.log(charName);
+        const data = getCharData(charName);
+        const a = new Avatar(data);
+        const angle = 2*Math.PI / numPoints * i;
+        let pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
         
-    //     a.position.copy(pos);
-    //     a.position.add(a.offset);
-    //     a.rotation.x = angle;
+        a.position.copy(pos);
+        a.position.add(a.offset);
+        a.rotation.x = angle;
 
-    //     if( i === 0){
+        if( i === 0){
 
-    //         user_data.character = data;
-    //         testMesh = a;
-    //         testMesh.castShadow = true;
-    //         scene.add(testMesh);
+            user_data.character = data;
+            testMesh = a;
+            testMesh.castShadow = true;
+            scene.add(testMesh);
 
-    //     } else{
+        } else{
 
-    //         a.rotation.y = Math.PI;
-    //         innerGlobe.add(a);
+            a.rotation.y = Math.PI;
+            innerGlobe.add(a);
 
-    //     }
+        }
 
-    //     let c = {};
-    //     c.name = a.name;
-    //     c.hit = false;
-    //     c.character = a;
-    //     checkpoints.push(c);
+        let c = {};
+        c.name = a.name;
+        c.hit = false;
+        c.character = a;
+        checkpoints.push(c);
 
-    // }
+    }
 
     globe = new Globe(GLOBE_RADIUS+2.5, new THREE.Color(0xffe877), testMesh.position);
     // globe.position.y = -GLOBE_RADIUS;
