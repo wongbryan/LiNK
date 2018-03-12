@@ -92,7 +92,15 @@ const init = () => {
             user_data.character = data;
             testMesh = a;
             testMesh.castShadow = true;
+            // testMesh.scale.set(7, 7, 7);
             scene.add(testMesh);
+
+            spotLight.target = testMesh;
+            let container = new THREE.Object3D();
+            container.add(spotLight);
+            container.scale.divide(testMesh.scale);
+            testMesh.add(container);
+            testMesh.light = spotLight;
 
         } else{
 
@@ -118,13 +126,6 @@ const init = () => {
     // testMesh.position.y += GLOBE_RADIUS;
     // let s = 1;
     // testMesh.scale.multiplyScalar(s);
-
-    spotLight.target = testMesh;
-    let container = new THREE.Object3D();
-    container.add(spotLight);
-    // container.scale.divideScalar(s);
-    testMesh.add(container);
-    testMesh.light = spotLight;
 
     clock = new THREE.Clock();
 

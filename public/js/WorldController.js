@@ -2,7 +2,7 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
 	const cameraPositions = {
 		front: new THREE.Vector3(0, GLOBE_RADIUS + 7.5, GLOBE_RADIUS/3),
-		side: new THREE.Vector3(-(GLOBE_RADIUS/3 + 75), GLOBE_RADIUS + 7.5, 0),
+		side: new THREE.Vector3(-(GLOBE_RADIUS/3 + 75), GLOBE_RADIUS + 35, 75),
 		diagonal: new THREE.Vector3(-GLOBE_RADIUS/3, GLOBE_RADIUS + 7.5, GLOBE_RADIUS/3),
 	}
 
@@ -70,8 +70,8 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 	    	let tween = new TWEEN.Tween(globe.scale).to(t, 1000);
 	    	tween.easing(TWEEN.Easing.Exponential.Out);
 
-	    	let targetDist = (dir === 1) ? 500 : 40;
-	    	let targetSize = (dir === 1) ? .2 : .1;
+	    	let targetDist = (dir === 1) ? 500 : 100;
+	    	let targetSize = (dir === 1) ? .2 : .2;
 
 	    	let distTime = (dir === 1) ? 600 : 300;
 	    	let easing = (dir === 1) ? TWEEN.Easing.Quadratic.InOut : TWEEN.Easing.Quintic.In;
@@ -136,7 +136,6 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
 	}
 
-	let checkpointIndex = 1;
 	let rot = {
 		val: 0,
 	}
@@ -161,11 +160,17 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 		    if( (innerGlobe.rotation.x <= (-angle + Math.PI/25)) && !stopped){ //stop rotation
 
 		    	UIController.showQuoteMain(dummy_data);
-		    	checkpointIndex++;
+		    	paused = true;
 
 		    }
 
 	    }
+
+	}
+
+	function executeAction(index){
+
+		checkpointActions[index]();
 
 	}
 
@@ -240,6 +245,7 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 		continueRotation: continueRotation,
 		stopRotation: stopRotation,
 		setRotationFactor: setRotationFactor,
+		executeAction: executeAction,
 		update: update,
 		animate: animate,
 	}

@@ -1,4 +1,35 @@
 const checkpoints = [];
+let checkpointIndex = 1;
+let paused = true;
+
+const checkpointActions = [
+	
+	0,
+
+	function(){
+
+		WORLD_CONTROLLER.expandStarField(800);
+		WORLD_CONTROLLER.fadeToColor(800);
+		checkpointIndex++;
+
+	},
+
+	function(){
+
+		
+		checkpointIndex++;
+
+	},
+
+	function(){
+
+		console.log('check');
+		checkpointIndex++;
+
+	},
+	
+];
+
 const dummy_data = {
 	name: "Michael",
 	id: 0,

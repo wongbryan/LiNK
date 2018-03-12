@@ -109,7 +109,8 @@ const UIController = (function(){
 		hideQuoteInput();
 		WORLD_CONTROLLER.shrinkStarField(1200);
 		WORLD_CONTROLLER.moveCamera('side');
-
+		paused = false;
+		
 		return false;
 	}
 
@@ -134,6 +135,12 @@ const UIController = (function(){
 	}
 
 	function handleKeyDown(e){
+
+		if(paused){
+
+			return;
+
+		}
 
 		if(e.keyCode === 32  && e.target === document.body ){ //space
 	        
@@ -231,7 +238,12 @@ const UIController = (function(){
 	}
 
 	quoteMainClose.addEventListener('mousedown', hideQuoteMain);
-	// quoteMainClose.addEventListener('mousedown', WORLD_CONTROLLER.continueRotation);
+	quoteMainClose.addEventListener('mousedown', function(){
+
+		WORLD_CONTROLLER.executeAction(checkpointIndex);
+		paused = false;
+
+	});
 
 	/* DONATION BOX STUFF */
 	let card_token = "";
