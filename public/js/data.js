@@ -1,13 +1,13 @@
 const checkpoints = [0];
 let checkpointIndex = 1;
-let paused = true;
+let paused = false;
 
 const checkpointActions = [
 	
 	0,
 
 	function(){
-
+		
 		WORLD_CONTROLLER.sizeStarField(1, 1300, 100, .2, 300);
 		checkpointIndex++;
 
@@ -22,11 +22,11 @@ const checkpointActions = [
 
 	function(){
 
-		WORLD_CONTROLLER.fadeToColor(1300);
-		WORLD_CONTROLLER.sizeStarField(1.5, 800, 500, .4, 600);
-		UIController.showDonation();
+		WORLD_CONTROLLER.fadeToColor(1600);
+		WORLD_CONTROLLER.sizeStarField(1.5, 1200, 500, .4, 600);
+		setTimeout(UIController.showDonation, 1800);
 		paused = true;
-		checkpointIndex++;
+		checkpointIndex = 1; //start over?
 
 	},
 	

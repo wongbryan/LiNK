@@ -135,7 +135,7 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 	let rot = {
 		val: 0,
 	}
-	let stopped = false;
+	let hit = false;
 
 	function update(){
 
@@ -147,17 +147,22 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 	    globe.rotation.x += .0001;
 	    controls.update();
 
-	    if(rot.val){
+	    if(rot.val && !paused){
 
 	    	innerGlobe.rotation.x += rot.val;
 		    let angle = 2 * Math.PI / (checkpoints.length) * checkpointIndex; 
 		    console.log(angle);
 
-		    if( (innerGlobe.rotation.x <= (-angle + Math.PI/25)) && !stopped){ //stop rotation
+		    if( (innerGlobe.rotation.x <= (-angle + Math.PI/12)) && !hit){ //stop rotation and only set tween once
 
-		    	const data = entries[checkpointIndex-1];
-		    	UIController.showQuoteMain(data);
-		    	paused = true;
+		    	hit = true;
+
+		    	setRotationFactor(0, function(){
+		    		hit = false;
+		    		paused = true;
+		    		const data = entries[checkpointIndex-1];
+		    		UIController.showQuoteMain(data);
+		    	});
 
 		    }
 
@@ -173,7 +178,7 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
 	function setRotationFactor(val, callback){
 
-		tweenScalar(rot, 'val', val, 500, TWEEN.Easing.Quadratic.InOut, callback);
+		tweenScalar(rot, 'val', val, 1000, TWEEN.Easing.Quadratic.InOut, callback);
 
 	}
 

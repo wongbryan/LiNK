@@ -149,9 +149,11 @@ const UIController = (function(){
 		el.focus();
 	}
 
+	let fired = false;
+
 	function handleKeyDown(e){
 
-		if(paused){
+		if(paused || fired){
 
 			return;
 
@@ -159,6 +161,7 @@ const UIController = (function(){
 
 		if(e.keyCode === 32  && e.target === document.body ){ //space
 	        
+	        fired = true;
 			WORLD_CONTROLLER.setRotationFactor(-.005);
 
 	    }
@@ -169,6 +172,7 @@ const UIController = (function(){
 
 		if(e.keyCode === 32){
 
+			fired = false;
 			WORLD_CONTROLLER.setRotationFactor(0);
 
 		}

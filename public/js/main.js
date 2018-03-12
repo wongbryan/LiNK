@@ -90,9 +90,17 @@ const init = () => {
             const a = new Avatar(charData);
             const angle = 2*Math.PI / numPoints * (i+1);
             let pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
-            
+            let box = new THREE.Box3().setFromObject(a);
+            let height = Math.abs(box.max.y - box.min.y);
+            let factor = height / (pos.length());
+
+            console.log(factor);
+
+            pos.multiplyScalar(1 + factor/1.25);
+
             a.position.copy(pos);
             a.position.add(a.offset);
+
             a.rotation.x = angle;
             a.rotation.y += Math.PI;
 

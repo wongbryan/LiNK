@@ -165,6 +165,7 @@ const tweenScalar = (source, propName, target, time = 500, easing=TWEEN.Easing.Q
   });
   if(callback)
     tw.onComplete(function(){
+      console.log('callback');
       callback();
     });
 
