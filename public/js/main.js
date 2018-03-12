@@ -42,26 +42,24 @@ const init = () => {
 
         let keys = Object.keys(CHAR_DATA);
         console.log(keys);
-        // keys = keys.filter( k => {  
+        keys = keys.filter( k => {  
 
-        //     let ex = false;
+            let ex = false;
 
-        //     for(let i=0; i<checkpoints.length; i++){
+            for(let i=0; i<checkpoints.length; i++){
 
-        //         if(checkpoints[i].name === k){
-                    
-        //             ex = true;
-        //             break;
+                if(checkpoints[i].name === k){
 
-        //         }
+                    ex = true;
+                    break;
 
-        //     }
+                }
 
-        //     return ex;
+            }
 
-        // } );
+            return !ex;
 
-        console.log(keys);
+        } );
 
         const charName = getRandomCharName(keys);
         // console.log(charName);
