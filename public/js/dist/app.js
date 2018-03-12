@@ -401,7 +401,9 @@ var APIController = function (fetch) {
 var CreateAudioController = function CreateAudioController() {
 
 	var nightAudio = document.createElement('audio');
+	nightAudio.loop = true;
 	var dayAudio = document.createElement('audio');
+	dayAudio.loop = true;
 
 	nightAudio.src = "/assets/sounds/bg_night.mp3";
 	dayAudio.src = "/assets/sounds/bg_day.mp3";
@@ -424,15 +426,18 @@ var CreateAudioController = function CreateAudioController() {
 
 	function fade(audio, dir) {
 
-		audio.volume = 0;
+		var initialVal = dir === 1 ? 0 : 1;
+		var targetVal = dir === 1 ? 1 : 0;
+
+		audio.volume = initialVal;
 		audio.play();
 
 		var cur = {
-			value: dir === 1 ? 0 : 1
+			value: initialVal
 		};
 
 		var target = {
-			value: 1
+			value: targetVal
 		};
 
 		var t = new TWEEN.Tween(cur).to(target, 800);
@@ -445,14 +450,54 @@ var CreateAudioController = function CreateAudioController() {
 
 	function playNight() {
 
-		fadeIn(nightAudio);
+		fade(nightAudio, 1);
 	}
 
-	function stopNight() {}
+	function stopNight() {
+
+		fade(nightAudio, 0);
+	}
+
+	function playDay() {
+
+		fade(dayAudio, 1);
+	}
+
+	function stopDay() {
+
+		fade(dayAudio, 0);
+	}
+
+	function setVolumeNight(level) {
+
+		setVolume(nightAudio, level);
+	}
+
+	function setVolume(audio, level) {
+
+		var cur = {
+			value: audio.volume
+		};
+
+		var target = {
+			value: level
+		};
+
+		var t = new TWEEN.Tween(cur).to(target, 800);
+		t.easing(TWEEN.Easing.Quadratic.In);
+		t.onUpdate(function () {
+			audio.volume = cur.value;
+		});
+		t.start();
+	}
 
 	return {
 
-		playNight: playNight
+		playNight: playNight,
+		stopNight: stopNight,
+		playDay: playDay,
+		stopDay: stopDay,
+		setVolumeNight: setVolumeNight
 
 	};
 };
@@ -666,16 +711,21 @@ var paused = false;
 
 var checkpointActions = [0, function () {
 
+	AudioController.setVolumeNight(1);
 	WORLD_CONTROLLER.sizeStarField(1, 1300, 100, .2, 300);
 	checkpointIndex++;
 }, function () {
 
+	AudioController.setVolumeNight(1);
 	WORLD_CONTROLLER.sizeStarField(1, 800, 200, .3, 300);
 	checkpointIndex++;
 }, function () {
 
+	AudioController.stopNight();
+	AudioController.playDay();
 	WORLD_CONTROLLER.fadeToColor(1600);
 	WORLD_CONTROLLER.sizeStarField(1.5, 1200, 500, .4, 600);
+	WORLD_CONTROLLER.resetGlobe();
 	setTimeout(UIController.showDonation, 1800);
 	paused = true;
 	checkpointIndex = 1; //start over?
@@ -1199,7 +1249,7 @@ var initData = function initData() {
 
 		astronaut: {
 			scale: 2.75,
-			offset: new THREE.Vector3(0, 12, 0),
+			offset: new THREE.Vector3(0, 20, 0),
 			upper: {
 				offset: new THREE.Vector3(0, 5.5, 0),
 				dom: {
@@ -2262,12 +2312,13 @@ var init = function init() {
             var angle = 2 * Math.PI / numPoints * (i + 1);
             var pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
             var box = new THREE.Box3().setFromObject(a);
-            var height = Math.abs(box.max.y - box.min.y);
+            // let height = Math.abs(box.max.y - box.min.y);
+            var height = a.offset.y;
             var factor = height / pos.length();
 
             console.log(factor);
 
-            pos.multiplyScalar(1 + factor / 1.25);
+            pos.multiplyScalar(1 + factor);
 
             a.position.copy(pos);
             a.position.add(a.offset);
@@ -2634,7 +2685,7 @@ var UIController = function () {
 
 		if (ans.length === 0) {
 
-			var err = "answer must be longer than 0 characters.";
+			var err = "Answer must be longer than 0 characters.";
 			var elem = document.getElementById('quoteInputErr');
 
 			elem.innerHTML = err;
@@ -2642,6 +2693,7 @@ var UIController = function () {
 
 			return;
 		}
+
 		user_data.text = ans;
 		ans = stylizeQuote(ans);
 		donationQuoteAnswer.innerHTML = ans;
@@ -2663,6 +2715,7 @@ var UIController = function () {
 			});
 		}, 800);
 
+		AudioController.playNight();
 		APIController.postEntry(user_data);
 
 		return false;
@@ -2727,7 +2780,7 @@ var UIController = function () {
 
 		if (name.length === 0) {
 
-			var err = "surely you must go by something...";
+			var err = "Surely you must go by something...";
 			var elem = document.getElementById('nameInputErr');
 
 			elem.innerHTML = err;
@@ -3327,6 +3380,7 @@ var createController = function createController(renderer, scene, camera, mainAv
 					hit = false;
 					paused = true;
 					var data = entries[checkpointIndex - 1];
+					AudioController.setVolumeNight(.5);
 					UIController.showQuoteMain(data);
 				});
 			}
@@ -3343,33 +3397,9 @@ var createController = function createController(renderer, scene, camera, mainAv
 		tweenScalar(rot, 'val', val, 1000, TWEEN.Easing.Quadratic.InOut, callback);
 	}
 
-	function stopRotation() {
+	function resetGlobe() {
 
-		var callback = function callback() {
-
-			console.log('rotation stopped');
-			UIController.showQuoteMain(dummy_data);
-		};
-
-		setRotationFactor(0, callback);
-	}
-
-	function continueRotation() {
-
-		var callback = function callback() {
-
-			console.log('rotation continued');
-
-			if (stopped) {
-				//if it was stopped after being started
-
-				checkpointIndex++;
-			}
-
-			stopped = false;
-		};
-
-		setRotationFactor(-.002, callback);
+		tweenScalar(innerGlobe.rotation, 'x', 0, 3500, TWEEN.Easing.Quadratic.InOut);
 	}
 
 	function animate() {
@@ -3400,8 +3430,7 @@ var createController = function createController(renderer, scene, camera, mainAv
 		shrinkStarField: shrinkStarField,
 		sizeStarField: sizeStarField,
 		moveCamera: moveCamera,
-		continueRotation: continueRotation,
-		stopRotation: stopRotation,
+		resetGlobe: resetGlobe,
 		setRotationFactor: setRotationFactor,
 		executeAction: executeAction,
 		update: update,

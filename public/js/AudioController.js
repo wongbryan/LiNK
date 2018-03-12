@@ -1,9 +1,19 @@
 const CreateAudioController = function(){
 
-	const nightAudio = document.createElement('audio');
-	const dayAudio = document.createElement('audio');
+ 	const nightAudios = [];
 
-	nightAudio.src = "/assets/sounds/bg_night.mp3";
+	for(let i=0; i<3; i++){
+
+		const nightAudio = document.createElement('audio');
+		nightAudio.loop = true;
+		const path = '/assets/sounds/bg_night' + i + '.mp3';
+		nightAudio.src = path;
+		nightAudios.push(nightAudio);
+
+	}
+
+	const dayAudio = document.createElement('audio');
+	dayAudio.loop = true;
 	dayAudio.src = "/assets/sounds/bg_day.mp3";
 
 	function stop(audio){
@@ -50,15 +60,15 @@ const CreateAudioController = function(){
 
 	}
 
-	function playNight(){
+	function playNight(n){
 
-		fade(nightAudio, 1);
+		fade(nightAudios[n], 1);
 
 	}
 
-	function stopNight(){
+	function stopNight(n){
 
-		fade(nightAudio, 0);
+		fade(nightAudios[n], 0);
 
 	}
 
@@ -74,9 +84,9 @@ const CreateAudioController = function(){
 
 	}
 
-	function setVolumeNight(level){
+	function setVolumeNight(n, level){
 
-		setVolume(nightAudio, level);
+		setVolume(nightAudios[n], level);
 
 	}
 

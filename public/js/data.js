@@ -8,7 +8,8 @@ const checkpointActions = [
 
 	function(){
 
-		AudioController.setVolumeNight(1);
+		AudioController.stopNight(0);
+		AudioController.playNight(1);
 		WORLD_CONTROLLER.sizeStarField(1, 1300, 100, .2, 300);
 		checkpointIndex++;
 
@@ -16,7 +17,8 @@ const checkpointActions = [
 
 	function(){
 
-		AudioController.setVolumeNight(1);
+		AudioController.stopNight(1);
+		AudioController.playNight(2);
 		WORLD_CONTROLLER.sizeStarField(1, 800, 200, .3, 300);
 		checkpointIndex++;
 
@@ -24,7 +26,7 @@ const checkpointActions = [
 
 	function(){
 
-		AudioController.stopNight();
+		AudioController.stopNight(2);
 		AudioController.playDay();
 		WORLD_CONTROLLER.fadeToColor(1600);
 		WORLD_CONTROLLER.sizeStarField(1.5, 1200, 500, .4, 600);
@@ -204,7 +206,7 @@ const initData = () => {
 
 		robot: {
 			scale: 2.75,
-			offset: new THREE.Vector3(0, 10, 0),
+			offset: new THREE.Vector3(0, 0, 0),
 			upper: {
 				offset: new THREE.Vector3(0, 4.75, 0),
 				dom: {	
@@ -431,7 +433,7 @@ const initData = () => {
 
 		dice: {
 			scale: 4.,
-			offset: new THREE.Vector3(0, 20, 0),
+			offset: new THREE.Vector3(0, 7.5, 0),
 			upper: {},
 			upperLeft: {
 				offset: new THREE.Vector3(-3, 0, 0),
@@ -568,7 +570,7 @@ const initData = () => {
 
 		astronaut: {
 			scale: 2.75,
-			offset: new THREE.Vector3(0, 12, 0),
+			offset: new THREE.Vector3(0, 0, 0),
 			upper: {
 				offset: new THREE.Vector3(0, 5.5, 0),
 				dom: {
@@ -800,6 +802,7 @@ const initData = () => {
 		},
 
 		breadGuy: {
+			offset: new THREE.Vector3(0, 2.5, 0),
 			scale: 5,
 			upper: {},
 			middle: {
@@ -944,7 +947,7 @@ const initData = () => {
 
 		houseGuy: {
 			scale: 8,
-			offset: new THREE.Vector3(0, 0, 0),
+			offset: new THREE.Vector3(0, -2.5, 0),
 			top: {
 				offset: new THREE.Vector3(0, 2.3, 0),
 				dom: {

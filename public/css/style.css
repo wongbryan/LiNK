@@ -23,6 +23,7 @@ h1, h2, header, p, a, span {
   background: none !important;
   z-index: 4; }
   #title .main {
+    pointer-events: none;
     text-align: center;
     position: absolute;
     top: 50%;
@@ -268,7 +269,7 @@ h1, h2, header, p, a, span {
       margin-top: 70px;
       margin-bottom: 50px; }
       #donation .main .info h1 {
-        font-family: "CaslonGraphiqueEF";
+        font-family: "ITC Grouch";
         font-size: 2rem;
         color: #f4f5f7;
         font-weight: lighter; }

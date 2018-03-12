@@ -137,7 +137,7 @@ const UIController = (function(){
 
 		}, 800);
 
-		AudioController.playNight();
+		AudioController.playNight(0);
 		APIController.postEntry(user_data);
 
 

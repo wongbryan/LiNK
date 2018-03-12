@@ -68,7 +68,11 @@ const init = () => {
     user_data.character = data;
     testMesh = a;
     testMesh.castShadow = true;
-    // testMesh.scale.set(7, 7, 7);
+    
+    const testMeshBox = new THREE.Box3().setFromObject(testMesh);
+    const testMeshHeight = Math.abs(testMeshBox.max.y - testMeshBox.min.y);
+    testMesh.position.y += testMeshHeight / 2 + testMesh.offset.y;
+
     scene.add(testMesh);
 
     spotLight.target = testMesh;
@@ -92,11 +96,11 @@ const init = () => {
             let pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
             let box = new THREE.Box3().setFromObject(a);
             let height = Math.abs(box.max.y - box.min.y);
-            let factor = height / (pos.length());
+            let factor = (height/2 + a.offset.y) / (pos.length());
 
             console.log(factor);
 
-            pos.multiplyScalar(1 + factor/1.25);
+            pos.multiplyScalar(1 + factor);
 
             a.position.copy(pos);
             a.position.add(a.offset);

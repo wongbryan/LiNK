@@ -53,6 +53,7 @@ h1, h2, header, p, a, span{
 	background: none !important;
 	z-index: 4;
 	.main{
+		pointer-events: none;
 		text-align: center;
 		h1{
 			font-family: $Grouch;
@@ -317,7 +318,7 @@ h1, h2, header, p, a, span{
 			margin-top: 70px;
 			margin-bottom: 50px;
 			h1{
-			font-family: $Caslon;
+			font-family: $Grouch;
 			font-size: 2rem;
 			color: $white;
 			font-weight: lighter;

@@ -161,7 +161,7 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 		    		hit = false;
 		    		paused = true;
 		    		const data = entries[checkpointIndex-1];
-		    		AudioController.setVolumeNight(.5);
+		    		AudioController.setVolumeNight(checkpointIndex-1, .5);
 		    		UIController.showQuoteMain(data);
 		    	});
 
