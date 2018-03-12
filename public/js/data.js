@@ -31,20 +31,10 @@ const checkpointActions = [
 	
 ];
 
-const dummy_data = {
-	name: "Michael",
-	id: 0,
-	text: "Hello",
-	votes: 0,
-	donation: 0,
-	character_name: null,
-}
-
 const user_data = {
 	name: "",
 	id: 0,
 	text: "",
-	votes: 0,
 	donation: 0,
 	character: null,
 };
@@ -1176,11 +1166,13 @@ const baseColors = ['beige', 'lightbeige', 'lightbrown', 'darkbrown',];
 
 const CHAR_DATA_OVERRIDES = {
 	astronaut: {
+		name: 'astronaut',
 		'upper_eyeLeft': ['black'],
 		'upper_eyeRight': ['black'], 
 		'upper_head': ['orange', 'beige'],
 	},
 	poopGuy: {
+		name: 'poopGuy',
 		'upper_dom': ['lightblue'],
 		'upper_eyeRight': ['lightblue'],
 		'middle_dom': primaryColors,
@@ -1190,15 +1182,18 @@ const CHAR_DATA_OVERRIDES = {
 		'middle_ring4': primaryColors
 	},
 	robot: {
+		name: 'robot',
 		'upper_eyeLeft': ['black', 'lightgray'],
 		'upper_eyeRight': ['black', 'lightgray'], 
 		'upper_dom': ['orange', 'yellow']
 	},
 	dice: {
+		name: 'dice',
 		'upperLeft_dom': ['orange', 'yellow'], 
 		'upperRight_dom': ['lightblue', 'red'], 
 	},
 	breadGuy: {
+		name: 'breadGuy',
 		'middle_dom': ['lightbeige'],
 		'middle_eyeRight': ['black'],
 		'middle_eyeLeft': ['black'],
@@ -1206,6 +1201,7 @@ const CHAR_DATA_OVERRIDES = {
 		'middle_eggWhite': ['white'],
 	},
 	houseGuy: {
+		name: 'houseGuy',
 		'middle_dom': ['beige'],
 		'top_dom': primaryColors.filter( i => i !== 'yellow'),
 		'upperLeft_dom': ['darkgray'],
@@ -1213,6 +1209,8 @@ const CHAR_DATA_OVERRIDES = {
 		'lowerLeft_dom': ['darkgray'],
 		'lowerRight_dom': ['darkgray'],
 	},
-	ricecookerGuy: {}
+	ricecookerGuy: {
+		name: 'ricecookerGuy',
+	}
 
 }

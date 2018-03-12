@@ -203,6 +203,9 @@ const getCharData = function(charName){
 
   for(let key in overrides){
 
+    if(key === 'name')
+      continue;
+    
     let mats = overrides[key];
     let matName = mats[Math.floor(Math.random() * mats.length)];
 

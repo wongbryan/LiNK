@@ -124,6 +124,8 @@ const UIController = (function(){
 
 		}, 800);
 
+		APIController.postEntry(user_data);
+
 		return false;
 	}
 

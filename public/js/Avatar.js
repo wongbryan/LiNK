@@ -179,12 +179,14 @@ function buildParts(data){
 var Avatar = function(data){
 	
 	let char = data['name'];
-	let charData = Object.assign({}, CHAR_DATA[char]);
+	let charData = CHAR_DATA[char];
 
 	for(let str in data){
 
 		let mKey = data[str];
 		let keys = str.split('_');
+
+		console.log(charData);
 
 		if(keys.length < 2)
 			continue;
