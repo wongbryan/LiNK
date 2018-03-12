@@ -21,7 +21,20 @@ function buildParts(data){
 		section.position.copy(o);
 
 		let dom = sectionData['dom']; //dominant part
-		let geom = dom.geom || dom.mesh.geometry;
+		const gType = dom.geom.type;
+		const gArgs = dom.geom.args;
+
+		let geom;
+
+		if(dom.hasOwnProperty('mesh')){
+
+			geom = dom.mesh.geometry;
+
+		} else{
+
+			geom = new THREE[gType].apply(null, gArgs);
+
+		}
 
 		geom.computeBoundingBox();
 		sectionBoundingBox = geom.boundingBox;
