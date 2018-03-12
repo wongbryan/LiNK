@@ -236,15 +236,6 @@ const createUIController = function(){
 	/* DONATION BOX STUFF */
 	let card_token = "";
 
-	Panda.init('pk_test_2C04UlQCKet4YoLtQVNkNQ', 'donationForm');
-
-	Panda.on('success', function(token){
-		submitDonation();
-	});
-	Panda.on('error', async function(errors){
-		console.log(errors);
-		errorDisplay(errors);
-	});
 
 	function errorDisplay(errors){
 
@@ -275,7 +266,6 @@ const createUIController = function(){
 	}
 
 	async function submitDonation(e){
-		
 		/* clear error display */
 		while (errorList.firstChild) {
 			errorList.removeChild(errorList.firstChild);
@@ -311,6 +301,7 @@ const createUIController = function(){
 			}
 
 			try {
+				console.log('post');
 				const response = await fetch("https://api.pandapay.io/v1/donations/", {
 					type: 'POST',
 					headers: {
@@ -339,7 +330,6 @@ const createUIController = function(){
 			}
 		}
 		return false
-
 	}
 
 	donationClose.addEventListener('mousedown', hideDonation);
@@ -353,6 +343,8 @@ const createUIController = function(){
 		hideQuoteInput: hideQuoteInput,
 		handleKeyDown: handleKeyDown,
 		handleKeyUp: handleKeyUp,
+		submitDonation: submitDonation,
+		errorDisplay: errorDisplay,
 	}
 
 };
