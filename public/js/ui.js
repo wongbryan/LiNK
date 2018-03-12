@@ -330,10 +330,9 @@ const UIController = (function(){
 			try {
 				const response = await fetch("https://api.pandapay.io/v1/donations", {
 					method: 'POST',
-					mode: 'cors',
 					headers: {
 						'Content-Type': "application/json; charset=utf-8",
-						'Authorization': 'Basic ' + btoa('SECRET KEY GOES HERE' + ':'),
+						'Authorization': 'Basic ' + btoa('sk_test_ehg1TY6M9ACY8k13VKgyAw' + ':'),
 					},
 					body: JSON.stringify(payload),
 				});
