@@ -87,18 +87,36 @@ const init = () => {
 	elem.start()
     })
 
-    //Make head follow the mouse
-    
-    //let followMouse = lookAtMouse(testMesh, MOUSE_POS, camera)
-    //followMouse.start()
-    
+    //Set checkpoints
+    const numPoints = 3;
+
+    for(let i=0; i<numPoints; i++){
+
+        const charName = getRandomCharName();
+        const data = getCharData(charName);
+        const a = new Avatar(data);
+        const angle = 2*Math.PI / numPoints;
+        let pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
+        pos.y += 2.5;
+        pos.z += 2.5;
+        a.position.copy(pos);
+        a.rotation.x = angle;
+
+        let c = {};
+
+        c.hit = false;
+        c.character = a;
+
+        scene.add(a);
+
+    }
     
     testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
 
     WORLD_CONTROLLER = createController(renderer, scene, camera, testMesh, globe);
     WORLD_CONTROLLER.setWorldLights(1);
     WORLD_CONTROLLER.setMainLightIntensity(.3);
-    WORLD_CONTROLLER.turnOffPostProcessing();
+    WORLD_CONTROLLER.expandStarField(100);
 
     clock.start();
     WORLD_CONTROLLER.animate();

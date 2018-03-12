@@ -1,3 +1,5 @@
+const checkpoints = [];
+
 const user_data = {
 	name: "",
 	id: 0,

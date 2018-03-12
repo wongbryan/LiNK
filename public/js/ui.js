@@ -102,8 +102,8 @@ const UIController = (function(){
 		donationQuoteAnswer.innerHTML = ans;
 
 		hideQuoteInput();
-		WORLD_CONTROLLER.fadeToColor(1200);
 		WORLD_CONTROLLER.expandStarField(1200);
+		WORLD_CONTROLLER.moveCamera('side');
 
 		return false;
 	}

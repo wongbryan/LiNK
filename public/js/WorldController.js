@@ -35,9 +35,15 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
     }
 
-    function turnOffPostProcessing(){
+    function turnOffPostProcessing(passName){
 
-    	if(postprocessing){
+    	if(passName){
+
+    		let pass = shaderPasses[passName];
+    		pass.renderToScreen = false;
+
+    	}
+    	else if(postprocessing){
 
     		postprocessing.renderToScreen = false;
     		postprocessing = null;
@@ -49,7 +55,7 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
     function fadeToColor(delay){
 
     	setTimeout(function(){
-    		tweenScalar(monochromePass.uniforms['darkness'], 'value', 0);
+    		tweenScalar(monochromePass.uniforms['darkness'], 'value', 0, 500, TWEEN.Easing.Quadratic.InOut, turnOffPostProcessing);
     		tweenScalar(monochromePass.uniforms['magnitude'], 'value', 0);
     	}, delay);
 

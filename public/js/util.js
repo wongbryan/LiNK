@@ -150,7 +150,7 @@ const getEdgesGeom = (geom) => { //use w THREE.LineSegments or THREE.Line and li
 
 }
 
-const tweenScalar = (source, propName, target, time = 500, easing=TWEEN.Easing.Quadratic.InOut) => { //tween for scalar target
+const tweenScalar = (source, propName, target, time = 500, easing=TWEEN.Easing.Quadratic.InOut, callback) => { //tween for scalar target
 
   let o = {};
   o[propName] = source[propName]; //value
@@ -161,6 +161,10 @@ const tweenScalar = (source, propName, target, time = 500, easing=TWEEN.Easing.Q
   tw.onUpdate(function(){
     source[propName] = o[propName];
   });
+  if(callback)
+    tw.onComplete(function(){
+      callback();
+    });
 
   tw.start();
 
@@ -200,7 +204,6 @@ const getCharData = function(charName){
   for(let key in overrides){
 
     let mats = overrides[key];
-    console.log(mats);
     let matName = mats[Math.floor(Math.random() * mats.length)];
 
     data[key] = matName;
