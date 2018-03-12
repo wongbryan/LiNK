@@ -95,19 +95,39 @@ function buildParts(data){
 				func = THREE[gType];
 				let geom = createGeom(gType, gArgs);
 
+				// geom = d.round ? round(geom, d.round) : geom;
+
 				if(d.round){
+
+					let geomExists = false;
 
 					if(ROUNDED_GEOMS.hasOwnProperty(gType)){
 
-						geom = ROUNDED_GEOMS[gType];
+						const params = JSON.stringify(geom.parameters);
 
-					} else{
+						ROUNDED_GEOMS[gType].forEach( g => {
+
+							const existingParams = JSON.stringify(g.parameters);
+
+							if(params === existingParams){
+
+								geomExists = true;
+								geom = g;
+							}
+
+						});
+
+					} 
+
+					if(!geomExists){
 
 						const roundedGeom = round(geom, d.round);
 						geom = roundedGeom;
-						ROUNDED_GEOMS[gType] = roundedGeom;
+						ROUNDED_GEOMS[gType] = [];
+						ROUNDED_GEOMS[gType].push(roundedGeom);
 
 					}
+
 
 				}
 
@@ -116,6 +136,8 @@ function buildParts(data){
 				part = new THREE.Mesh(geom, mat);
 
 			}
+
+			console.log(part);
 
 			let n = d.name || k;
 			let offset = d.offset || z;

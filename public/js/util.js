@@ -188,9 +188,8 @@ const stylizeQuote = function(string){
 
 }
 
-const getRandomCharName = function(){
-
-  let keys = Object.keys(CHAR_DATA);
+const getRandomCharName = function(keys){
+  
   return keys[Math.floor(Math.random() * keys.length)];
 
 }

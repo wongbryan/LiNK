@@ -32,20 +32,75 @@ const init = () => {
     scene.add(spotLight);
 
     // let charData = getRandomCharacterData();
-    let charData = getCharData('dice');
+    let charData = getCharData('poopGuy');
     user_data.character = charData;
-    
-    testMesh = new Avatar(charData);
-    testMesh.castShadow = true;
-    testMesh.position.add(testMesh.offset);
-    testMesh.position.y += GLOBE_RADIUS;
-    let s = 1;
-    testMesh.scale.multiplyScalar(s);
+
+    //Set checkpoints
+    const numPoints = 4;
+
+    for(let i=0; i<numPoints; i++){
+
+        let keys = Object.keys(CHAR_DATA);
+        console.log(keys);
+        // keys = keys.filter( k => {  
+
+        //     let ex = false;
+
+        //     for(let i=0; i<checkpoints.length; i++){
+
+        //         if(checkpoints[i].name === k){
+                    
+        //             ex = true;
+        //             break;
+
+        //         }
+
+        //     }
+
+        //     return ex;
+
+        // } );
+
+        console.log(keys);
+
+        const charName = getRandomCharName(keys);
+        // console.log(charName);
+        const data = getCharData(charName);
+        const a = new Avatar(data);
+        const angle = 2*Math.PI / numPoints * i;
+        let pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
+        
+        a.position.copy(pos);
+        a.position.add(a.offset);
+        a.rotation.x = angle;
+
+        if( i === 0){
+
+            testMesh = a;
+            testMesh.castShadow = true;
+
+        } 
+
+        let c = {};
+        c.name = a.name;
+        c.hit = false;
+        c.character = a;
+
+        checkpoints.push(c);
+
+        scene.add(a);
+
+    }
+
+    // testMesh.position.add(testMesh.offset);
+    // testMesh.position.y += GLOBE_RADIUS;
+    // let s = 1;
+    // testMesh.scale.multiplyScalar(s);
 
     spotLight.target = testMesh;
     let container = new THREE.Object3D();
     container.add(spotLight);
-    container.scale.divideScalar(s);
+    // container.scale.divideScalar(s);
     testMesh.add(container);
     testMesh.light = spotLight;
 
@@ -86,30 +141,6 @@ const init = () => {
     idleAnims.forEach( elem => {
 	elem.start()
     })
-
-    //Set checkpoints
-    const numPoints = 3;
-
-    for(let i=0; i<numPoints; i++){
-
-        const charName = getRandomCharName();
-        const data = getCharData(charName);
-        const a = new Avatar(data);
-        const angle = 2*Math.PI / numPoints;
-        let pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
-        pos.y += 2.5;
-        pos.z += 2.5;
-        a.position.copy(pos);
-        a.rotation.x = angle;
-
-        let c = {};
-
-        c.hit = false;
-        c.character = a;
-
-        scene.add(a);
-
-    }
     
     testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
 
