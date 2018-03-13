@@ -31,7 +31,12 @@ const checkpointActions = [
 		WORLD_CONTROLLER.fadeToColor(1600);
 		WORLD_CONTROLLER.sizeStarField(1.5, 1200, 500, .4, 600);
 		WORLD_CONTROLLER.resetGlobe();
-		setTimeout(UIController.showDonation, 1800);
+		setTimeout(function(){
+
+			UIController.showDonation();
+			WORLD_CONTROLLER.moveCamera('front');
+
+		}, 800);
 		paused = true;
 		checkpointIndex = 1; //start over?
 
@@ -1192,8 +1197,8 @@ const CHAR_DATA_OVERRIDES = {
 	},
 	robot: {
 		name: 'robot',
-		'upper_eyeLeft': ['black', 'lightgray'],
-		'upper_eyeRight': ['black', 'lightgray'], 
+		'upper_eyeLeft': ['black'],
+		'upper_eyeRight': ['black'], 
 		'upper_dom': ['orange', 'yellow']
 	},
 	dice: {

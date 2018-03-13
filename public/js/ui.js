@@ -169,7 +169,9 @@ const createUIController = function(){
 		hideQuoteInput();
 		// WORLD_CONTROLLER.shrinkStarField(1200);
 		WORLD_CONTROLLER.sizeStarField(1, 100, 60, .1, 300);
-		WORLD_CONTROLLER.moveCamera('side');
+		setTimeout(function(){
+			WORLD_CONTROLLER.moveCamera('behind')
+		}, 800);
 		paused = false;
 
 		AudioController.playNight(0);
@@ -215,6 +217,10 @@ const createUIController = function(){
 		}
 
 		if(e.keyCode === 32  && e.target === document.body ){ //space
+	        
+	        if(camera.currentPos !== 'behind'){
+	        	WORLD_CONTROLLER.moveCamera('behind');
+	        }
 	        
 	        hideInstructions();
 	        fired = true;

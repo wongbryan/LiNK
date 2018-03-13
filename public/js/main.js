@@ -177,12 +177,12 @@ const init = () => {
     WORLD_CONTROLLER.setWorldLights(1);
     WORLD_CONTROLLER.setMainLightIntensity(.3);
     WORLD_CONTROLLER.expandStarField(100);
-    WORLD_CONTROLLER.moveCamera('side');
+    // WORLD_CONTROLLER.moveCamera('behind');
 
     UIController = createUIController();
 
     UIController.setUserCharacter(testMesh.name);
-    UIController.showQuoteMainInfo();
+    // UIController.showQuoteMainInfo();
 
     document.body.addEventListener('keydown', UIController.handleKeyDown);
     document.body.addEventListener('keyup', UIController.handleKeyUp);

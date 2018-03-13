@@ -756,7 +756,11 @@ var checkpointActions = [0, function () {
 	WORLD_CONTROLLER.fadeToColor(1600);
 	WORLD_CONTROLLER.sizeStarField(1.5, 1200, 500, .4, 600);
 	WORLD_CONTROLLER.resetGlobe();
-	setTimeout(UIController.showDonation, 1800);
+	setTimeout(function () {
+
+		UIController.showDonation();
+		WORLD_CONTROLLER.moveCamera('front');
+	}, 800);
 	paused = true;
 	checkpointIndex = 1; //start over?
 }];
@@ -1901,8 +1905,8 @@ var CHAR_DATA_OVERRIDES = {
 	},
 	robot: {
 		name: 'robot',
-		'upper_eyeLeft': ['black', 'lightgray'],
-		'upper_eyeRight': ['black', 'lightgray'],
+		'upper_eyeLeft': ['black'],
+		'upper_eyeRight': ['black'],
 		'upper_dom': ['orange', 'yellow']
 	},
 	dice: {
@@ -2426,12 +2430,12 @@ var init = function init() {
     WORLD_CONTROLLER.setWorldLights(1);
     WORLD_CONTROLLER.setMainLightIntensity(.3);
     WORLD_CONTROLLER.expandStarField(100);
-    WORLD_CONTROLLER.moveCamera('side');
+    // WORLD_CONTROLLER.moveCamera('behind');
 
     UIController = createUIController();
 
     UIController.setUserCharacter(testMesh.name);
-    UIController.showQuoteMainInfo();
+    // UIController.showQuoteMainInfo();
 
     document.body.addEventListener('keydown', UIController.handleKeyDown);
     document.body.addEventListener('keyup', UIController.handleKeyUp);
@@ -2740,7 +2744,9 @@ var createUIController = function createUIController() {
 		hideQuoteInput();
 		// WORLD_CONTROLLER.shrinkStarField(1200);
 		WORLD_CONTROLLER.sizeStarField(1, 100, 60, .1, 300);
-		WORLD_CONTROLLER.moveCamera('side');
+		setTimeout(function () {
+			WORLD_CONTROLLER.moveCamera('behind');
+		}, 800);
 		paused = false;
 
 		AudioController.playNight(0);
@@ -2784,6 +2790,10 @@ var createUIController = function createUIController() {
 
 		if (e.keyCode === 32 && e.target === document.body) {
 			//space
+
+			if (camera.currentPos !== 'behind') {
+				WORLD_CONTROLLER.moveCamera('behind');
+			}
 
 			hideInstructions();
 			fired = true;
@@ -3195,7 +3205,7 @@ var initializeCamera = function initializeCamera() {
   //Set camera to requested position
   var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
   // camera.position.set(-GLOBE_RADIUS/3, GLOBE_RADIUS+7.5, 0)
-  camera.position.set(0, GLOBE_RADIUS + 30, GLOBE_RADIUS / 3);
+  camera.position.set(0, GLOBE_RADIUS + 30, GLOBE_RADIUS);
   //Similar to above
   return camera;
 };
@@ -3345,8 +3355,9 @@ var mouse_monitor = function mouse_monitor(e) {
 var createController = function createController(renderer, scene, camera, mainAvatar, globe) {
 
 	var cameraPositions = {
-		front: new THREE.Vector3(0, GLOBE_RADIUS + 7.5, GLOBE_RADIUS / 3),
+		front: new THREE.Vector3(0, GLOBE_RADIUS + 30, GLOBE_RADIUS),
 		side: new THREE.Vector3(-(GLOBE_RADIUS / 3 + 75), GLOBE_RADIUS + 35, 75),
+		behind: new THREE.Vector3(-(GLOBE_RADIUS / 3 + 55), GLOBE_RADIUS + 55, -105),
 		diagonal: new THREE.Vector3(-GLOBE_RADIUS / 3, GLOBE_RADIUS + 7.5, GLOBE_RADIUS / 3)
 	};
 
