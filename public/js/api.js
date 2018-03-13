@@ -170,7 +170,6 @@ const APIController = (function(fetch){
 			return [e];
 		}
 
-
 	}
 
 	return {
