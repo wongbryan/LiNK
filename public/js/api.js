@@ -1,4 +1,4 @@
-const apibase = 'http://159.203.117.240/api/';
+const apibase = 'https://magnacreativelabs.club/api/';
 
 const APIController = (function(fetch){
 
@@ -15,7 +15,7 @@ const APIController = (function(fetch){
 			if (status >= 200 && status < 300) {
 				const json = await response.json();
 				return json;
-			    //console.log("This is your entry: ", json);
+			    console.log("This is your entry: ", json);
 			} else {
 				throw new Error(status);
 			}

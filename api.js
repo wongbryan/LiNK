@@ -1,6 +1,6 @@
 const request = require('request-promise');
 
-const url = 'http://159.203.117.240/api/';
+const url = 'https://magnacreativelabs.club/api/';
 
 const API = (function() {
 

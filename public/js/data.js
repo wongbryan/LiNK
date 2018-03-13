@@ -33,8 +33,9 @@ const checkpointActions = [
 		WORLD_CONTROLLER.resetGlobe();
 		setTimeout(function(){
 
-			UIController.showDonation();
 			WORLD_CONTROLLER.moveCamera('front');
+
+			setTimeout(UIController.showDonation, 800);
 
 		}, 800);
 		paused = true;
