@@ -2622,6 +2622,7 @@ var createUIController = function createUIController() {
 	    donationClose = document.getElementById('donationClose'),
 	    donationSubmit = document.getElementById('donationSubmit'),
 	    donationQuoteAnswer = document.getElementById('donationQuoteAnswer'),
+	    donationConfirm = document.getElementById('donationConfirm'),
 	    name = document.getElementById('name'),
 	    cvv = document.getElementById('cvv'),
 	    number = document.getElementById('number'),
@@ -2924,8 +2925,9 @@ var createUIController = function createUIController() {
 
 	function errorDisplay(errors) {
 
-		if (Object.keys(errors).length != 0) errorList.innerHTML = "detected error(s):";
-
+		if (Object.keys(errors).length != 0) errorList.innerHTML = "detected error(s):";else {
+			errorList.innerHTML = "";
+		}
 		var _iteratorNormalCompletion = true;
 		var _didIteratorError = false;
 		var _iteratorError = undefined;
@@ -3007,18 +3009,21 @@ var createUIController = function createUIController() {
 			};
 
 			try {
-				var response = await fetch("https://api.pandapay.io/v1/donations", {
+				var response = await fetch("http://159.203.117.240/api/donation", {
 					method: 'POST',
 					headers: {
-						'Content-Type': "application/json; charset=utf-8",
-						'Authorization': 'Basic ' + btoa(PANDA_SECRET_KEY + ':')
+						'Content-Type': "application/json; charset=utf-8"
 					},
 					body: JSON.stringify(payload)
 				});
-				var status = await response.status;
+				var status = response.status;
 				if (status >= 200 && status < 300) {
 					var json = await response.json();
 					console.log(json);
+					hide(donationForm);
+					setTimeout(function () {
+						show(donationConfirm);
+					}, 300);
 					return true;
 				} else {
 					throw new Error(status);

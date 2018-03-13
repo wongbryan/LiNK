@@ -48,12 +48,13 @@ const createUIController = function(){
 	donationClose = document.getElementById('donationClose'),
 	donationSubmit = document.getElementById('donationSubmit'),
 	donationQuoteAnswer = document.getElementById('donationQuoteAnswer'),
+	donationConfirm = document.getElementById('donationConfirm'),
 	name = document.getElementById('name'),
 	cvv = document.getElementById('cvv'),
 	number = document.getElementById('number'),
 	expiration = document.getElementById('expiration'),
 	amount = document.getElementById('amount'),
-	email = document.getElementById('email');
+	email = document.getElementById('email')
 
 	let errorList = document.querySelector('#error');
 
@@ -368,7 +369,9 @@ const createUIController = function(){
 
 		if (Object.keys(errors).length != 0)
 			errorList.innerHTML = "detected error(s):";
-
+		else{
+			errorList.innerHTML = "";
+		}
 		for (const [key, err] of Object.entries(errors)) {
 			let errorItem = document.createElement('li');
 			errorItem.innerHTML = err.message;
@@ -439,6 +442,10 @@ const createUIController = function(){
 				if (status >= 200 && status < 300) {
 					const json = await response.json();
 					console.log(json);
+					hide(donationForm);
+					setTimeout(function(){
+						show(donationConfirm);
+					}, 300);
 					return true;
 				} else {
 					throw new Error(status);

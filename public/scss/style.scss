@@ -394,6 +394,14 @@ h1, h2, header, p, a, span{
 		text-shadow: 0 0 20px rgba(255, 255, 255, 1);
 	}
 
+	#donationConfirm{
+		font-family: $Brandon;
+		color: $white;
+		font-size: 1rem;
+		visibility: hidden;
+		margin-top: 25px;
+	}
+
 	#donationForm{
 		width: 90%;
 	}

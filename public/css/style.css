@@ -326,6 +326,12 @@ h1, h2, header, p, a, span {
     color: #f4f5f7;
     font-size: 1.5rem;
     text-shadow: 0 0 20px white; }
+  #donation #donationConfirm {
+    font-family: "Brandon Text";
+    color: #f4f5f7;
+    font-size: 1rem;
+    visibility: hidden;
+    margin-top: 25px; }
   #donation #donationForm {
     width: 90%; }
   #donation label {
