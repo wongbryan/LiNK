@@ -1,4 +1,4 @@
-const apibase = 'http://159.203.117.240/api/';
+const apibase = 'https://magnacreativelabs.club/api/';
 
 const APIController = (function(fetch){
 

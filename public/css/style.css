@@ -398,6 +398,45 @@ h1, h2, header, p, a, span {
       list-style: none; }
 
 
+    @media only screen and (max-width: 600px) {
+	
+	#donation {
+	overflow: scroll;
+	/* Add touch scrolling */
+	overflow-y: scroll; 
+	-webkit-overflow-scrolling: touch;
+	width:100%;
+    }
+
+	.mobileFull{
+	    position:absolute;
+	    
+	    width:80%;
+	    height:80%;
+	    left:10%;
+    }
+
+	#donation .main .info {
+	    margin-top:2em;
+	}
+	.mobile-info{
+	    margin-top:2em;
+	}
+
+	.DonationSubmit{
+	    padding-bottom:10px;
+	}
+
+	.mobileForm{
+	    height:85%;
+	}
+    
+	body:{
+	    overflow:scroll;
+	}
+    
+    }
+
     .mobileShow{
 	display:none;
     }
@@ -406,8 +445,6 @@ h1, h2, header, p, a, span {
     and (max-device-width : 600px){
 	display: inline;
     }
-
-
     .noSelectTouch {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -433,3 +470,4 @@ h1, h2, header, p, a, span {
     background: #eee;
   }
 }
+

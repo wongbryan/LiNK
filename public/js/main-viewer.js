@@ -31,9 +31,13 @@ const init = () => {
     spotLight.position.set(-10, 30, 0);
     scene.add(spotLight);
 
-    let charData = getRandomCharacterData();
-    user_data.character = charData;
-
+    //let charData = getRandomCharacterData();
+    //user_data.character = charData;
+    const charName = getRandomCharName(Object.keys(CHAR_DATA));
+    // console.log(charName);
+    const charData = getCharData(charName);
+    
+    
     testMesh = new Avatar(charData);
     testMesh.castShadow = true;
     testMesh.position.y = GLOBE_RADIUS+5;

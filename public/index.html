@@ -47,15 +47,15 @@
 		</div>
 	</div>
 	<div id="donation" class="screen">
-		<div class="wrapper">
-			<div class="main">
+		<div class="wrapper" id="theWrapper">
+			<div class="main mobile-full">
 				<div id="donationClose" class="submitButton glowBorder"></div>
-				<div class="info">
+				<div class="info mobile-info">
 					<h1 class="glow">Help others find a home</h1>
 					<p>What is home? Some say it's where the lights are, where the family is. Or maybe it's <span id="donationQuoteAnswer">sample here</span> The question of what is easier to answer than where. </br></br>Every year, Liberty in North Korea helps refugees escape an oppressive country. They do this this that this... Help by donating to LiNK below.</p>
 					<a href="/https://www.libertyinnorthkorea.org/" target="_blank">learn more</a>
 				</div>
-				<form id="donationForm" spellcheck="false">
+				<form class="mobile-form" id="donationForm" spellcheck="false">
 					<div class="form-group name">
 						<label for="name">first name</label>
 						<input type="text" class="form-control" id="name" autocomplete="nope" data-panda="first_name" ></input>
@@ -87,8 +87,8 @@
 						<input type="text" class="form-control" id="email" autocomplete="nope" ></input>
 						<h1 class="description">for your tax-deductible email receipt</h1>
 					</div>
-					<div id="donationSubmit">
-						<button type="submit">submit</button>
+					<div id="donationSubmit" class="DonationSubmit">
+						<button type="submit">Submit</button>
 					</div>
 					<div class="form-group error">
 						<ul id="error"></ul>
@@ -181,6 +181,10 @@
 <script type="text/javascript" src="/js/lib/RenderPass.js"></script>
 <script type="text/javascript" src="/js/lib/ShaderPass.js"></script>
 
+<script type="text/javascript" src="/js/lib/iscroll.js"></script>
+<script type="text/javascript">
+var myScroll = new IScroll('#theWrapper');
+</script>
 <script type="text/javascript" src="/js/lib/Tween.js"></script>
 <script type="text/javascript" src="/js/util.js"></script>
 <script type="text/javascript" src="/js/Shaders.js"></script>
