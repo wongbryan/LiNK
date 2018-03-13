@@ -866,7 +866,7 @@ const initData = () => {
 
 		poopGuy: {
 			scale: 7.,
-			offset: new THREE.Vector3(0, 8., 0),
+			offset: new THREE.Vector3(0, 10, 0),
 			upper: {
 				offset: new THREE.Vector3(0, .5, 0),
 				dom: {	

@@ -184,7 +184,7 @@ var Avatar = function(data){
 		let mKey = data[str];
 		let keys = str.split('_');
 
-		console.log(charData);
+	    //console.log(charData);
 
 		if(keys.length < 2)
 			continue;
