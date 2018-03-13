@@ -5,6 +5,26 @@ body {
   margin: 0;
   overflow: hidden; }
 
+.main{
+    width:90%;
+    left:5%;
+    right:5%;
+}
+
+#MobileInstructions{
+    display:none;
+}
+
+@media only screen and (max-width: 600px) {
+    #MobileInstructions{
+	display:inline;
+    }
+    #WebInstructions{
+	display:none;
+    }
+}
+
+
 #activeQuoteBox {
   position: absolute;
   top: 60%;
@@ -59,6 +79,8 @@ h1, h2, header, p, a, span {
   height: 100%;
   background: rgba(0, 1, 12, 0.8);
   color: #f4f5f7; }
+
+
 
 #loading {
   transition: all .6s ease;
@@ -142,7 +164,9 @@ h1, h2, header, p, a, span {
   z-index: 3;
   visibility: hidden; }
   #quoteInput .main, #nameInput .main {
-    width: 600px;
+      width: 90%;
+      left:5%;
+      right:5%;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -221,7 +245,9 @@ h1, h2, header, p, a, span {
       font-family: "Brandon Text";
       color: #f4f5f7;
       font-size: 2rem;
-      width: 600px;
+      width: 90%;
+      left:5%;
+      right:5%;
       margin: auto;
       font-weight: lighter;
       margin-bottom: 0; }
@@ -550,6 +576,17 @@ h1, h2, header, p, a, span {
 	body:{
 	    overflow:scroll;
 	}
+
+/*	.screen{
+	    position: absolute;
+	    left:5%;
+	    right:5%;
+	    width: 90%;
+	    height: 100%;
+  background: rgba(0, 1, 12, 0.8);
+  color: #f4f5f7; }*/
+
+	}
     
     }
 
@@ -562,13 +599,13 @@ h1, h2, header, p, a, span {
 	display: inline;
     }
     .noSelectTouch {
-    -webkit-touch-callout: none;
+	-webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-}
+    }
 
   @media screen and (max-width:600px){
   select,
