@@ -414,15 +414,14 @@ const createUIController = function(){
 			}
 
 			try {
-				const response = await fetch("https://api.pandapay.io/v1/donations", {
+				const response = await fetch("http://159.203.117.240/api/donation", {
 					method: 'POST',
 					headers: {
 						'Content-Type': "application/json; charset=utf-8",
-						'Authorization': 'Basic ' + btoa(PANDA_SECRET_KEY + ':'),
 					},
 					body: JSON.stringify(payload),
 				});
-				const status = await response.status;
+				const status = response.status;
 				if (status >= 200 && status < 300) {
 					const json = await response.json();
 					console.log(json);
