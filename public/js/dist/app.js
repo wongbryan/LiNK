@@ -256,6 +256,7 @@ var APIController = function (fetch) {
 			var status = response.status;
 			if (status >= 200 && status < 300) {
 				var json = await response.json();
+				return json;
 				//console.log("This is your entry: ", json);
 			} else {
 				throw new Error(status);
@@ -2429,6 +2430,8 @@ var init = function init() {
 
     UIController = createUIController();
 
+    UIController.setUserCharacter(testMesh.name);
+
     document.body.addEventListener('keydown', UIController.handleKeyDown);
     document.body.addEventListener('keyup', UIController.handleKeyUp);
 
@@ -2623,6 +2626,8 @@ var createUIController = function createUIController() {
 	    donationSubmit = document.getElementById('donationSubmit'),
 	    donationQuoteAnswer = document.getElementById('donationQuoteAnswer'),
 	    donationConfirm = document.getElementById('donationConfirm'),
+	    userCharacter = document.getElementById('userCharacter'),
+	    userCharacterLink = document.getElementById('userCharacterLink'),
 	    name = document.getElementById('name'),
 	    cvv = document.getElementById('cvv'),
 	    number = document.getElementById('number'),
@@ -2740,7 +2745,10 @@ var createUIController = function createUIController() {
 		AudioController.playNight(0);
 		//Clear focus
 		document.activeElement.blur();
-		APIController.postEntry(user_data);
+		APIController.postEntry(user_data).then(function (resp) {
+			var link = 'localhost:3000/view/' + resp.id;+'/';
+			UIController.setUserCharacterLink(link);
+		});
 
 		return false;
 	}
@@ -2892,6 +2900,42 @@ var createUIController = function createUIController() {
 
 	function hideDonation() {
 		hide(donation);
+	}
+
+	function setUserCharacter(val) {
+
+		var str = void 0;
+
+		switch (val) {
+			case 'breadGuy':
+				str = 'bread person';
+				break;
+			case 'astronaut':
+				str = 'astronaut';
+				break;
+			case 'robot':
+				str = 'robot';
+				break;
+			case 'poopGuy':
+				str = 'ring toy (or rainbow-colored poop)';
+				break;
+			case 'ricecookerGuy':
+				str = 'rice cooker';
+				break;
+			case 'dice':
+				str = 'pair of dice';
+				break;
+			case 'houseGuy':
+				str = 'house person';
+				break;
+		}
+
+		userCharacter.innerHTML = str;
+	}
+
+	function setUserCharacterLink(val) {
+		userCharacterLink.href = val;
+		userCharacterLink.innerHTML = val;
 	}
 
 	function hide(elem) {
@@ -3052,7 +3096,9 @@ var createUIController = function createUIController() {
 		handleKeyDown: handleKeyDown,
 		handleKeyUp: handleKeyUp,
 		submitDonation: submitDonation,
-		errorDisplay: errorDisplay
+		errorDisplay: errorDisplay,
+		setUserCharacter: setUserCharacter,
+		setUserCharacterLink: setUserCharacterLink
 	};
 };
 'use strict';

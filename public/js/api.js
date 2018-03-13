@@ -14,6 +14,7 @@ const APIController = (function(fetch){
 			const status = response.status;
 			if (status >= 200 && status < 300) {
 				const json = await response.json();
+				return json;
 			    //console.log("This is your entry: ", json);
 			} else {
 				throw new Error(status);

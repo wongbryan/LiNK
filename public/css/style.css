@@ -322,6 +322,10 @@ h1, h2, header, p, a, span {
         #donation .main .info a:hover {
           color: #f4f5f7;
           text-shadow: 0 0 15px white; }
+  #donation #userCharacterLink {
+    color: #f4f5f7; }
+    #donation #userCharacterLink:hover {
+      cursor: pointer; }
   #donation #donationQuoteAnswer {
     color: #f4f5f7;
     font-size: 1.5rem;
