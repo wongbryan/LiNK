@@ -1,4 +1,4 @@
-const UIController = (function(){
+const createUIController = function(){
 
 	var title = document.getElementById('title');
 
@@ -405,4 +405,4 @@ const UIController = (function(){
 		errorDisplay: errorDisplay,
 	}
 
-})();
+};

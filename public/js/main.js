@@ -82,7 +82,7 @@ const init = () => {
     testMesh.add(container);
     testMesh.light = spotLight;
 
-    APIController.getRecentEntries(4)
+    APIController.getUniqueEntries(4)
     .then( res => {
 
         entries = res;
@@ -98,13 +98,11 @@ const init = () => {
             }
 
             const a = new Avatar(charData);
-            const angle = 2*Math.PI / numPoints * (i+1);
+            const angle = 2*Math.PI / numPoints * (numcheckpoints+1);
             let pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
             let box = new THREE.Box3().setFromObject(a);
             let height = Math.abs(box.max.y - box.min.y);
             let factor = (height/2 + a.offset.y) / (pos.length());
-
-            console.log(factor);
 
             pos.multiplyScalar(1 + factor);
 
@@ -228,7 +226,7 @@ const init = () => {
     WORLD_CONTROLLER.expandStarField(100);
     WORLD_CONTROLLER.moveCamera('side');
 
-    // UIController = createUIController();
+    UIController = createUIController();
 
     document.body.addEventListener('keydown', UIController.handleKeyDown);
     document.body.addEventListener('keyup', UIController.handleKeyUp);

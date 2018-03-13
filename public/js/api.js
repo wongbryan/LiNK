@@ -148,6 +148,28 @@ const APIController = (function(fetch){
 		} catch(e) {
 			throw new Error(e.message);
 		}
+	}
+
+	async function getUniqueEntries(n){
+
+		try {
+			const response = await fetch(apibase + "unique/" + n, {
+				method: 'GET',
+				headers: { "Content-Type": "application/json" },
+			});
+
+			const status = response.status;
+			if (status >= 200 && status < 300) {
+				const json = await response.json();
+				return json.entries;
+			} else {
+				throw new Error(status);
+			}
+		} catch(e) {
+			throw new Error(e.message);
+			return [e];
+		}
+
 
 	}
 
@@ -159,6 +181,7 @@ const APIController = (function(fetch){
 		getTopDonorEntries: getTopDonorEntries,
 		getEntry: getEntry,
 		getTotalDonations: getTotalDonations,
+		getUniqueEntries: getUniqueEntries,
 	}
 
 })(window.fetch);
