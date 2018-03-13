@@ -49,6 +49,32 @@ h1, h2, header, p, a, span{
 	color: $white;
 }
 
+#loading{
+	transition: all .6s ease;
+	background: rgba(0, 1, 12, 1);
+	z-index: 6;
+	.wrapper{
+		@include absolute-center;
+	}
+
+	.circle{
+		margin: auto;
+		height: 50px;
+		width: 50px;
+		border-radius: 50%;
+		border: $white 2px solid;
+		animation: blinkGlowBorder 1.5s infinite alternate linear;
+	}
+
+	p{
+		font-family: $Brandon;
+		font-size: 1rem;
+		color: $lightgray;
+		margin: auto;
+		margin: 20px;
+	}
+}
+
 #title{
 	background: none !important;
 	z-index: 4;
@@ -288,8 +314,8 @@ h1, h2, header, p, a, span{
 }
 
 @keyframes blinkGlowBorder{
-	0%{box-shadow: 0px 0px 5px white;}
-	100%{box-shadow: 0px 0px 15px white;}
+	0%{box-shadow: 0px 0px 10px $white; }
+	100%{box-shadow: 0px 0px 30px $white;}
 }
 
 .glowBorder{

@@ -2066,8 +2066,15 @@ var Loader = function () {
     };
 
     manager.onLoad = function () {
-        initData();
-        init();
+        setTimeout(function () {
+            //let page render before calling init (push to event queue)
+            initData();
+            init();
+            document.getElementById('loading').style.opacity = 0;
+            setTimeout(function () {
+                document.getElementById('loading').style.display = "none";
+            }, 600);
+        }, 0);
     };
 
     var loadFont = function loadFont(file) {

@@ -19,6 +19,29 @@ h1, h2, header, p, a, span {
   background: rgba(0, 1, 12, 0.8);
   color: #f4f5f7; }
 
+#loading {
+  transition: all .6s ease;
+  background: #00010c;
+  z-index: 6; }
+  #loading .wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); }
+  #loading .circle {
+    margin: auto;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border: #f4f5f7 2px solid;
+    animation: blinkGlowBorder 1.5s infinite alternate linear; }
+  #loading p {
+    font-family: "Brandon Text";
+    font-size: 1rem;
+    color: #929598;
+    margin: auto;
+    margin: 20px; }
+
 #title {
   background: none !important;
   z-index: 4; }
@@ -229,9 +252,9 @@ h1, h2, header, p, a, span {
 
 @keyframes blinkGlowBorder {
   0% {
-    box-shadow: 0px 0px 5px white; }
+    box-shadow: 0px 0px 10px #f4f5f7; }
   100% {
-    box-shadow: 0px 0px 15px white; } }
+    box-shadow: 0px 0px 30px #f4f5f7; } }
 
 .glowBorder:hover {
   border: 1px solid #f4f5f7;
