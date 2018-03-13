@@ -42,7 +42,9 @@ const init = () => {
     innerGlobe = new THREE.Mesh(sGeom, sMat);
     scene.add(innerGlobe);
 
-    setActiveBox(entry.text, "-" + entry.name);
+    let str = capitalizeWords(entry.name);
+    str = (entry.location) ? str + ", " + entry.location : str;
+    setActiveBox(entry.text, "-" + str);
 
     const data = entry.character;
     const a = new Avatar(data);
@@ -86,7 +88,7 @@ const init = () => {
 
     /* Get similar quotes */
 
-    const maxNumChars = 4;
+    const maxNumChars = (entry.sentiment_users.length < 3) ? entry.sentiment_users.length : 4;
     entry.sentiment_users.forEach( id => {
 
         APIController.getEntry(id)
@@ -95,6 +97,7 @@ const init = () => {
             const numChars = characters.length;
             
             if(numChars >= maxNumChars){
+                console.log(numChars);
                 document.getElementById('loading').style.opacity = 0;
                 setTimeout(function(){
                     document.getElementById('loading').style.display = "none";
@@ -143,7 +146,7 @@ const init = () => {
         moveLeft();
         activeCharacter = (activeCharacter === 0) ? characters.length-1 : activeCharacter - 1;
         const d = characters[activeCharacter];
-        let str = d.name;
+        let str = "-" + capitalizeWords(d.name);
         str = (d.location) ? str + ", " + d.location : str;
         setActiveBox(d.text, str);
     });
@@ -152,9 +155,8 @@ const init = () => {
         moveRight();
         activeCharacter = (activeCharacter === characters.length-1) ? 0 : activeCharacter + 1;
         const d = characters[activeCharacter];
-        let str = d.name;
+        let str = "-" + capitalizeWords(d.name);
         str = (d.location) ? str + ", " + d.location : str;
-        setActiveBox(d.text, str);
         setActiveBox(d.text, str);
     });
 

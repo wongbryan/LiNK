@@ -256,6 +256,20 @@ const mouse_monitor = (e) => {
     MOUSE_POS.y = (e.clientY / window.innerHeight) * 2  - 1
 }
 
+const capitalizeWords = (string) => {
+  let str = "";
+  let words = string.split(" ");
+  words.forEach( (n, i) => { //first and last
+    let cap = n.charAt(0).toUpperCase() + n.slice(1);
+    str += cap;
+
+    if(i !== words.length -1){
+      str += " ";
+    }
+  });
+  return str;
+}
+
 /* Single view mode */
 
 const activeQuoteBox = document.getElementById('activeQuoteBox');
@@ -321,5 +335,5 @@ const initOtherUsers = () => {
         })
 
     });
-    
+
 }
