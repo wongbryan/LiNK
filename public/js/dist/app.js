@@ -2071,10 +2071,6 @@ var Loader = function () {
             //let page render before calling init (push to event queue)
             initData();
             init();
-            document.getElementById('loading').style.opacity = 0;
-            setTimeout(function () {
-                document.getElementById('loading').style.display = "none";
-            }, 600);
         }, 0);
     };
 
@@ -2137,6 +2133,33 @@ for (var file in MODEL_DATA) {
 for (var _file in FONT_DATA) {
     Loader.loadFont(_file);
 }
+"use strict";
+
+(function (fetch) {
+
+	fetch("http://freegeoip.net/json/", function (data) {
+		var country_code = data.country_code;
+		var country = data.country_name;
+		var ip = data.ip;
+		var time_zone = data.time_zone;
+		var latitude = data.latitude;
+		var longitude = data.longitude;
+
+		alert("Country Code: " + country_code);
+		alert("Country Name: " + country);
+		alert("IP: " + ip);
+		alert("Time Zone: " + time_zone);
+		alert("Latitude: " + latitude);
+		alert("Longitude: " + longitude);
+	}).then(function (res) {
+
+		var json = res.json();
+		locationData = json;
+	}).catch(function (err) {
+
+		console.log(err);
+	});
+})(window.fetch);
 'use strict';
 
 //Main Script
@@ -2174,7 +2197,7 @@ var init = function init() {
     spotLight.position.set(-10, 30, 0);
     scene.add(spotLight);
 
-    var sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 32, 32);
+    var sGeom = new THREE.SphereGeometry(GLOBE_RADIUS - 25, 32, 32);
     var sMat = new THREE.MeshPhongMaterial({
         emissive: COLORS.teal,
         specular: 0xffffff,
@@ -2183,8 +2206,7 @@ var init = function init() {
     innerGlobe = new THREE.Mesh(sGeom, sMat);
     scene.add(innerGlobe);
 
-    setActiveQuote(entry.text);
-    setActiveUser("-" + entry.name);
+    setActiveBox(entry.text, "-" + entry.name);
 
     var data = entry.character;
     var a = new Avatar(data);
@@ -2217,11 +2239,8 @@ var init = function init() {
     scene.add(globe);
 
     characters = [];
-    var c = {};
-    c.name = entry.character_name;
-    c.text = entry.text;
-    c.character = testMesh;
-    characters.push(c);
+    entry.avatar = testMesh;
+    characters.push(entry);
 
     var idleAnims = getIdleAnim(testMesh);
 
@@ -2239,6 +2258,10 @@ var init = function init() {
             var numChars = characters.length;
 
             if (numChars >= maxNumChars) {
+                document.getElementById('loading').style.opacity = 0;
+                setTimeout(function () {
+                    document.getElementById('loading').style.display = "none";
+                }, 600);
                 return;
             }
 
@@ -2250,13 +2273,10 @@ var init = function init() {
             a.rotation.z = angle - Math.PI / 2;
             innerGlobe.add(a);
 
-            var c = {};
-            c.name = e.name;
-            c.text = e.text;
-            c.character = a;
-            characters.push(c);
+            e.avatar = a;
+            characters.push(e);
 
-            var idleAnims = getIdleAnim(c.character);
+            var idleAnims = getIdleAnim(e.avatar);
 
             idleAnims.forEach(function (elem) {
                 elem.start();
@@ -2281,13 +2301,16 @@ var init = function init() {
 
     document.getElementById('moveLeft').addEventListener('mousedown', function () {
         moveLeft();
-        activeCharacter--;
-        var user = characters[activeCharacter];
+        activeCharacter = activeCharacter === 0 ? characters.length - 1 : activeCharacter - 1;
+        var d = characters[activeCharacter];
+        setActiveBox(d.text, d.name);
     });
 
     document.getElementById('moveRight').addEventListener('mousedown', function () {
         moveRight();
-        activeCharacter++;
+        activeCharacter = activeCharacter === characters.length - 1 ? 0 : activeCharacter + 1;
+        var d = characters[activeCharacter];
+        setActiveBox(d.text, d.name);
     });
 };
 'use strict';
@@ -3393,24 +3416,15 @@ var mouse_monitor = function mouse_monitor(e) {
 
 var activeQuoteBox = document.getElementById('activeQuoteBox');
 var activeQuote = document.getElementById('activeQuote');
-
-var setActiveQuote = function setActiveQuote(val) {
-  activeQuoteBox.style.opacity = 0;
-
-  setTimeout(function () {
-    activeQuoteBox.style.opacity = 1;
-    activeQuote.innerHTML = val;
-  }, 600);
-};
-
 var activeUser = document.getElementById('activeUser');
 
-var setActiveUser = function setActiveUser(val) {
+var setActiveBox = function setActiveBox(quote, user) {
   activeQuoteBox.style.opacity = 0;
 
   setTimeout(function () {
     activeQuoteBox.style.opacity = 1;
-    activeUser.innerHTML = val;
+    activeQuote.innerHTML = quote;
+    activeUser.innerHTML = user;
   }, 600);
 };
 
@@ -3422,6 +3436,41 @@ var moveLeft = function moveLeft() {
 var moveRight = function moveRight() {
   var target = innerGlobe.rotation.z + Math.PI / 2;
   WORLD_CONTROLLER.rotateGlobeZ(target);
+};
+
+var initOtherUsers = function initOtherUsers() {
+
+  var maxNumChars = 4;
+  entry.sentiment_users.forEach(function (id) {
+
+    APIController.getEntry(id).then(function (e) {
+
+      var numChars = characters.length;
+
+      if (numChars >= maxNumChars) {
+        return;
+      }
+
+      var a = new Avatar(e.character);
+      var angle = 2 * Math.PI / maxNumChars * (numChars + 1); //start at second one
+      var pos = new THREE.Vector3(GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle), 0);
+      a.position.copy(pos);
+      a.position.add(a.offset);
+      a.rotation.z = angle - Math.PI / 2;
+      innerGlobe.add(a);
+
+      e.avatar = a;
+      characters.push(e);
+
+      var idleAnims = getIdleAnim(e.avatar);
+
+      idleAnims.forEach(function (elem) {
+        elem.start();
+      });
+    }).catch(function (err) {
+      console.log(err);
+    });
+  });
 };
 'use strict';
 

@@ -193,8 +193,18 @@
 	const PANDA_PUBLIC_KEY = <%- JSON.stringify(PANDA_PUBLIC_KEY) %>;
 	const PANDA_SECRET_KEY = <%- JSON.stringify(PANDA_SECRET_KEY) %>;
 	const singleView = false;
+
+	const user_data = {
+		name: "",
+		id: 0,
+		text: "",
+		donation: 0,
+		character: null,
+		location: "earth"
+	};
 </script>
 
+<script type="text/javascript" src="/js/Location.js"></script>
 <script type="text/javascript" src="/js/lib/three.js"></script>
 <script type="text/javascript" src="/js/lib/OrbitControls.js"></script>
 <script type="text/javascript" src="/js/lib/SubdivisionModifier.js"></script>

@@ -117,16 +117,11 @@ const init = () => {
             a.rotation.x = angle;
             a.rotation.y += Math.PI;
 
-            let c = {};
-            c.name = e.name;
-            c.text = e.text;
-            c.character = a;
-            checkpoints.push(c);
+            e.character = a;
+            checkpoints.push(e);
 
             innerGlobe.add(a);
             numcheckpoints++;
-
-
 
         });
 

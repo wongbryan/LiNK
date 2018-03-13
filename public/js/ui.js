@@ -309,7 +309,11 @@ const createUIController = function(){
 		answer.innerHTML = data.text;
 	    }
 	    if(data && data.name){
-		username.innerHTML = "-" + data.name;
+    	let str = "-" + data.name;
+		if(data.location){
+			str += ", " + data.location;
+		}
+		username.innerHTML = str;
 	    }
 		show(quoteMain);
 	}

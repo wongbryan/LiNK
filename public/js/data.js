@@ -44,14 +44,6 @@ const checkpointActions = [
 	
 ];
 
-const user_data = {
-	name: "",
-	id: 0,
-	text: "",
-	donation: 0,
-	character: null,
-};
-
 const other_users_data = [];
 
 const ROUNDED_GEOMS = {
