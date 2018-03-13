@@ -95,6 +95,22 @@ h1, h2, header, p, a, span{
 
 }
 
+#instructions{
+	text-align: center;
+	position: absolute;
+	z-index: 2;
+	pointer-events: none;
+	font-family: $Brandon;
+	font-style: italic;
+	font-size: .8rem;
+	color: $lightgray;
+	opacity: 0;
+	top: 55%;
+	left: 50%;
+	transform: translateX(-50%);
+	transition: all .4s ease;
+}
+
 #quoteInput, #nameInput{
 	z-index: 3;
 	visibility: hidden;
@@ -111,7 +127,7 @@ h1, h2, header, p, a, span{
 			margin-bottom: 25px;
 		}
 
-		#prompt{
+		.prompt{
 			position: relative;
 			.textinput{
 				position: relative;
@@ -186,13 +202,6 @@ h1, h2, header, p, a, span{
 	.main{
 		@include absolute-center;
 		text-align: center;
-		h1{
-			font-family: $Univers;
-			font-style: italic;
-			font-weight: 300;
-			color: $gray;
-			font-size: .7rem;
-		}
 		h2{
 			font-family: $Brandon;
 			color: $white;
@@ -202,12 +211,17 @@ h1, h2, header, p, a, span{
 			font-weight: lighter;
 			margin-bottom: 0;
 		}
-		p{ //user
+		p, h1{ //user
 			font-family: $Brandon;
 			color: $lightgray;
 			font-size: 1.2rem;
 			margin: 0;
 			margin: 15px;
+		}
+
+		h1{
+			font-size: .8rem;
+			margin: 5px;
 		}
 	}
 

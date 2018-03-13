@@ -256,7 +256,7 @@ var APIController = function (fetch) {
 			var status = response.status;
 			if (status >= 200 && status < 300) {
 				var json = await response.json();
-				console.log("This is your entry: ", json);
+				//console.log("This is your entry: ", json);
 			} else {
 				throw new Error(status);
 			}
@@ -277,7 +277,7 @@ var APIController = function (fetch) {
 			var status = response.status;
 			if (status >= 200 && status < 300) {
 				var json = await response.json();
-				console.log("This is your updated entry: ", json);
+				//console.log("This is your updated entry: ", json);
 			} else {
 				throw new Error(status);
 			}
@@ -297,7 +297,7 @@ var APIController = function (fetch) {
 			var status = response.status;
 			if (status >= 200 && status < 300) {
 				var json = await response.json();
-				console.log("This is all of the latest donor entries: ", json.entries);
+				//console.log("This is all of the latest donor entries: ", json.entries);
 			} else {
 				throw new Error(status);
 			}
@@ -316,7 +316,7 @@ var APIController = function (fetch) {
 			var status = response.status;
 			if (status >= 200 && status < 300) {
 				var json = await response.json();
-				console.log("This is all of the recent entries: ", json.entries);
+				//console.log("This is all of the recent entries: ", json.entries);
 				return json.entries;
 			} else {
 				throw new Error(status);
@@ -337,7 +337,7 @@ var APIController = function (fetch) {
 			var status = response.status;
 			if (status >= 200 && status < 300) {
 				var json = await response.json();
-				console.log("This is all of the top donors in order: ", json.entries);
+				//console.log("This is all of the top donors in order: ", json.entries);
 			} else {
 				throw new Error(status);
 			}
@@ -357,7 +357,7 @@ var APIController = function (fetch) {
 			var status = response.status;
 			if (status >= 200 && status < 300) {
 				var json = await response.json();
-				console.log("This is the entry you searched for: ", json);
+				//console.log("This is the entry you searched for: ", json);
 			} else {
 				throw new Error(status);
 			}
@@ -377,7 +377,7 @@ var APIController = function (fetch) {
 			var status = response.status;
 			if (status >= 200 && status < 300) {
 				var json = await response.json();
-				console.log("This is the total donations in cents: ", json.total);
+				//console.log("This is the total donations in cents: ", json.total);
 			} else {
 				throw new Error(status);
 			}
@@ -701,7 +701,7 @@ var Avatar = function Avatar(data) {
 		var mKey = data[str];
 		var keys = str.split('_');
 
-		console.log(charData);
+		//console.log(charData);
 
 		if (keys.length < 2) return 'continue';
 
@@ -1574,7 +1574,7 @@ var initData = function initData() {
 
 		poopGuy: {
 			scale: 7.,
-			offset: new THREE.Vector3(0, 8., 0),
+			offset: new THREE.Vector3(0, 10, 0),
 			upper: {
 				offset: new THREE.Vector3(0, .5, 0),
 				dom: {
@@ -2293,7 +2293,7 @@ var init = function init() {
     // testMesh.position.add(testMesh.offset);
     // scene.add(testMesh);
 
-    var sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 32, 32);
+    var sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 10, 10);
     var sMat = new THREE.MeshPhongMaterial({
         emissive: COLORS.teal,
         specular: 0xffffff,
@@ -2574,18 +2574,40 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var createUIController = function createUIController() {
 
+	//Mobile additions
+	document.addEventListener("touchmove", function (e) {
+		e.preventDefault();
+	});
+	//window.addEventListener("load", function() {window.scrollTo(0,0);});
+
+	//Attempt to go full screen
+	var body = document.documentElement;
+	if (body.requestFullscreen) {
+		body.requestFullscreen();
+	} else if (body.webkitrequestFullscreen) {
+		body.webkitrequestFullscreen();
+	} else if (body.mozrequestFullscreen) {
+		body.mozrequestFullscreen();
+	} else if (body.msrequestFullscreen) {
+		body.msrequestFullscreen();
+	}
+
+	var threejscanvas = document.getElementById('container');
 	var title = document.getElementById('title');
 
 	var quoteInput = document.getElementById('quoteInput'),
-	    quoteInputButton = quoteInput.getElementsByClassName('submitButton')[0],
-	    prompt = document.getElementById('prompt'),
-	    quoteInputAnswer = document.getElementById('userAnswer'),
-	    remaining = document.getElementById('userAnswerRemaining'),
-	    answerMax = 250;
+	    quoteInputButton = quoteInput.getElementsByClassName('submitButton')[0];
+
+	var quoteForm = document.getElementById('quoteForm');
+	quoteForm.onSubmit = onAnswerSubmit;
+
+	quoteInputAnswer = document.getElementById('userAnswer'), remaining = document.getElementById('userAnswerRemaining'), answerMax = 250;
 
 	var nameInput = document.getElementById('nameInput'),
 	    nameInputAnswer = document.getElementById('nameInputAnswer'),
 	    nameInputClose = nameInput.getElementsByClassName('submitButton')[0];
+
+	var nameForm = document.getElementById('nameForm');
 
 	var quoteMain = document.getElementById('quoteMain'),
 	    quoteMainInfo = document.getElementById('quoteMainInfo'),
@@ -2608,6 +2630,8 @@ var createUIController = function createUIController() {
 	    email = document.getElementById('email');
 
 	var errorList = document.querySelector('#error');
+
+	var instructions = document.getElementById('instructions');
 
 	/* TITLE SCREEN */
 
@@ -2668,6 +2692,20 @@ var createUIController = function createUIController() {
 	title.addEventListener("mouseup", mouseup);
 	title.addEventListener("mouseout", mouseup);
 
+	//Attempt to just use touch events and bind to mousedown...
+	//Not super elegant
+	title.addEventListener("touchstart", mousedown);
+	title.addEventListener("touchend", mouseup);
+
+	//Add event listener to the body to allow for movement along sphere
+	threejscanvas.addEventListener("touchstart", function () {
+		if (!paused) WORLD_CONTROLLER.setRotationFactor(-0.005);
+	});
+
+	threejscanvas.addEventListener("touchend", function () {
+		if (!paused) WORLD_CONTROLLER.setRotationFactor(0);
+	});
+
 	/* USER INPUT ANSWER SCREEN */
 
 	function onAnswerSubmit(e) {
@@ -2691,6 +2729,7 @@ var createUIController = function createUIController() {
 		ans = stylizeQuote(ans);
 		donationQuoteAnswer.innerHTML = ans;
 
+		showInstructions();
 		hideQuoteInput();
 		// WORLD_CONTROLLER.shrinkStarField(1200);
 		WORLD_CONTROLLER.sizeStarField(1, 100, 60, .1, 300);
@@ -2698,6 +2737,8 @@ var createUIController = function createUIController() {
 		paused = false;
 
 		AudioController.playNight(0);
+		//Clear focus
+		document.activeElement.blur();
 		APIController.postEntry(user_data);
 
 		return false;
@@ -2734,6 +2775,7 @@ var createUIController = function createUIController() {
 		if (e.keyCode === 32 && e.target === document.body) {
 			//space
 
+			hideInstructions();
 			fired = true;
 			WORLD_CONTROLLER.setRotationFactor(-.005);
 		}
@@ -2748,6 +2790,9 @@ var createUIController = function createUIController() {
 		}
 	}
 
+	//quoteMobileButton = document.getElementById('submitName')
+	//quoteMobileButton.onclick = onAnswerSubmit
+
 	quoteInputButton.addEventListener('mousedown', onAnswerSubmit);
 	quoteInputAnswer.addEventListener('keydown', ansKeyDown);
 	quoteInputAnswer.addEventListener('blur', keepBlur);
@@ -2757,7 +2802,6 @@ var createUIController = function createUIController() {
 	function onNameInputSubmit(e) {
 
 		e.preventDefault();
-
 		var name = nameInputAnswer.value;
 
 		if (name.length === 0) {
@@ -2808,9 +2852,12 @@ var createUIController = function createUIController() {
 		var answer = document.getElementById('quoteMainAnswer'),
 		    username = document.getElementById('quoteMainUser');
 
-		answer.innerHTML = '"' + data.text + '"';
-		username.innerHTML = data.name;
-
+		if (data && data.text) {
+			answer.innerHTML = data.text;
+		}
+		if (data && data.name) {
+			username.innerHTML = "-" + data.name;
+		}
 		show(quoteMain);
 	}
 
@@ -2822,6 +2869,16 @@ var createUIController = function createUIController() {
 	function hideQuoteMainInfo() {
 		quoteMainInfo.style.filter = "blur:(" + 100 + "px)";
 		quoteMainInfo.style.opacity = 0;
+	}
+
+	function showInstructions() {
+		instructions.style.filter = "blur:(" + 0 + "px)";
+		instructions.style.opacity = 1;
+	}
+
+	function hideInstructions() {
+		instructions.style.filter = "blur:(" + 100 + "px)";
+		instructions.style.opacity = 0;
 	}
 
 	function hideQuoteMain() {
@@ -2848,7 +2905,6 @@ var createUIController = function createUIController() {
 
 	quoteMainClose.addEventListener('mousedown', hideQuoteMain);
 	quoteMainClose.addEventListener('mousedown', function () {
-
 		hideQuoteMainInfo();
 		WORLD_CONTROLLER.executeAction(checkpointIndex);
 		paused = false;

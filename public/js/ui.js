@@ -55,7 +55,9 @@ const createUIController = function(){
 	amount = document.getElementById('amount'),
 	email = document.getElementById('email');
 
-	let errorList = document.querySelector('#error')
+	let errorList = document.querySelector('#error');
+
+	const instructions = document.getElementById('instructions');
 
 	/* TITLE SCREEN */
 
@@ -114,7 +116,7 @@ const createUIController = function(){
 	   el.style.opacity = opacity;
 	}
 
-    	title.addEventListener("mousedown", mousedown);
+    title.addEventListener("mousedown", mousedown);
 	title.addEventListener("mouseup", mouseup);
 	title.addEventListener("mouseout", mouseup);
 
@@ -160,6 +162,7 @@ const createUIController = function(){
 		ans = stylizeQuote(ans);
 		donationQuoteAnswer.innerHTML = ans;
 
+		showInstructions();
 		hideQuoteInput();
 		// WORLD_CONTROLLER.shrinkStarField(1200);
 		WORLD_CONTROLLER.sizeStarField(1, 100, 60, .1, 300);
@@ -207,6 +210,7 @@ const createUIController = function(){
 
 		if(e.keyCode === 32  && e.target === document.body ){ //space
 	        
+	        hideInstructions();
 	        fired = true;
 			WORLD_CONTROLLER.setRotationFactor(-.005);
 
@@ -306,6 +310,16 @@ const createUIController = function(){
 	function hideQuoteMainInfo(){
 		quoteMainInfo.style.filter = "blur:(" + 100 + "px)";
 		quoteMainInfo.style.opacity = 0;
+	}
+
+	function showInstructions(){
+		instructions.style.filter = "blur:(" + 0 + "px)";
+		instructions.style.opacity = 1;
+	}
+
+	function hideInstructions(){
+		instructions.style.filter = "blur:(" + 100 + "px)";
+		instructions.style.opacity = 0;
 	}
 
 	function hideQuoteMain(){

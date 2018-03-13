@@ -41,7 +41,7 @@ const init = () => {
     // testMesh.position.add(testMesh.offset);
     // scene.add(testMesh);
 
-    let sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 32, 32);
+    let sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 10, 10);
     let sMat = new THREE.MeshPhongMaterial({
         emissive: COLORS.teal, 
         specular: 0xffffff,
@@ -131,7 +131,7 @@ const init = () => {
         });
 
         /* start animations */
-        
+
         checkpoints.forEach( c => {
 
             const idleAnims = getIdleAnim(c.character)
