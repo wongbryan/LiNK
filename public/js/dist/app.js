@@ -2136,7 +2136,7 @@ for (var file in MODEL_DATA) {
 for (var _file in FONT_DATA) {
     Loader.loadFont(_file);
 }
-"use strict";
+'use strict';
 
 //Main Script
 
@@ -2171,95 +2171,81 @@ var init = function init() {
     spotLight.position.set(-10, 30, 0);
     scene.add(spotLight);
 
-    var charData = getRandomCharacterData();
-    user_data.character = charData;
+    var charName = getRandomCharName(Object.keys(CHAR_DATA));
+    // console.log(charName);
+    var data = getCharData(charName);
+    user_data.character = data;
 
-    testMesh = new Avatar(charData);
+    var a = new Avatar(data);
+    var angle = 2 * Math.PI / 4 * 0;
+    var pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
+
+    a.position.copy(pos);
+    a.position.add(a.offset);
+    a.rotation.x = angle;
+
+    user_data.character = data;
+    testMesh = a;
     testMesh.castShadow = true;
-    testMesh.position.y = GLOBE_RADIUS + 5;
-    var s = .5;
-    testMesh.scale.multiplyScalar(s);
+
+    var testMeshBox = new THREE.Box3().setFromObject(testMesh);
+    var testMeshHeight = Math.abs(testMeshBox.max.y - testMeshBox.min.y);
+    testMesh.position.y += testMeshHeight / 2 + testMesh.offset.y;
+
+    scene.add(testMesh);
 
     spotLight.target = testMesh;
     var container = new THREE.Object3D();
     container.add(spotLight);
-    container.scale.divideScalar(s);
+    container.scale.divide(testMesh.scale);
     testMesh.add(container);
     testMesh.light = spotLight;
 
-    // WORLD_CONTROLLER.setMainLightIntensity(0);
-    // WORLD_CONTROLLER.setAvatarOpacity(0);
-
     scene.add(testMesh);
 
-    // globe = new Globe(GLOBE_RADIUS+5, new THREE.Color(0xffe877), testMesh.position);
-    // // globe.position.y = -GLOBE_RADIUS;
-    // // globe.receiveShadow = true;
-    // scene.add(globe);
+    globe = new Globe(GLOBE_RADIUS + 2.5, new THREE.Color(0xffe877), testMesh.position);
+    // globe.position.y = -GLOBE_RADIUS;
+    // globe.receiveShadow = true;
+    scene.add(globe);
 
-    var sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 32, 32);
+    var sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 10, 10);
     var sMat = new THREE.MeshPhongMaterial({
-        emissive: COLORS.black,
-        specular: COLORS.black,
+        emissive: COLORS.teal,
+        specular: 0xffffff,
         shininess: 0
     });
-    var innerGlobe = new THREE.Mesh(sGeom, sMat);
+    innerGlobe = new THREE.Mesh(sGeom, sMat);
     scene.add(innerGlobe);
+
+    var characters = [];
+    var c = {};
+    c.name = testMesh.name;
+    c.text = testMesh.text;
+    c.character = testMesh;
+    characters.push(c);
+
+    characters.forEach(function (c) {
+
+        var idleAnims = getIdleAnim(c.character);
+
+        idleAnims.forEach(function (elem) {
+            elem.start();
+        });
+    });
 
     clock = new THREE.Clock();
 
     window.addEventListener('resize', resize);
 
-    var x = 0,
-        y = 1,
-        z = 0;
-
-    var pointStart = new THREE.Vector3(x, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
-    var pointEnd = new THREE.Vector3(x - .0001, y, z).normalize().multiplyScalar(GLOBE_RADIUS);
-    var curve = setArc3D(pointStart, pointEnd, 3000, "lime", true);
-    // scene.add(curve);
-
-    testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
-
-    // let a = new THREE.AmbientLight();
-    // scene.add(a);
-
     clock.start();
-    animate();
+    WORLD_CONTROLLER = createController(renderer, scene, camera, testMesh, globe);
+    WORLD_CONTROLLER.setWorldLights(1);
+    WORLD_CONTROLLER.setMainLightIntensity(.3);
+    WORLD_CONTROLLER.expandStarField(100);
+    WORLD_CONTROLLER.moveCamera('frontClose');
+
+    WORLD_CONTROLLER.animate();
 };
-
-var update = function update() {
-    TWEEN.update();
-    var d = clock.getDelta();
-    var globalTime = clock.elapsedTime;
-
-    var elipsePathPoint = testMesh.movementFunc(globalTime);
-
-    // camera.lookAt(testMesh);
-    // testMesh.position.x = elipsePathPoint.x
-    // testMesh.position.y = elipsePathPoint.y
-    // testMesh.position.z = elipsePathPoint.z;
-
-    // camera.position.copy(testMesh.position);
-    // camera.position.z = 5;
-    // testMesh.update(d);
-
-    controls.update();
-};
-
-var animate = function animate() {
-
-    window.requestAnimationFrame(animate);
-    update();
-
-    //Animation should be extracted into its own function
-    //but you get the point for now.
-
-    //Render the frame
-    renderer.render(scene, camera);
-};
-//Run the update call for the first time, registering
-//it for every animation frame.
 'use strict';
 
 //Main Script
@@ -3363,6 +3349,7 @@ var createController = function createController(renderer, scene, camera, mainAv
 
 	var cameraPositions = {
 		front: new THREE.Vector3(0, GLOBE_RADIUS + 30, GLOBE_RADIUS),
+		frontClose: new THREE.Vector3(0, GLOBE_RADIUS + 30, GLOBE_RADIUS / 2),
 		side: new THREE.Vector3(-(GLOBE_RADIUS / 3 + 75), GLOBE_RADIUS + 35, 75),
 		behind: new THREE.Vector3(-(GLOBE_RADIUS / 3 + 55), GLOBE_RADIUS + 55, -105),
 		diagonal: new THREE.Vector3(-GLOBE_RADIUS / 3, GLOBE_RADIUS + 7.5, GLOBE_RADIUS / 3)
@@ -3375,19 +3362,21 @@ var createController = function createController(renderer, scene, camera, mainAv
 
 	/* Post processing stuff */
 
-	var composer = new THREE.EffectComposer(renderer);
-	composer.addPass(new THREE.RenderPass(scene, camera));
+	if (!singleView) {
+		var _composer = new THREE.EffectComposer(renderer);
+		_composer.addPass(new THREE.RenderPass(scene, camera));
 
-	var monochromePass = new THREE.ShaderPass(SHADERS.monochrome);
-	composer.addPass(monochromePass);
+		var _monochromePass = new THREE.ShaderPass(SHADERS.monochrome);
+		_composer.addPass(_monochromePass);
 
-	var shaderPasses = {
+		var _shaderPasses = {
 
-		'monochrome': monochromePass
+			'monochrome': _monochromePass
 
-	};
+		};
 
-	turnOnPostProcessing('monochrome');
+		turnOnPostProcessing('monochrome');
+	}
 
 	function turnOnPostProcessing(name) {
 
@@ -3515,6 +3504,14 @@ var createController = function createController(renderer, scene, camera, mainAv
 		}
 	}
 
+	function updateSingleView() {
+
+		TWEEN.update();
+		globe.frustumCulled = false;
+		globe.rotation.x += .0001;
+		controls.update();
+	}
+
 	function executeAction(index) {
 
 		checkpointActions[index]();
@@ -3533,17 +3530,21 @@ var createController = function createController(renderer, scene, camera, mainAv
 	function animate() {
 		TWEEN.update();
 		window.requestAnimationFrame(animate);
-		update();
 
-		//Animation should be extracted into its own function
-		//but you get the point for now.
+		if (singleView) {
 
-		if (postprocessing) {
-
-			composer.render();
-		} else {
-
+			updateSingleView();
 			renderer.render(scene, camera);
+		} else {
+			update();
+
+			if (postprocessing) {
+
+				composer.render();
+			} else {
+
+				renderer.render(scene, camera);
+			}
 		}
 	}
 

@@ -2,6 +2,7 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
 	const cameraPositions = {
 		front: new THREE.Vector3(0, GLOBE_RADIUS + 30, GLOBE_RADIUS),
+		frontClose: new THREE.Vector3(0, GLOBE_RADIUS + 30, GLOBE_RADIUS/2),
 		side: new THREE.Vector3(-(GLOBE_RADIUS/3 + 75), GLOBE_RADIUS + 35, 75),
 		behind: new THREE.Vector3(-(GLOBE_RADIUS/3 + 55), GLOBE_RADIUS + 55, -105 ),
 		diagonal: new THREE.Vector3(-GLOBE_RADIUS/3, GLOBE_RADIUS + 7.5, GLOBE_RADIUS/3),
@@ -14,19 +15,21 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
 	/* Post processing stuff */
 
-	const composer = new THREE.EffectComposer(renderer);
-    composer.addPass(new THREE.RenderPass(scene, camera));
+	if(!singleView){
+		const composer = new THREE.EffectComposer(renderer);
+	    composer.addPass(new THREE.RenderPass(scene, camera));
 
-    const monochromePass = new THREE.ShaderPass( SHADERS.monochrome );
-    composer.addPass( monochromePass );
+	    const monochromePass = new THREE.ShaderPass( SHADERS.monochrome );
+	    composer.addPass( monochromePass );
 
-    const shaderPasses = {
+	    const shaderPasses = {
 
-    	'monochrome': monochromePass,
+	    	'monochrome': monochromePass,
 
-    }
+	    }
 
-    turnOnPostProcessing('monochrome');
+	    turnOnPostProcessing('monochrome');
+	}
 
     function turnOnPostProcessing(name){
 
@@ -171,6 +174,15 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
 	}
 
+	function updateSingleView(){
+
+		TWEEN.update();
+		globe.frustumCulled = false;
+	    globe.rotation.x += .0001;
+	    controls.update();
+
+	}
+
 	function executeAction(index){
 
 		checkpointActions[index]();
@@ -192,21 +204,26 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 	function animate(){
 	    TWEEN.update()
 	    window.requestAnimationFrame(animate)
-	    update();
+	    
+	    if(singleView){
 
-	    //Animation should be extracted into its own function
-	    //but you get the point for now.
-
-	    if(postprocessing){
-
-
-	    	composer.render();
-
-	    } else{
-
+	    	updateSingleView();
 	    	renderer.render(scene, camera);
 
+	    } else{
+	    	update();
+
+	    	if(postprocessing){
+
+		    	composer.render();
+
+		    } else{
+
+		    	renderer.render(scene, camera);
+
+	    	}
 	    }
+
 	}
 
 	return {

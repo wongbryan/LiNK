@@ -8,11 +8,64 @@
 	<title>Single User Page</title>
 </head>
 <body>
+	<div id="loading" class="screen">
+		<div class="wrapper">
+			<div class="circle"></div>
+			<p>Loading</p>
+		</div>
+	</div>
 	<div id="container"></div>
 </body>
 <script>
 	let entry = <%- JSON.stringify(entry) %>;
 	console.log(entry);
+	const singleView = true;
+</script>
+
+<script type="vsh" id="globeVertex">
+
+	uniform vec3 avatarPos;
+	uniform float appearAmt; //0->1 how many meshes appear around avatar
+	uniform float maxDist;
+	uniform float size;
+
+	attribute vec3 vOffset;
+
+	varying float opacity;
+
+	float rand(float n){return fract(sin(n) * 43758.5453123);}
+
+	void main() 
+	{
+	    vec4 mPosition = modelMatrix * vec4(vOffset, 1.);
+	    float scale =  size * (.1 + 1.5*rand(vOffset.x));
+	    mPosition.xyz += position * 3.*scale;
+
+	    float dist = distance(mPosition.xyz, avatarPos);
+	    opacity = (maxDist - distance(mPosition.xyz, avatarPos)) / maxDist;
+	    opacity = clamp(opacity, 0., 1.);
+
+	    float appear = step( 1.-appearAmt, rand(scale) );
+	    opacity *= appear;
+
+	    gl_Position = projectionMatrix * viewMatrix * mPosition;
+	}
+
+</script>
+<script type="fsh" id="globeFragment">
+
+	uniform vec3 avatarPos;
+
+	varying float opacity;
+
+	void main() 
+	{
+		// float intensity = pow( c - dot( vNormal, vec3( 0.0, 0.0, 1.0 ) ), p ); 
+		// gl_FragColor = vec4( 1.0, 1.0, 1.0, 1.0 ) * intensity;
+		gl_FragColor = vec4( vec3(1.), opacity);
+		// gl_FragColor = vec4( normalize(testColor), opacity );
+	}
+
 </script>
 <script type="text/javascript" src="/js/lib/three.js"></script>
 <script type="text/javascript" src="/js/lib/OrbitControls.js"></script>
@@ -23,8 +76,8 @@
 <script type="text/javascript" src="/js/data.js"></script>
 <script type="text/javascript" src="/js/Loader.js"></script>
 <script type="text/javascript" src="/js/Globe.js"></script>
-<script type="text/javascript" src="/js/glowMesh.js"></script>
 <script type="text/javascript" src="/js/Avatar.js"></script>
+<script type="text/javascript" src="/js/Animations.js"></script>
 <script type="text/javascript" src="/js/API.js"></script>
 <script type="text/javascript" src="/js/WorldController.js"></script>
 <script type="text/javascript" src="/js/main-viewer.js"></script>
