@@ -72,9 +72,9 @@ h1, h2, header, p, a, span {
       font-size: 2.15rem;
       margin: 0;
       margin-bottom: 25px; }
-    #quoteInput .main #prompt, #nameInput .main #prompt {
+    #quoteInput .main .prompt, #nameInput .main .prompt {
       position: relative; }
-      #quoteInput .main #prompt .textinput, #nameInput .main #prompt .textinput {
+      #quoteInput .main .prompt .textinput, #nameInput .main .prompt .textinput {
         position: relative;
         background: none;
         color: #cbcdd0;
@@ -89,9 +89,9 @@ h1, h2, header, p, a, span {
         line-height: 22px;
         margin-bottom: 30px;
         width: 100%; }
-        #quoteInput .main #prompt .textinput:focus + i, #nameInput .main #prompt .textinput:focus + i {
+        #quoteInput .main .prompt .textinput:focus + i, #nameInput .main .prompt .textinput:focus + i {
           display: none; }
-        #quoteInput .main #prompt .textinput:focus, #nameInput .main #prompt .textinput:focus {
+        #quoteInput .main .prompt .textinput:focus, #nameInput .main .prompt .textinput:focus {
           outline: none; }
     #quoteInput .main .remaining, #nameInput .main .remaining {
       font-family: "Brandon Text";
@@ -238,9 +238,16 @@ h1, h2, header, p, a, span {
   width: 65%;
   padding: 20px;
   visibility: hidden;
-  background: none; }
+  background: none;
+  overflow:scroll;
+  overflow-y:scroll;
+  -webkit-overflow-scrolling: touch;
+}
   #donation .wrapper {
-    overflow: scroll;
+      overflow: scroll;
+      /* Add touch scrolling */
+      overflow-y: scroll; 
+      -webkit-overflow-scrolling: touch;
     height: 100%;
     width: 100%;
     padding: 35px;
@@ -389,3 +396,40 @@ h1, h2, header, p, a, span {
       font-style: italic;
       text-transform: lowercase;
       list-style: none; }
+
+
+    .mobileShow{
+	display:none;
+    }
+    @media only screen
+    and (min-device-width : 100px)
+    and (max-device-width : 600px){
+	display: inline;
+    }
+
+
+    .noSelectTouch {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+  @media screen and (max-width:600px){
+  select,
+  textarea,
+  input {
+      font-size: 16px;
+  }
+}
+
+  @media screen and (max-width:600px){
+  select:focus,
+  textarea:focus,
+  input:focus {
+    font-size: 16px;
+    background: #eee;
+  }
+}

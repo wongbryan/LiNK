@@ -1,18 +1,41 @@
 const UIController = (function(){
 
+
+    //Mobile additions
+    document.addEventListener("touchmove", function(e) { e.preventDefault() });
+    //window.addEventListener("load", function() {window.scrollTo(0,0);});
+
+    //Attempt to go full screen
+    let body = document.documentElement;
+    if (body.requestFullscreen) {
+	body.requestFullscreen();
+    } else if (body.webkitrequestFullscreen) {
+	body.webkitrequestFullscreen();
+    } else if (body.mozrequestFullscreen) {
+	body.mozrequestFullscreen();
+    } else if (body.msrequestFullscreen) {
+	body.msrequestFullscreen();
+    }
+
+    let threejscanvas = document.getElementById('container');
 	var title = document.getElementById('title');
 
 	var quoteInput = document.getElementById('quoteInput'),
-	quoteInputButton = quoteInput.getElementsByClassName('submitButton')[0],
-	prompt = document.getElementById('prompt'),
+	quoteInputButton = quoteInput.getElementsByClassName('submitButton')[0]
+
+    let quoteForm = document.getElementById('quoteForm');
+    quoteForm.onSubmit = onAnswerSubmit
+
 	quoteInputAnswer = document.getElementById('userAnswer'),
 	remaining = document.getElementById('userAnswerRemaining'),
 	answerMax = 250;
 
 	var nameInput = document.getElementById('nameInput'),
 	nameInputAnswer = document.getElementById('nameInputAnswer'),
-	nameInputClose = nameInput.getElementsByClassName('submitButton')[0];
+	    nameInputClose = nameInput.getElementsByClassName('submitButton')[0];
 
+    let nameForm = document.getElementById('nameForm');
+    
 	var quoteMain = document.getElementById('quoteMain'),
 	quoteMainAnswer = document.getElementById('quoteMainAnswer'),
 	quoteMainClose = document.getElementById('quoteMainClose');
@@ -30,7 +53,6 @@ const UIController = (function(){
 	email = document.getElementById('email');
 
 	let errorList = document.querySelector('#error')
-
 
 	/* TITLE SCREEN */
 
@@ -89,12 +111,28 @@ const UIController = (function(){
 	   el.style.opacity = opacity;
 	}
 
-	title.addEventListener("mousedown", mousedown);
+    	title.addEventListener("mousedown", mousedown);
 	title.addEventListener("mouseup", mouseup);
 	title.addEventListener("mouseout", mouseup);
 
 
-	/* USER INPUT ANSWER SCREEN */
+    //Attempt to just use touch events and bind to mousedown...
+    //Not super elegant
+    title.addEventListener("touchstart", mousedown);
+    title.addEventListener("touchend", mouseup);
+
+    //Add event listener to the body to allow for movement along sphere
+    threejscanvas.addEventListener("touchstart", ()=> {
+	if(!paused)
+	    WORLD_CONTROLLER.setRotationFactor(-0.005)
+    })
+
+    threejscanvas.addEventListener("touchend", ()=> {
+	if(!paused)
+	   WORLD_CONTROLLER.setRotationFactor(0)
+    })
+
+    /* USER INPUT ANSWER SCREEN */
 
 	function onAnswerSubmit(e){
 
@@ -112,6 +150,9 @@ const UIController = (function(){
 		WORLD_CONTROLLER.moveCamera('side');
 		paused = false;
 
+	    //Clear focus
+	    document.activeElement.blur()
+	    
 		setTimeout(function(){
 
 			//Good for poop dude
@@ -175,6 +216,9 @@ const UIController = (function(){
 
 	}
 
+    //quoteMobileButton = document.getElementById('submitName')
+    //quoteMobileButton.onclick = onAnswerSubmit
+    
 	quoteInputButton.addEventListener('mousedown', onAnswerSubmit);
 	quoteInputAnswer.addEventListener('keydown', ansKeyDown);
 	quoteInputAnswer.addEventListener('blur', keepBlur);
@@ -183,8 +227,7 @@ const UIController = (function(){
 
 	function onNameInputSubmit(e){
 
-		e.preventDefault();
-
+	    e.preventDefault();
 		let name = nameInputAnswer.value;
 		user_data.name = name;
 
@@ -224,9 +267,12 @@ const UIController = (function(){
 		let answer = document.getElementById('quoteMainAnswer'),
 		username = document.getElementById('quoteMainUser');
 
+	    if(data && data.text){
 		answer.innerHTML = data.text;
+	    }
+	    if(data && data.name){
 		username.innerHTML = "-" + data.name;
-
+	    }
 		show(quoteMain);
 	}
 
@@ -254,10 +300,8 @@ const UIController = (function(){
 
 	quoteMainClose.addEventListener('mousedown', hideQuoteMain);
 	quoteMainClose.addEventListener('mousedown', function(){
-
-		WORLD_CONTROLLER.executeAction(checkpointIndex);
-		paused = false;
-
+	    WORLD_CONTROLLER.executeAction(checkpointIndex);
+	    paused = false;
 	});
 
 	/* DONATION BOX STUFF */

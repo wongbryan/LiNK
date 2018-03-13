@@ -14,7 +14,7 @@ const APIController = (function(fetch){
 			const status = response.status;
 			if (status >= 200 && status < 300) {
 				const json = await response.json();
-				console.log("This is your entry: ", json);
+			    //console.log("This is your entry: ", json);
 			} else {
 				throw new Error(status);
 			}
@@ -36,7 +36,7 @@ const APIController = (function(fetch){
 			const status = response.status;
 			if (status >= 200 && status < 300) {
 				const json = await response.json();
-				console.log("This is your updated entry: ", json);
+			    //console.log("This is your updated entry: ", json);
 			} else {
 				throw new Error(status);
 			}
@@ -57,7 +57,7 @@ const APIController = (function(fetch){
 			const status =  response.status;
 			if (status >= 200 && status < 300) {
 				const json = await response.json();
-				console.log("This is all of the latest donor entries: ", json.entries);
+			    //console.log("This is all of the latest donor entries: ", json.entries);
 			} else {
 				throw new Error(status);
 			}
@@ -77,7 +77,7 @@ const APIController = (function(fetch){
 			const status = response.status;
 			if (status >= 200 && status < 300) {
 				const json = await response.json();
-				console.log("This is all of the recent entries: ", json.entries);
+			    //console.log("This is all of the recent entries: ", json.entries);
 				return json.entries;
 			} else {
 				throw new Error(status);
@@ -99,7 +99,7 @@ const APIController = (function(fetch){
 			const status = response.status;
 			if (status >= 200 && status < 300) {
 				const json = await response.json();
-				console.log("This is all of the top donors in order: ", json.entries);
+			    //console.log("This is all of the top donors in order: ", json.entries);
 			} else {
 				throw new Error(status);
 			}
@@ -120,7 +120,7 @@ const APIController = (function(fetch){
 			const status = response.status;
 			if (status >= 200 && status < 300) {
 				const json = await response.json();
-				console.log("This is the entry you searched for: ", json);
+			    //console.log("This is the entry you searched for: ", json);
 			} else {
 				throw new Error(status);
 			}
@@ -141,7 +141,7 @@ const APIController = (function(fetch){
 			const status = response.status;
 			if (status >= 200 && status < 300) {
 				const json = await response.json();
-				console.log("This is the total donations in cents: ", json.total);
+			    //console.log("This is the total donations in cents: ", json.total);
 			} else {
 				throw new Error(status);
 			}

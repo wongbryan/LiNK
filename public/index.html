@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
+    <!--Stop the zoooooom-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0 user-scalable=no" />
+    
 	<link rel="stylesheet" type="text/css" href="/assets/fonts/caslon-web/stylesheet.css"/>
 	<link rel="stylesheet" type="text/css" href="/assets/fonts/brandon-text-web/stylesheet.css"/>
 	<link rel="stylesheet" type="text/css" href="/assets/fonts/itc-grouch-web/stylesheet.css"/>
@@ -9,7 +12,7 @@
 	<title>LiNK (dev page)</title>
 </head>
 <body>
-	<div id="title" class="screen">
+	<div id="title" class="screen noSelectTouch">
 		<div class="main">
 			<h1 class="glow">Home</h1>
 			<h2>a charity project for Liberty in North Korea.</h2>
@@ -19,16 +22,17 @@
 	<div id="nameInput" class="screen">
 		<div class="main">
 			<h1 class="glow">What's your name?</h1>
-			<form id="prompt">
-				<textarea maxlength="250" rows="3" spellcheck="false" id="nameInputAnswer" class="textinput" type="text"" autofocus autocomplete="nope"></textarea>
+			<form class="prompt" id="nameForm">
+			  <textarea maxlength="250" rows="3" spellcheck="false" id="nameInputAnswer" class="textinput" type="text" autofocus autocomplete="nope"></textarea>
 			</form>
-			<div class="submitButton glowBorder"></div>
+			<div class="submitButton glowBorder">
+			</div>
 		</div>
 	</div>
 	<div id="quoteInput" class="screen">
 		<div class="main">
 			<h1 class="glow">Home is...</h1>
-			<form id="prompt">
+			<form class="prompt" id="quoteForm">
 				<textarea maxlength="250" rows="3" spellcheck="false" id="userAnswer" class="textinput" type="text" autofocus autocomplete="nope"></textarea>
 			</form>
 			<div class="remaining"><span id="userAnswerRemaining">250</span> characters remaining</div>
