@@ -151,7 +151,6 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
 	    	innerGlobe.rotation.x += rot.val;
 		    let angle = 2 * Math.PI / (checkpoints.length) * checkpointIndex; 
-		    console.log(angle);
 
 		    if( (innerGlobe.rotation.x <= (-angle + Math.PI/12)) && !hit){ //stop rotation and only set tween once
 

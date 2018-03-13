@@ -125,17 +125,17 @@ const createUIController = function(){
 		WORLD_CONTROLLER.moveCamera('side');
 		paused = false;
 
-		setTimeout(function(){
+		// setTimeout(function(){
 
-			//Good for poop dude
-		    let idleAnims = getIdleAnim(testMesh)
+		// 	//Good for poop dude
+		//     let idleAnims = getIdleAnim(testMesh)
 		    
-		    //Start animations
-		    idleAnims.forEach( elem => {
-			elem.start()
-		    });
+		//     //Start animations
+		//     idleAnims.forEach( elem => {
+		// 	elem.start()
+		//     });
 
-		}, 800);
+		// }, 800);
 
 		AudioController.playNight(0);
 		APIController.postEntry(user_data);

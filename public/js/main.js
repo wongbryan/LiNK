@@ -56,7 +56,6 @@ const init = () => {
     const charName = getRandomCharName(Object.keys(CHAR_DATA));
     // console.log(charName);
     const data = getCharData(charName);
-    console.log(data);
     const a = new Avatar(data);
     const angle = 2*Math.PI / 4 * 0;
     let pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
@@ -81,6 +80,12 @@ const init = () => {
     container.scale.divide(testMesh.scale);
     testMesh.add(container);
     testMesh.light = spotLight;
+
+    let c = {};
+    c.name = testMesh.name;
+    c.text = testMesh.text;
+    c.character = testMesh;
+    checkpoints.push(c);
 
     APIController.getUniqueEntries(4)
     .then( res => {
@@ -121,78 +126,26 @@ const init = () => {
             innerGlobe.add(a);
             numcheckpoints++;
 
+
+
         });
 
-    });
-
-
-    //Set checkpoints
-    // const numPoints = 4;
-
-    // for(let i=0; i<numPoints; i++){
-
-        // let keys = Object.keys(CHAR_DATA);
-        // console.log(keys);
-        // keys = keys.filter( k => {  
-
-        //     let ex = false;
-
-        //     for(let i=0; i<checkpoints.length; i++){
-
-        //         if(checkpoints[i].name === k){
-
-        //             ex = true;
-        //             break;
-
-        //         }
-
-        //     }
-
-        //     return !ex;
-
-        // } );
-
-        // const charName = getRandomCharName(keys);
-        // // console.log(charName);
-        // const data = getCharData(charName);
-        // console.log(data);
-        // const a = new Avatar(data);
-        // const angle = 2*Math.PI / numPoints * i;
-        // let pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
+        /* start animations */
         
-        // a.position.copy(pos);
-        // a.position.add(a.offset);
-        // a.rotation.x = angle;
+        checkpoints.forEach( c => {
 
-        // if( i === 0){
+            const idleAnims = getIdleAnim(c.character)
+            
+            console.log(idleAnims);
+            //Start animations
+            idleAnims.forEach( elem => {
+               elem.start()
+            });
 
-        //     user_data.character = data;
-        //     testMesh = a;
-        //     testMesh.castShadow = true;
-        //     // testMesh.scale.set(7, 7, 7);
-        //     scene.add(testMesh);
+        });
 
-        //     spotLight.target = testMesh;
-        //     let container = new THREE.Object3D();
-        //     container.add(spotLight);
-        //     container.scale.divide(testMesh.scale);
-        //     testMesh.add(container);
-        //     testMesh.light = spotLight;
 
-        // } else{
-
-        //     a.rotation.y = Math.PI;
-        //     innerGlobe.add(a);
-
-        // }
-
-        // let c = {};
-        // c.name = a.name;
-        // c.hit = false;
-        // c.character = a;
-        // checkpoints.push(c);
-
-    // }
+    });
 
     globe = new Globe(GLOBE_RADIUS+2.5, new THREE.Color(0xffe877), testMesh.position);
     // globe.position.y = -GLOBE_RADIUS;

@@ -1,4 +1,4 @@
-const checkpoints = [0];
+const checkpoints = [];
 let checkpointIndex = 1;
 let paused = false;
 
@@ -433,7 +433,7 @@ const initData = () => {
 
 		dice: {
 			scale: 4.,
-			offset: new THREE.Vector3(0, 7.5, 0),
+			offset: new THREE.Vector3(0, 10, 0),
 			upper: {},
 			upperLeft: {
 				offset: new THREE.Vector3(-3, 0, 0),
