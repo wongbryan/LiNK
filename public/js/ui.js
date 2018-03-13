@@ -1,10 +1,5 @@
 const createUIController = function(){
 
-
-    //Mobile additions
-    document.addEventListener("touchmove", function(e) { e.preventDefault() });
-    //window.addEventListener("load", function() {window.scrollTo(0,0);});
-
     //Attempt to go full screen
     let body = document.documentElement;
     if (body.requestFullscreen) {
@@ -121,26 +116,6 @@ const createUIController = function(){
 	   el.style.opacity = opacity;
 	}
 
-    title.addEventListener("mousedown", mousedown);
-	title.addEventListener("mouseup", mouseup);
-	title.addEventListener("mouseout", mouseup);
-
-
-    //Attempt to just use touch events and bind to mousedown...
-    //Not super elegant
-    title.addEventListener("touchstart", mousedown);
-    title.addEventListener("touchend", mouseup);
-
-    //Add event listener to the body to allow for movement along sphere
-    threejscanvas.addEventListener("touchstart", ()=> {
-	if(!paused)
-	    WORLD_CONTROLLER.setRotationFactor(-0.005)
-    })
-
-    threejscanvas.addEventListener("touchend", ()=> {
-	WORLD_CONTROLLER.setRotationFactor(0)
-    })
-
     /* USER INPUT ANSWER SCREEN */
 
 	function onAnswerSubmit(e){
@@ -242,13 +217,6 @@ const createUIController = function(){
 
 	}
 
-    //quoteMobileButton = document.getElementById('submitName')
-    //quoteMobileButton.onclick = onAnswerSubmit
-    
-	quoteInputButton.addEventListener('mousedown', onAnswerSubmit);
-	quoteInputAnswer.addEventListener('keydown', ansKeyDown);
-	quoteInputAnswer.addEventListener('blur', keepBlur);
-
 	/* NAME INPUT SCREEN */
 
 	function onNameInputSubmit(e){
@@ -274,7 +242,6 @@ const createUIController = function(){
 		showQuoteInput();
 
 	}
-	nameInputClose.addEventListener('mousedown', onNameInputSubmit);
 
 	/* Util functions for navigation */
 
@@ -348,6 +315,7 @@ const createUIController = function(){
 	}
 
 	function hideDonation(){
+		console.log('hiding donation');
 		hide(donation);
 	}
 
@@ -396,23 +364,6 @@ const createUIController = function(){
 		elem.classList.remove('fadeOutBlur');
 		elem.classList.add('fadeInBlur');
 	}
-
-	quoteMainClose.addEventListener('mousedown', hideQuoteMain);
-	quoteMainClose.addEventListener('mousedown', function(){
-		hideQuoteMainInfo();
-		WORLD_CONTROLLER.executeAction(checkpointIndex);
-		paused = false;
-	});
-
-	quoteMainInfoOpen.addEventListener('mousedown', function(){
-
-		if(quoteMainInfo.style.opacity == 0){
-			showQuoteMainInfo();
-		} else{
-			hideQuoteMainInfo();
-		}
-
-	});
 
 	/* DONATION BOX STUFF */
 	let card_token = "";
@@ -516,7 +467,76 @@ const createUIController = function(){
 		return false
 	}
 
-	donationClose.addEventListener('mousedown', hideDonation);
+	if(isMobile){
+		//Mobile additions
+	    document.addEventListener("touchmove", function(e) { e.preventDefault() });
+	    //window.addEventListener("load", function() {window.scrollTo(0,0);});
+
+		//Attempt to just use touch events and bind to mousedown...
+	    //Not super elegant
+	    title.addEventListener("touchstart", mousedown);
+	    title.addEventListener("touchend", mouseup);
+
+	    //Add event listener to the body to allow for movement along sphere
+	    threejscanvas.addEventListener("touchstart", ()=> {
+		if(!paused)
+		    WORLD_CONTROLLER.setRotationFactor(-0.005)
+	    })
+
+	    threejscanvas.addEventListener("touchend", ()=> {
+		WORLD_CONTROLLER.setRotationFactor(0)
+	    })
+
+	    nameInputClose.addEventListener('touchstart', onNameInputSubmit);
+
+	    quoteMainClose.addEventListener('touchstart', hideQuoteMain);
+		quoteMainClose.addEventListener('touchstart', function(){
+			hideQuoteMainInfo();
+			WORLD_CONTROLLER.executeAction(checkpointIndex);
+			paused = false;
+		});
+
+		quoteMainInfoOpen.addEventListener('touchstart', function(){
+
+			if(quoteMainInfo.style.opacity == 0){
+				showQuoteMainInfo();
+			} else{
+				hideQuoteMainInfo();
+			}
+
+		});
+
+		donationClose.addEventListener('touchstart', hideDonation);
+
+	} else{
+		title.addEventListener("mousedown", mousedown);
+		title.addEventListener("mouseup", mouseup);
+		title.addEventListener("mouseout", mouseup);
+
+		quoteInputButton.addEventListener('mousedown', onAnswerSubmit);
+		quoteInputAnswer.addEventListener('keydown', ansKeyDown);
+		quoteInputAnswer.addEventListener('blur', keepBlur);
+
+		nameInputClose.addEventListener('mousedown', onNameInputSubmit);
+
+		quoteMainClose.addEventListener('mousedown', hideQuoteMain);
+		quoteMainClose.addEventListener('mousedown', function(){
+			hideQuoteMainInfo();
+			WORLD_CONTROLLER.executeAction(checkpointIndex);
+			paused = false;
+		});
+
+		quoteMainInfoOpen.addEventListener('mousedown', function(){
+			if(quoteMainInfo.style.opacity == 0){
+				showQuoteMainInfo();
+			} else{
+				hideQuoteMainInfo();
+			}
+		});
+
+		// donationClose.addEventListener('mousedown', hideDonation);
+		donationClose.onmousedown = hideDonation;
+	}
 
 	return{
 		showTitle: showTitle,
@@ -525,6 +545,7 @@ const createUIController = function(){
 		hideQuoteMain: hideQuoteMain,
 		showQuoteMainInfo: showQuoteMainInfo,
 		showDonation: showDonation,
+		hideDonation: hideDonation,
 		showQuoteInput: showQuoteInput,
 		hideQuoteInput: hideQuoteInput,
 		handleKeyDown: handleKeyDown,

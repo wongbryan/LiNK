@@ -29,6 +29,8 @@
 	let entry = <%- JSON.stringify(entry) %>;
 	console.log(entry);
 	const singleView = true;
+
+	const isMobile = ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) ? true : false;
 </script>
 
 <script type="vsh" id="globeVertex">

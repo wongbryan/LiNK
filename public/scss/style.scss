@@ -644,5 +644,12 @@ h1, h2, header, p, a, span{
 			}
 		}
 	}
+
+	@media only screen and (max-width: 600px) {
+	    width: 100%;
+	    .wrapper{
+	    	overflow-y: scroll;
+	    }
+	}
 }
 
