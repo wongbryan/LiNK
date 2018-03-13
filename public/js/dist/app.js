@@ -358,7 +358,8 @@ var APIController = function (fetch) {
 			var status = response.status;
 			if (status >= 200 && status < 300) {
 				var json = await response.json();
-				//console.log("This is the entry you searched for: ", json);
+				// console.log("This is the entry you searched for: ", json);
+				return json;
 			} else {
 				throw new Error(status);
 			}
@@ -2144,6 +2145,8 @@ var renderer, camera, scene, controls, spotLight;
 var clock;
 var globe, testMesh;
 
+var activeCharacter = 0; //index of current char
+
 var init = function init() {
     scene = new THREE.Scene();
     renderer = initializeRenderer();
@@ -2171,60 +2174,7 @@ var init = function init() {
     spotLight.position.set(-10, 30, 0);
     scene.add(spotLight);
 
-    var charName = getRandomCharName(Object.keys(CHAR_DATA));
-    // console.log(charName);
-    var data = getCharData(charName);
-    user_data.character = data;
-
-    var a = new Avatar(data);
-    var angle = 2 * Math.PI / 4 * 0;
-    var pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
-
-    a.position.copy(pos);
-    a.position.add(a.offset);
-    a.rotation.x = angle;
-
-    user_data.character = data;
-    testMesh = a;
-    testMesh.castShadow = true;
-
-    var testMeshBox = new THREE.Box3().setFromObject(testMesh);
-    var testMeshHeight = Math.abs(testMeshBox.max.y - testMeshBox.min.y);
-    testMesh.position.y += testMeshHeight / 2 + testMesh.offset.y;
-
-    scene.add(testMesh);
-
-    spotLight.target = testMesh;
-    var container = new THREE.Object3D();
-    container.add(spotLight);
-    container.scale.divide(testMesh.scale);
-    testMesh.add(container);
-    testMesh.light = spotLight;
-
-    scene.add(testMesh);
-
-    var characters = [];
-    var c = {};
-    c.name = testMesh.name;
-    c.text = testMesh.text;
-    c.character = testMesh;
-    characters.push(c);
-
-    characters.forEach(function (c) {
-
-        var idleAnims = getIdleAnim(c.character);
-
-        idleAnims.forEach(function (elem) {
-            elem.start();
-        });
-    });
-
-    globe = new Globe(GLOBE_RADIUS + 2.5, new THREE.Color(0xffe877), testMesh.position);
-    // globe.position.y = -GLOBE_RADIUS;
-    // globe.receiveShadow = true;
-    scene.add(globe);
-
-    var sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 10, 10);
+    var sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 32, 32);
     var sMat = new THREE.MeshPhongMaterial({
         emissive: COLORS.teal,
         specular: 0xffffff,
@@ -2233,6 +2183,89 @@ var init = function init() {
     innerGlobe = new THREE.Mesh(sGeom, sMat);
     scene.add(innerGlobe);
 
+    setActiveQuote(entry.text);
+    setActiveUser("-" + entry.name);
+
+    var data = entry.character;
+    var a = new Avatar(data);
+    var angle = 2 * Math.PI / 4 * 0;
+    var pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
+
+    a.position.copy(pos);
+    a.position.add(a.offset);
+    a.rotation.x = angle;
+
+    testMesh = a;
+    testMesh.castShadow = true;
+
+    var testMeshBox = new THREE.Box3().setFromObject(testMesh);
+    var testMeshHeight = Math.abs(testMeshBox.max.y - testMeshBox.min.y);
+    testMesh.position.y += testMeshHeight / 2 + testMesh.offset.y;
+
+    innerGlobe.add(testMesh);
+
+    spotLight.target = testMesh;
+    var container = new THREE.Object3D();
+    container.add(spotLight);
+    container.scale.divide(testMesh.scale);
+    testMesh.add(container);
+    testMesh.light = spotLight;
+
+    innerGlobe.add(testMesh);
+
+    globe = new Globe(GLOBE_RADIUS + 2.5, new THREE.Color(0xffe877), testMesh.position);
+    scene.add(globe);
+
+    characters = [];
+    var c = {};
+    c.name = entry.character_name;
+    c.text = entry.text;
+    c.character = testMesh;
+    characters.push(c);
+
+    var idleAnims = getIdleAnim(testMesh);
+
+    idleAnims.forEach(function (elem) {
+        elem.start();
+    });
+
+    /* Get similar quotes */
+
+    var maxNumChars = 4;
+    entry.sentiment_users.forEach(function (id) {
+
+        APIController.getEntry(id).then(function (e) {
+
+            var numChars = characters.length;
+
+            if (numChars >= maxNumChars) {
+                return;
+            }
+
+            var a = new Avatar(e.character);
+            var angle = 2 * Math.PI / maxNumChars * (numChars + 1); //start at second one
+            var pos = new THREE.Vector3(GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle), 0);
+            a.position.copy(pos);
+            a.position.add(a.offset);
+            a.rotation.z = angle - Math.PI / 2;
+            innerGlobe.add(a);
+
+            var c = {};
+            c.name = e.name;
+            c.text = e.text;
+            c.character = a;
+            characters.push(c);
+
+            var idleAnims = getIdleAnim(c.character);
+
+            idleAnims.forEach(function (elem) {
+                elem.start();
+            });
+        }).catch(function (err) {
+            console.log(err);
+        });
+    });
+
     clock = new THREE.Clock();
 
     window.addEventListener('resize', resize);
@@ -2240,11 +2273,22 @@ var init = function init() {
     clock.start();
     WORLD_CONTROLLER = createController(renderer, scene, camera, testMesh, globe);
     WORLD_CONTROLLER.setWorldLights(1);
-    WORLD_CONTROLLER.setMainLightIntensity(.3);
+    WORLD_CONTROLLER.setMainLightIntensity(.5);
     WORLD_CONTROLLER.expandStarField(100);
     WORLD_CONTROLLER.moveCamera('frontClose');
 
     WORLD_CONTROLLER.animate();
+
+    document.getElementById('moveLeft').addEventListener('mousedown', function () {
+        moveLeft();
+        activeCharacter--;
+        var user = characters[activeCharacter];
+    });
+
+    document.getElementById('moveRight').addEventListener('mousedown', function () {
+        moveRight();
+        activeCharacter++;
+    });
 };
 'use strict';
 
@@ -3263,6 +3307,7 @@ var tweenScalar = function tweenScalar(source, propName, target) {
   tw.onUpdate(function () {
     source[propName] = o[propName];
   });
+  tw.easing(easing);
   if (callback) tw.onComplete(function () {
     console.log('callback');
     callback();
@@ -3342,6 +3387,41 @@ var MOUSE_POS = { x: 0.5, y: 0.5 };
 var mouse_monitor = function mouse_monitor(e) {
   MOUSE_POS.x = e.clientX / window.innerWidth * 2 - 1;
   MOUSE_POS.y = e.clientY / window.innerHeight * 2 - 1;
+};
+
+/* Single view mode */
+
+var activeQuoteBox = document.getElementById('activeQuoteBox');
+var activeQuote = document.getElementById('activeQuote');
+
+var setActiveQuote = function setActiveQuote(val) {
+  activeQuoteBox.style.opacity = 0;
+
+  setTimeout(function () {
+    activeQuoteBox.style.opacity = 1;
+    activeQuote.innerHTML = val;
+  }, 600);
+};
+
+var activeUser = document.getElementById('activeUser');
+
+var setActiveUser = function setActiveUser(val) {
+  activeQuoteBox.style.opacity = 0;
+
+  setTimeout(function () {
+    activeQuoteBox.style.opacity = 1;
+    activeUser.innerHTML = val;
+  }, 600);
+};
+
+var moveLeft = function moveLeft() {
+  var target = innerGlobe.rotation.z - Math.PI / 2;
+  WORLD_CONTROLLER.rotateGlobeZ(target);
+};
+
+var moveRight = function moveRight() {
+  var target = innerGlobe.rotation.z + Math.PI / 2;
+  WORLD_CONTROLLER.rotateGlobeZ(target);
 };
 'use strict';
 
@@ -3531,6 +3611,10 @@ var createController = function createController(renderer, scene, camera, mainAv
 		tweenScalar(innerGlobe.rotation, 'x', 0, 3500, TWEEN.Easing.Quadratic.InOut);
 	}
 
+	function rotateGlobeZ(target) {
+		tweenScalar(innerGlobe.rotation, 'z', target, 1500, TWEEN.Easing.Quadratic.InOut);
+	}
+
 	function animate() {
 		TWEEN.update();
 		window.requestAnimationFrame(animate);
@@ -3567,6 +3651,7 @@ var createController = function createController(renderer, scene, camera, mainAv
 		setRotationFactor: setRotationFactor,
 		executeAction: executeAction,
 		update: update,
-		animate: animate
+		animate: animate,
+		rotateGlobeZ: rotateGlobeZ
 	};
 };

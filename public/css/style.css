@@ -5,11 +5,51 @@ body {
   margin: 0;
   overflow: hidden; }
 
-#activeQuote {
+#activeQuoteBox {
   position: absolute;
   top: 55%;
   left: 50%;
-  transform: translateX(-50%); }
+  transform: translateX(-50%);
+  text-align: center;
+  transition: all .5s ease; }
+  #activeQuoteBox h1 {
+    font-family: "Brandon Text";
+    font-size: 1rem;
+    color: #f4f5f7;
+    margin: 0; }
+  #activeQuoteBox p {
+    font-family: "Brandon Text";
+    color: #f4f5f7; }
+  #activeQuoteBox #activeQuote {
+    font-family: "Brandon Text";
+    margin: 10px;
+    font-size: 2rem; }
+  #activeQuoteBox #activeUser {
+    margin: 0;
+    font-size: 1rem; }
+
+#moveLeft, #moveRight {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: box-shadow .25s ease;
+  box-shadow: 0px 0px 10px #00010c; }
+  #moveLeft:hover, #moveRight:hover {
+    box-shadow: 0px 0px 25px #00010c; }
+
+#moveLeft {
+  left: 0;
+  margin-left: 25px; }
+  box
+#moveLeft:before {
+    content: "<" !important; }
+
+#moveLeft:before {
+  content: "<" !important; }
+
+#moveRight {
+  right: 0;
+  margin-right: 25px; }
 
 h1, h2, header, p, a, span {
   text-rendering: optimizeLegibility;

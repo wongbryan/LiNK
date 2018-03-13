@@ -163,6 +163,7 @@ const tweenScalar = (source, propName, target, time = 500, easing=TWEEN.Easing.Q
   tw.onUpdate(function(){
     source[propName] = o[propName];
   });
+  tw.easing(easing);
   if(callback)
     tw.onComplete(function(){
       console.log('callback');
@@ -253,4 +254,72 @@ var MOUSE_POS = {x:0.5, y:0.5};
 const mouse_monitor = (e) => {
     MOUSE_POS.x = (e.clientX / window.innerWidth) * 2 -1
     MOUSE_POS.y = (e.clientY / window.innerHeight) * 2  - 1
+}
+
+/* Single view mode */
+
+const activeQuoteBox = document.getElementById('activeQuoteBox');
+const activeQuote = document.getElementById('activeQuote');
+const activeUser = document.getElementById('activeUser');
+
+
+const setActiveBox = (quote, user) => {
+  activeQuoteBox.style.opacity = 0;
+
+  setTimeout(function(){
+    activeQuoteBox.style.opacity = 1;
+    activeQuote.innerHTML = quote;
+    activeUser.innerHTML = user;
+  }, 600);
+
+}
+
+const moveLeft = () => {
+  const target = innerGlobe.rotation.z - Math.PI/2;
+  WORLD_CONTROLLER.rotateGlobeZ(target);
+}
+
+const moveRight = () => {
+  const target = innerGlobe.rotation.z + Math.PI/2;
+  WORLD_CONTROLLER.rotateGlobeZ(target);
+}
+
+const initOtherUsers = () => {
+
+    const maxNumChars = 4;
+    entry.sentiment_users.forEach( id => {
+
+        APIController.getEntry(id)
+        .then( e => {
+
+            const numChars = characters.length;
+            
+            if(numChars >= maxNumChars){
+                return;
+            }
+
+            const a = new Avatar(e.character);
+            const angle = 2*Math.PI / maxNumChars * (numChars + 1); //start at second one
+            const pos = new THREE.Vector3(GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle), 0);
+            a.position.copy(pos);
+            a.position.add(a.offset);
+            a.rotation.z = angle - Math.PI/2;
+            innerGlobe.add(a);
+
+            e.avatar = a;
+            characters.push(e);
+
+            const idleAnims = getIdleAnim(e.avatar)
+
+            idleAnims.forEach( elem => {
+               elem.start()
+            });
+
+        })
+        .catch( err => {
+            console.log(err);
+        })
+
+    });
+    
 }

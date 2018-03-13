@@ -203,6 +203,10 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
 	}
 
+	function rotateGlobeZ(target){
+		tweenScalar(innerGlobe.rotation, 'z', target, 1500, TWEEN.Easing.Quadratic.InOut);
+	}
+
 	function animate(){
 	    TWEEN.update()
 	    window.requestAnimationFrame(animate)
@@ -244,6 +248,7 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 		executeAction: executeAction,
 		update: update,
 		animate: animate,
+		rotateGlobeZ: rotateGlobeZ,
 	}
 
 };

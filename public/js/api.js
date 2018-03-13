@@ -121,7 +121,8 @@ const APIController = (function(fetch){
 			const status = response.status;
 			if (status >= 200 && status < 300) {
 				const json = await response.json();
-			    //console.log("This is the entry you searched for: ", json);
+			    // console.log("This is the entry you searched for: ", json);
+			    return json;
 			} else {
 				throw new Error(status);
 			}

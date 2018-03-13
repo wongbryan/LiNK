@@ -221,7 +221,7 @@ const createUIController = function(){
 	        if(camera.currentPos !== 'behind'){
 	        	WORLD_CONTROLLER.moveCamera('behind');
 	        }
-	        
+
 	        hideInstructions();
 	        fired = true;
 			WORLD_CONTROLLER.setRotationFactor(-.005);

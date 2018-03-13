@@ -4,6 +4,8 @@ var renderer, camera, scene, controls, spotLight;
 var clock;
 var globe, testMesh;
 
+let activeCharacter = 0; //index of current char
+
 const init = () => {
     scene = new THREE.Scene();
     renderer = initializeRenderer();
@@ -31,8 +33,18 @@ const init = () => {
     spotLight.position.set(-10, 30, 0);
     scene.add(spotLight);
 
-    const data = entry.character;
+    let sGeom = new THREE.SphereGeometry(GLOBE_RADIUS-25, 32, 32);
+    let sMat = new THREE.MeshPhongMaterial({
+        emissive: COLORS.teal, 
+        specular: 0xffffff,
+        shininess: 0
+    });
+    innerGlobe = new THREE.Mesh(sGeom, sMat);
+    scene.add(innerGlobe);
 
+    setActiveBox(entry.text, "-" + entry.name);
+
+    const data = entry.character;
     const a = new Avatar(data);
     const angle = 2*Math.PI / 4 * 0;
     let pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
@@ -48,7 +60,7 @@ const init = () => {
     const testMeshHeight = Math.abs(testMeshBox.max.y - testMeshBox.min.y);
     testMesh.position.y += testMeshHeight / 2 + testMesh.offset.y;
 
-    scene.add(testMesh);
+    innerGlobe.add(testMesh);
 
     spotLight.target = testMesh;
     let container = new THREE.Object3D();
@@ -57,38 +69,62 @@ const init = () => {
     testMesh.add(container);
     testMesh.light = spotLight;
 
-    scene.add(testMesh);
-
-    const characters = [];
-    const c = {};
-    c.name = testMesh.name;
-    c.text = testMesh.text;
-    c.character = testMesh;
-    characters.push(c);
-
-    characters.forEach( c => {
-
-        const idleAnims = getIdleAnim(c.character)
-
-        idleAnims.forEach( elem => {
-           elem.start()
-        });
-
-    });
+    innerGlobe.add(testMesh);
 
     globe = new Globe(GLOBE_RADIUS+2.5, new THREE.Color(0xffe877), testMesh.position);
-    // globe.position.y = -GLOBE_RADIUS;
-    // globe.receiveShadow = true;
     scene.add(globe);
 
-    let sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 10, 10);
-    let sMat = new THREE.MeshPhongMaterial({
-        emissive: COLORS.teal, 
-        specular: 0xffffff,
-        shininess: 0
+    characters = [];
+    entry.avatar = testMesh;
+    characters.push(entry);
+
+    const idleAnims = getIdleAnim(testMesh)
+
+    idleAnims.forEach( elem => {
+       elem.start()
     });
-    innerGlobe = new THREE.Mesh(sGeom, sMat);
-    scene.add(innerGlobe);
+
+    /* Get similar quotes */
+
+    const maxNumChars = 4;
+    entry.sentiment_users.forEach( id => {
+
+        APIController.getEntry(id)
+        .then( e => {
+
+            const numChars = characters.length;
+            
+            if(numChars >= maxNumChars){
+                document.getElementById('loading').style.opacity = 0;
+                setTimeout(function(){
+                    document.getElementById('loading').style.display = "none";
+                }, 600);
+                return;
+            }
+
+            const a = new Avatar(e.character);
+            const angle = 2*Math.PI / maxNumChars * (numChars + 1); //start at second one
+            const pos = new THREE.Vector3(GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle), 0);
+            a.position.copy(pos);
+            a.position.add(a.offset);
+            a.rotation.z = angle - Math.PI/2;
+            innerGlobe.add(a);
+
+            e.avatar = a;
+            characters.push(e);
+
+            const idleAnims = getIdleAnim(e.avatar)
+
+            idleAnims.forEach( elem => {
+               elem.start()
+            });
+
+        })
+        .catch( err => {
+            console.log(err);
+        })
+
+    });
 
     clock = new THREE.Clock();
 
@@ -97,10 +133,24 @@ const init = () => {
     clock.start();
     WORLD_CONTROLLER = createController(renderer, scene, camera, testMesh, globe);
     WORLD_CONTROLLER.setWorldLights(1);
-    WORLD_CONTROLLER.setMainLightIntensity(.3);
+    WORLD_CONTROLLER.setMainLightIntensity(.5);
     WORLD_CONTROLLER.expandStarField(100);
     WORLD_CONTROLLER.moveCamera('frontClose');
 
     WORLD_CONTROLLER.animate();
+
+    document.getElementById('moveLeft').addEventListener('mousedown', function(){
+        moveLeft();
+        activeCharacter = (activeCharacter === 0) ? characters.length-1 : activeCharacter - 1;
+        const d = characters[activeCharacter];
+        setActiveBox(d.text, d.name);
+    });
+
+    document.getElementById('moveRight').addEventListener('mousedown', function(){
+        moveRight();
+        activeCharacter = (activeCharacter === characters.length-1) ? 0 : activeCharacter + 1;
+        const d = characters[activeCharacter];
+        setActiveBox(d.text, d.name);
+    });
 
 }
