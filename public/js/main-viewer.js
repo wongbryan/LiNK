@@ -143,14 +143,19 @@ const init = () => {
         moveLeft();
         activeCharacter = (activeCharacter === 0) ? characters.length-1 : activeCharacter - 1;
         const d = characters[activeCharacter];
-        setActiveBox(d.text, d.name);
+        let str = d.name;
+        str = (d.location) ? str + ", " + d.location : str;
+        setActiveBox(d.text, str);
     });
 
     document.getElementById('moveRight').addEventListener('mousedown', function(){
         moveRight();
         activeCharacter = (activeCharacter === characters.length-1) ? 0 : activeCharacter + 1;
         const d = characters[activeCharacter];
-        setActiveBox(d.text, d.name);
+        let str = d.name;
+        str = (d.location) ? str + ", " + d.location : str;
+        setActiveBox(d.text, str);
+        setActiveBox(d.text, str);
     });
 
 }

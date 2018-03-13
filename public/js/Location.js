@@ -25,6 +25,7 @@
 
 			locationData = d;
 			user_data.location = locationData['city'] || locationData['region_name'] || locationData['country_name']
+			
 		})
 		.catch( e => {
 
