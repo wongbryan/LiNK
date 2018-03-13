@@ -302,7 +302,7 @@ const initOtherUsers = () => {
 
     const maxNumChars = 4;
     entry.sentiment_users.forEach( id => {
-
+        
         APIController.getEntry(id)
         .then( e => {
 

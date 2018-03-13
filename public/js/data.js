@@ -2,48 +2,81 @@ const checkpoints = [];
 let checkpointIndex = 1;
 let paused = false;
 
-const checkpointActions = [
+let checkpointActions;
+
+if(isMobile){
+
+	checkpointActions = [
+
+		0,
+
+		function(){
+
+			AudioController.stopNight(0);
+			AudioController.playDay();
+			WORLD_CONTROLLER.fadeToColor(1600);
+			WORLD_CONTROLLER.sizeStarField(1.5, 1200, 500, .4, 600);
+			WORLD_CONTROLLER.resetGlobe();
+			setTimeout(function(){
+
+				WORLD_CONTROLLER.moveCamera('front');
+
+				setTimeout(UIController.showDonation, 800);
+
+			}, 800);
+			paused = true;
+			checkpointIndex = 1;
+
+		},
+
+	]
+
+} else{
+
+	checkpointActions = [
 	
-	0,
+		0,
 
-	function(){
+		function(){
 
-		AudioController.stopNight(0);
-		AudioController.playNight(1);
-		WORLD_CONTROLLER.sizeStarField(1, 1300, 100, .2, 300);
-		checkpointIndex++;
+			AudioController.stopNight(0);
+			AudioController.playNight(1);
+			WORLD_CONTROLLER.sizeStarField(1, 1300, 100, .2, 300);
+			checkpointIndex++;
 
-	},
+		},
 
-	function(){
+		function(){
 
-		AudioController.stopNight(1);
-		AudioController.playNight(2);
-		WORLD_CONTROLLER.sizeStarField(1, 800, 200, .3, 300);
-		checkpointIndex++;
+			AudioController.stopNight(1);
+			AudioController.playNight(2);
+			WORLD_CONTROLLER.sizeStarField(1, 800, 200, .3, 300);
+			checkpointIndex++;
 
-	},
+		},
 
-	function(){
+		function(){
 
-		AudioController.stopNight(2);
-		AudioController.playDay();
-		WORLD_CONTROLLER.fadeToColor(1600);
-		WORLD_CONTROLLER.sizeStarField(1.5, 1200, 500, .4, 600);
-		WORLD_CONTROLLER.resetGlobe();
-		setTimeout(function(){
+			AudioController.stopNight(2);
+			AudioController.playDay();
+			WORLD_CONTROLLER.fadeToColor(1600);
+			WORLD_CONTROLLER.sizeStarField(1.5, 1200, 500, .4, 600);
+			WORLD_CONTROLLER.resetGlobe();
+			setTimeout(function(){
 
-			WORLD_CONTROLLER.moveCamera('front');
+				WORLD_CONTROLLER.moveCamera('front');
 
-			setTimeout(UIController.showDonation, 800);
+				setTimeout(UIController.showDonation, 800);
 
-		}, 800);
-		paused = true;
-		checkpointIndex = 1; //start over?
+			}, 800);
+			paused = true;
+			checkpointIndex = 1; //start over?
 
-	},
-	
-];
+		},
+		
+	];
+
+}
 
 const other_users_data = [];
 

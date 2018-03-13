@@ -87,23 +87,23 @@ const init = () => {
     c.character = testMesh;
     checkpoints.push(c);
 
-    APIController.getUniqueEntries(4)
+    const maxNumChars = isMobile ? 2 : 4;
+    let numChars = 1;
+    APIController.getUniqueEntries(maxNumChars)
     .then( res => {
 
         entries = res;
 
-        const numPoints = 4;
-        let numcheckpoints = 0;
         entries.forEach( (e, i) => {
 
             let charData = e.character;
 
-            if(charData.name === testMesh.name || numcheckpoints === 3){ //do not exceed 3 other chars
+            if(charData.name === testMesh.name || numChars === maxNumChars){ //do not exceed 3 other chars
                 return;
             }
 
             const a = new Avatar(charData);
-            const angle = 2*Math.PI / numPoints * (numcheckpoints+1);
+            const angle = 2*Math.PI / (maxNumChars) * (numChars);
             let pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
             let box = new THREE.Box3().setFromObject(a);
             let height = Math.abs(box.max.y - box.min.y);
@@ -121,7 +121,7 @@ const init = () => {
             checkpoints.push(e);
 
             innerGlobe.add(a);
-            numcheckpoints++;
+            numChars++;
 
         });
 
