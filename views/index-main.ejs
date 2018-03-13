@@ -69,16 +69,17 @@
 		</div>
 	</div> -->
 	<div id="donation" class="screen">
-		<div class="wrapper">
-			<div class="main">
+		<div class="wrapper" id="theWrapper">
+			<div class="main mobile-full">
 				<div id="donationClose" class="submitButton glowBorder"></div>
-				<div class="info">
+				<div class="info mobile-info">
 					<h1 class="glow">Finding Home</h1>
 					<p>What is home? Maybe it's better to ask where it is, or what it feels like. Or maybe it's <span id="donationQuoteAnswer">sample here</span> That <span id="userCharacter"></span> you see in the middle is your unique character, and those other avatars were made by people just like you. Each of them comes with their own meaning of home. Share your avatar with your friends using this link: <a id="userCharacterLink"></a></br></br></br>Liberty in North Korea is an organization that helps refugees escape an oppressive regime and find new homes across the world. You can support the cause by donating through the form below.</p>
 					<a href="https://www.libertyinnorthkorea.org/" target="_blank">learn more</a>
 				</div>
 				<div id="donationConfirm">Thanks for your contribution!</div>
 				<form id="donationForm" spellcheck="false">
+
 					<div class="form-group name">
 						<label for="name">first name</label>
 						<input type="text" class="form-control" id="name" autocomplete="nope" data-panda="first_name" ></input>
@@ -110,8 +111,8 @@
 						<input type="text" class="form-control" id="email" autocomplete="nope" ></input>
 						<h1 class="description">for your tax-deductible email receipt</h1>
 					</div>
-					<div id="donationSubmit">
-						<button type="submit">submit</button>
+					<div id="donationSubmit" class="DonationSubmit">
+						<button type="submit">Submit</button>
 					</div>
 					<div class="form-group error">
 						<ul id="error"></ul>
@@ -219,6 +220,10 @@
 <script type="text/javascript" src="/js/lib/RenderPass.js"></script>
 <script type="text/javascript" src="/js/lib/ShaderPass.js"></script>
 
+<script type="text/javascript" src="/js/lib/iscroll.js"></script>
+<script type="text/javascript">
+var myScroll = new IScroll('#theWrapper');
+</script>
 <script type="text/javascript" src="/js/lib/Tween.js"></script>
 <script type="text/javascript" src="/js/util.js"></script>
 <script type="text/javascript" src="/js/Shaders.js"></script>

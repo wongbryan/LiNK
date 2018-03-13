@@ -24,6 +24,8 @@ const createUIController = function(){
 	quoteInputButton = quoteInput.getElementsByClassName('submitButton')[0]
 
     let quoteForm = document.getElementById('quoteForm');
+
+    //iphone sends submit for return key
     quoteForm.onSubmit = onAnswerSubmit
 
 	quoteInputAnswer = document.getElementById('userAnswer'),
@@ -136,8 +138,7 @@ const createUIController = function(){
     })
 
     threejscanvas.addEventListener("touchend", ()=> {
-	if(!paused)
-	   WORLD_CONTROLLER.setRotationFactor(0)
+	WORLD_CONTROLLER.setRotationFactor(0)
     })
 
     /* USER INPUT ANSWER SCREEN */
@@ -342,7 +343,7 @@ const createUIController = function(){
 		hide(quoteMain);
 	}
 
-	function showDonation(){
+    var showDonation = function showDonation(){
 		show(donation);
 	}
 

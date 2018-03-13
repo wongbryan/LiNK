@@ -513,3 +513,77 @@ h1, h2, header, p, a, span {
       font-style: italic;
       text-transform: lowercase;
       list-style: none; }
+
+    @media only screen and (max-width: 600px) {
+	
+	#donation {
+	overflow: scroll;
+	/* Add touch scrolling */
+	overflow-y: scroll; 
+	-webkit-overflow-scrolling: touch;
+	width:100%;
+    }
+
+	.mobileFull{
+	    position:absolute;
+	    
+	    width:80%;
+	    height:80%;
+	    left:10%;
+    }
+
+	#donation .main .info {
+	    margin-top:2em;
+	}
+	.mobile-info{
+	    margin-top:2em;
+	}
+
+	.DonationSubmit{
+	    padding-bottom:10px;
+	}
+
+	.mobileForm{
+	    height:85%;
+	}
+    
+	body:{
+	    overflow:scroll;
+	}
+    
+    }
+
+    .mobileShow{
+	display:none;
+    }
+    @media only screen
+    and (min-device-width : 100px)
+    and (max-device-width : 600px){
+	display: inline;
+    }
+    .noSelectTouch {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+  @media screen and (max-width:600px){
+  select,
+  textarea,
+  input {
+      font-size: 16px;
+  }
+}
+
+  @media screen and (max-width:600px){
+  select:focus,
+  textarea:focus,
+  input:focus {
+    font-size: 16px;
+    background: #eee;
+  }
+}
+
