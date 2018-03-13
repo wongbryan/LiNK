@@ -309,7 +309,16 @@ const createUIController = function(){
 		answer.innerHTML = data.text;
 	    }
 	    if(data && data.name){
-    	let str = "-" + data.name;
+	    let str = "-";
+	    let names = data.name.split(" ");
+	    names.forEach( (n, i) => { //first and last
+	    	let cap = n.charAt(0).toUpperCase() + n.slice(1);
+	    	str += cap;
+
+	    	if(i !== names.length -1){
+	    		str += " ";
+	    	}
+	    });
 		if(data.location){
 			str += ", " + data.location;
 		}
