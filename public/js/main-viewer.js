@@ -31,10 +31,7 @@ const init = () => {
     spotLight.position.set(-10, 30, 0);
     scene.add(spotLight);
 
-    const charName = getRandomCharName(Object.keys(CHAR_DATA));
-    // console.log(charName);
-    const data = getCharData(charName);
-    user_data.character = data;
+    const data = entry.character;
 
     const a = new Avatar(data);
     const angle = 2*Math.PI / 4 * 0;
@@ -44,7 +41,6 @@ const init = () => {
     a.position.add(a.offset);
     a.rotation.x = angle;
 
-    user_data.character = data;
     testMesh = a;
     testMesh.castShadow = true;
     
@@ -63,20 +59,6 @@ const init = () => {
 
     scene.add(testMesh);
 
-    globe = new Globe(GLOBE_RADIUS+2.5, new THREE.Color(0xffe877), testMesh.position);
-    // globe.position.y = -GLOBE_RADIUS;
-    // globe.receiveShadow = true;
-    scene.add(globe);
-
-    let sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 10, 10);
-    let sMat = new THREE.MeshPhongMaterial({
-        emissive: COLORS.teal, 
-        specular: 0xffffff,
-        shininess: 0
-    });
-    innerGlobe = new THREE.Mesh(sGeom, sMat);
-    scene.add(innerGlobe);
-
     const characters = [];
     const c = {};
     c.name = testMesh.name;
@@ -93,6 +75,20 @@ const init = () => {
         });
 
     });
+
+    globe = new Globe(GLOBE_RADIUS+2.5, new THREE.Color(0xffe877), testMesh.position);
+    // globe.position.y = -GLOBE_RADIUS;
+    // globe.receiveShadow = true;
+    scene.add(globe);
+
+    let sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 10, 10);
+    let sMat = new THREE.MeshPhongMaterial({
+        emissive: COLORS.teal, 
+        specular: 0xffffff,
+        shininess: 0
+    });
+    innerGlobe = new THREE.Mesh(sGeom, sMat);
+    scene.add(innerGlobe);
 
     clock = new THREE.Clock();
 

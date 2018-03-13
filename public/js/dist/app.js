@@ -2203,20 +2203,6 @@ var init = function init() {
 
     scene.add(testMesh);
 
-    globe = new Globe(GLOBE_RADIUS + 2.5, new THREE.Color(0xffe877), testMesh.position);
-    // globe.position.y = -GLOBE_RADIUS;
-    // globe.receiveShadow = true;
-    scene.add(globe);
-
-    var sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 10, 10);
-    var sMat = new THREE.MeshPhongMaterial({
-        emissive: COLORS.teal,
-        specular: 0xffffff,
-        shininess: 0
-    });
-    innerGlobe = new THREE.Mesh(sGeom, sMat);
-    scene.add(innerGlobe);
-
     var characters = [];
     var c = {};
     c.name = testMesh.name;
@@ -2232,6 +2218,20 @@ var init = function init() {
             elem.start();
         });
     });
+
+    globe = new Globe(GLOBE_RADIUS + 2.5, new THREE.Color(0xffe877), testMesh.position);
+    // globe.position.y = -GLOBE_RADIUS;
+    // globe.receiveShadow = true;
+    scene.add(globe);
+
+    var sGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 10, 10);
+    var sMat = new THREE.MeshPhongMaterial({
+        emissive: COLORS.teal,
+        specular: 0xffffff,
+        shininess: 0
+    });
+    innerGlobe = new THREE.Mesh(sGeom, sMat);
+    scene.add(innerGlobe);
 
     clock = new THREE.Clock();
 
@@ -3362,16 +3362,20 @@ var createController = function createController(renderer, scene, camera, mainAv
 
 	/* Post processing stuff */
 
+	var composer = void 0,
+	    monochromePass = void 0,
+	    shaderPasses = void 0;
+
 	if (!singleView) {
-		var _composer = new THREE.EffectComposer(renderer);
-		_composer.addPass(new THREE.RenderPass(scene, camera));
+		composer = new THREE.EffectComposer(renderer);
+		composer.addPass(new THREE.RenderPass(scene, camera));
 
-		var _monochromePass = new THREE.ShaderPass(SHADERS.monochrome);
-		_composer.addPass(_monochromePass);
+		monochromePass = new THREE.ShaderPass(SHADERS.monochrome);
+		composer.addPass(monochromePass);
 
-		var _shaderPasses = {
+		shaderPasses = {
 
-			'monochrome': _monochromePass
+			'monochrome': monochromePass
 
 		};
 

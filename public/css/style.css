@@ -2,10 +2,14 @@
   box-sizing: border-box; }
 
 body {
+  margin: 0;
   overflow: hidden; }
 
-body {
-  margin: 0; }
+#activeQuote {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translateX(-50%); }
 
 h1, h2, header, p, a, span {
   text-rendering: optimizeLegibility;

@@ -15,14 +15,16 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
 	/* Post processing stuff */
 
+	let composer, monochromePass, shaderPasses;
+
 	if(!singleView){
-		const composer = new THREE.EffectComposer(renderer);
+		composer = new THREE.EffectComposer(renderer);
 	    composer.addPass(new THREE.RenderPass(scene, camera));
 
-	    const monochromePass = new THREE.ShaderPass( SHADERS.monochrome );
+	    monochromePass = new THREE.ShaderPass( SHADERS.monochrome );
 	    composer.addPass( monochromePass );
 
-	    const shaderPasses = {
+	    shaderPasses = {
 
 	    	'monochrome': monochromePass,
 
