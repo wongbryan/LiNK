@@ -82,15 +82,21 @@ const init = () => {
     testMesh.add(container);
     testMesh.light = spotLight;
 
-    APIController.getRecentEntries(3)
+    APIController.getRecentEntries(4)
     .then( res => {
 
         entries = res;
 
         const numPoints = 4;
+        let numcheckpoints = 0;
         entries.forEach( (e, i) => {
 
             let charData = e.character;
+
+            if(charData.name === testMesh.name || numcheckpoints === 3){ //do not exceed 3 other chars
+                return;
+            }
+
             const a = new Avatar(charData);
             const angle = 2*Math.PI / numPoints * (i+1);
             let pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
@@ -115,6 +121,7 @@ const init = () => {
             checkpoints.push(c);
 
             innerGlobe.add(a);
+            numcheckpoints++;
 
         });
 
