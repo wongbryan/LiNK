@@ -2431,6 +2431,7 @@ var init = function init() {
     UIController = createUIController();
 
     UIController.setUserCharacter(testMesh.name);
+    UIController.showQuoteMainInfo();
 
     document.body.addEventListener('keydown', UIController.handleKeyDown);
     document.body.addEventListener('keyup', UIController.handleKeyUp);
@@ -3090,6 +3091,7 @@ var createUIController = function createUIController() {
 		hideTitle: hideTitle,
 		showQuoteMain: showQuoteMain,
 		hideQuoteMain: hideQuoteMain,
+		showQuoteMainInfo: showQuoteMainInfo,
 		showDonation: showDonation,
 		showQuoteInput: showQuoteInput,
 		hideQuoteInput: hideQuoteInput,

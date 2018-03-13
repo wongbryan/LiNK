@@ -512,6 +512,7 @@ const createUIController = function(){
 		hideTitle: hideTitle,
 		showQuoteMain: showQuoteMain,
 		hideQuoteMain: hideQuoteMain,
+		showQuoteMainInfo: showQuoteMainInfo,
 		showDonation: showDonation,
 		showQuoteInput: showQuoteInput,
 		hideQuoteInput: hideQuoteInput,

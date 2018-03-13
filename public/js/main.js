@@ -182,6 +182,7 @@ const init = () => {
     UIController = createUIController();
 
     UIController.setUserCharacter(testMesh.name);
+    UIController.showQuoteMainInfo();
 
     document.body.addEventListener('keydown', UIController.handleKeyDown);
     document.body.addEventListener('keyup', UIController.handleKeyUp);
