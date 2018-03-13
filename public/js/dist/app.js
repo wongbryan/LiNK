@@ -386,6 +386,27 @@ var APIController = function (fetch) {
 		}
 	}
 
+	async function getUniqueEntries(n) {
+
+		try {
+			var response = await fetch(apibase + "unique/" + n, {
+				method: 'GET',
+				headers: { "Content-Type": "application/json" }
+			});
+
+			var status = response.status;
+			if (status >= 200 && status < 300) {
+				var json = await response.json();
+				return json.entries;
+			} else {
+				throw new Error(status);
+			}
+		} catch (e) {
+			throw new Error(e.message);
+			return [e];
+		}
+	}
+
 	return {
 		postEntry: postEntry,
 		putEntry: putEntry,
@@ -393,7 +414,8 @@ var APIController = function (fetch) {
 		getRecentEntries: getRecentEntries,
 		getTopDonorEntries: getTopDonorEntries,
 		getEntry: getEntry,
-		getTotalDonations: getTotalDonations
+		getTotalDonations: getTotalDonations,
+		getUniqueEntries: getUniqueEntries
 	};
 }(window.fetch);
 'use strict';
@@ -710,7 +732,7 @@ var Avatar = function Avatar(data) {
 };
 "use strict";
 
-var checkpoints = [0];
+var checkpoints = [];
 var checkpointIndex = 1;
 var paused = false;
 
@@ -1119,7 +1141,7 @@ var initData = function initData() {
 
 		dice: {
 			scale: 4.,
-			offset: new THREE.Vector3(0, 7.5, 0),
+			offset: new THREE.Vector3(0, 10, 0),
 			upper: {},
 			upperLeft: {
 				offset: new THREE.Vector3(-3, 0, 0),
@@ -1552,7 +1574,7 @@ var initData = function initData() {
 
 		poopGuy: {
 			scale: 7.,
-			offset: new THREE.Vector3(0, 20., 0),
+			offset: new THREE.Vector3(0, 8., 0),
 			upper: {
 				offset: new THREE.Vector3(0, .5, 0),
 				dom: {
@@ -2286,7 +2308,6 @@ var init = function init() {
     var charName = getRandomCharName(Object.keys(CHAR_DATA));
     // console.log(charName);
     var data = getCharData(charName);
-    console.log(data);
     var a = new Avatar(data);
     var angle = 2 * Math.PI / 4 * 0;
     var pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
@@ -2312,22 +2333,33 @@ var init = function init() {
     testMesh.add(container);
     testMesh.light = spotLight;
 
-    APIController.getRecentEntries(3).then(function (res) {
+    var c = {};
+    c.name = testMesh.name;
+    c.text = testMesh.text;
+    c.character = testMesh;
+    checkpoints.push(c);
+
+    APIController.getUniqueEntries(4).then(function (res) {
 
         entries = res;
 
         var numPoints = 4;
+        var numcheckpoints = 0;
         entries.forEach(function (e, i) {
 
             var charData = e.character;
+
+            if (charData.name === testMesh.name || numcheckpoints === 3) {
+                //do not exceed 3 other chars
+                return;
+            }
+
             var a = new Avatar(charData);
-            var angle = 2 * Math.PI / numPoints * (i + 1);
+            var angle = 2 * Math.PI / numPoints * (numcheckpoints + 1);
             var pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
             var box = new THREE.Box3().setFromObject(a);
             var height = Math.abs(box.max.y - box.min.y);
             var factor = (height / 2 + a.offset.y) / pos.length();
-
-            console.log(factor);
 
             pos.multiplyScalar(1 + factor);
 
@@ -2344,76 +2376,22 @@ var init = function init() {
             checkpoints.push(c);
 
             innerGlobe.add(a);
+            numcheckpoints++;
+        });
+
+        /* start animations */
+
+        checkpoints.forEach(function (c) {
+
+            var idleAnims = getIdleAnim(c.character);
+
+            console.log(idleAnims);
+            //Start animations
+            idleAnims.forEach(function (elem) {
+                elem.start();
+            });
         });
     });
-
-    //Set checkpoints
-    // const numPoints = 4;
-
-    // for(let i=0; i<numPoints; i++){
-
-    // let keys = Object.keys(CHAR_DATA);
-    // console.log(keys);
-    // keys = keys.filter( k => {  
-
-    //     let ex = false;
-
-    //     for(let i=0; i<checkpoints.length; i++){
-
-    //         if(checkpoints[i].name === k){
-
-    //             ex = true;
-    //             break;
-
-    //         }
-
-    //     }
-
-    //     return !ex;
-
-    // } );
-
-    // const charName = getRandomCharName(keys);
-    // // console.log(charName);
-    // const data = getCharData(charName);
-    // console.log(data);
-    // const a = new Avatar(data);
-    // const angle = 2*Math.PI / numPoints * i;
-    // let pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
-
-    // a.position.copy(pos);
-    // a.position.add(a.offset);
-    // a.rotation.x = angle;
-
-    // if( i === 0){
-
-    //     user_data.character = data;
-    //     testMesh = a;
-    //     testMesh.castShadow = true;
-    //     // testMesh.scale.set(7, 7, 7);
-    //     scene.add(testMesh);
-
-    //     spotLight.target = testMesh;
-    //     let container = new THREE.Object3D();
-    //     container.add(spotLight);
-    //     container.scale.divide(testMesh.scale);
-    //     testMesh.add(container);
-    //     testMesh.light = spotLight;
-
-    // } else{
-
-    //     a.rotation.y = Math.PI;
-    //     innerGlobe.add(a);
-
-    // }
-
-    // let c = {};
-    // c.name = a.name;
-    // c.hit = false;
-    // c.character = a;
-    // checkpoints.push(c);
-
-    // }
 
     globe = new Globe(GLOBE_RADIUS + 2.5, new THREE.Color(0xffe877), testMesh.position);
     // globe.position.y = -GLOBE_RADIUS;
@@ -2449,7 +2427,7 @@ var init = function init() {
     WORLD_CONTROLLER.expandStarField(100);
     WORLD_CONTROLLER.moveCamera('side');
 
-    // UIController = createUIController();
+    UIController = createUIController();
 
     document.body.addEventListener('keydown', UIController.handleKeyDown);
     document.body.addEventListener('keyup', UIController.handleKeyUp);
@@ -2594,7 +2572,7 @@ var TIMELINE = function () {
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-var UIController = function () {
+var createUIController = function createUIController() {
 
 	var title = document.getElementById('title');
 
@@ -2610,7 +2588,11 @@ var UIController = function () {
 	    nameInputClose = nameInput.getElementsByClassName('submitButton')[0];
 
 	var quoteMain = document.getElementById('quoteMain'),
-	    quoteMainAnswer = document.getElementById('quoteMainAnswer'),
+	    quoteMainInfo = document.getElementById('quoteMainInfo'),
+
+	// quoteMainInfoOpen = document.getElementById('quoteMainInfoOpen'),
+	// quoteMainInfoClose = document.getElementById('quoteMainInfoClose'),
+	quoteMainAnswer = document.getElementById('quoteMainAnswer'),
 	    quoteMainClose = document.getElementById('quoteMainClose');
 
 	var donation = document.getElementById('donation'),
@@ -2714,17 +2696,6 @@ var UIController = function () {
 		WORLD_CONTROLLER.sizeStarField(1, 100, 60, .1, 300);
 		WORLD_CONTROLLER.moveCamera('side');
 		paused = false;
-
-		setTimeout(function () {
-
-			//Good for poop dude
-			var idleAnims = getIdleAnim(testMesh);
-
-			//Start animations
-			idleAnims.forEach(function (elem) {
-				elem.start();
-			});
-		}, 800);
 
 		AudioController.playNight(0);
 		APIController.postEntry(user_data);
@@ -2843,6 +2814,16 @@ var UIController = function () {
 		show(quoteMain);
 	}
 
+	function showQuoteMainInfo() {
+		quoteMainInfo.style.filter = "blur:(" + 0 + "px)";
+		quoteMainInfo.style.opacity = 1;
+	}
+
+	function hideQuoteMainInfo() {
+		quoteMainInfo.style.filter = "blur:(" + 100 + "px)";
+		quoteMainInfo.style.opacity = 0;
+	}
+
 	function hideQuoteMain() {
 		hide(quoteMain);
 	}
@@ -2868,8 +2849,18 @@ var UIController = function () {
 	quoteMainClose.addEventListener('mousedown', hideQuoteMain);
 	quoteMainClose.addEventListener('mousedown', function () {
 
+		hideQuoteMainInfo();
 		WORLD_CONTROLLER.executeAction(checkpointIndex);
 		paused = false;
+	});
+
+	quoteMainInfoOpen.addEventListener('mousedown', function () {
+
+		if (quoteMainInfo.style.opacity == 0) {
+			showQuoteMainInfo();
+		} else {
+			hideQuoteMainInfo();
+		}
 	});
 
 	/* DONATION BOX STUFF */
@@ -3002,7 +2993,7 @@ var UIController = function () {
 		submitDonation: submitDonation,
 		errorDisplay: errorDisplay
 	};
-}();
+};
 'use strict';
 
 /* WORLD RELATED DATA */
@@ -3380,7 +3371,6 @@ var createController = function createController(renderer, scene, camera, mainAv
 
 			innerGlobe.rotation.x += rot.val;
 			var angle = 2 * Math.PI / checkpoints.length * checkpointIndex;
-			console.log(angle);
 
 			if (innerGlobe.rotation.x <= -angle + Math.PI / 12 && !hit) {
 				//stop rotation and only set tween once

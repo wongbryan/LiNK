@@ -155,6 +155,13 @@ h1, h2, header, p, a, span {
       font-size: 1.2rem;
       margin: 0;
       margin: 15px; }
+  #quoteMain #quoteMainInfo {
+    font-size: .83rem;
+    color: #808285;
+    margin: auto;
+    margin-top: 30px;
+    width: 70%;
+    transition: all .6s ease; }
   #quoteMain #quoteMainClose {
     margin: auto;
     margin-top: 35px; }

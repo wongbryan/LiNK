@@ -14,6 +14,9 @@ const createUIController = function(){
 	nameInputClose = nameInput.getElementsByClassName('submitButton')[0];
 
 	var quoteMain = document.getElementById('quoteMain'),
+	quoteMainInfo = document.getElementById('quoteMainInfo'),
+	// quoteMainInfoOpen = document.getElementById('quoteMainInfoOpen'),
+	// quoteMainInfoClose = document.getElementById('quoteMainInfoClose'),
 	quoteMainAnswer = document.getElementById('quoteMainAnswer'),
 	quoteMainClose = document.getElementById('quoteMainClose');
 
@@ -124,18 +127,6 @@ const createUIController = function(){
 		WORLD_CONTROLLER.sizeStarField(1, 100, 60, .1, 300);
 		WORLD_CONTROLLER.moveCamera('side');
 		paused = false;
-
-		// setTimeout(function(){
-
-		// 	//Good for poop dude
-		//     let idleAnims = getIdleAnim(testMesh)
-		    
-		//     //Start animations
-		//     idleAnims.forEach( elem => {
-		// 	elem.start()
-		//     });
-
-		// }, 800);
 
 		AudioController.playNight(0);
 		APIController.postEntry(user_data);
@@ -262,6 +253,16 @@ const createUIController = function(){
 		show(quoteMain);
 	}
 
+	function showQuoteMainInfo(){
+		quoteMainInfo.style.filter = "blur:(" + 0 + "px)";
+		quoteMainInfo.style.opacity = 1;
+	}
+
+	function hideQuoteMainInfo(){
+		quoteMainInfo.style.filter = "blur:(" + 100 + "px)";
+		quoteMainInfo.style.opacity = 0;
+	}
+
 	function hideQuoteMain(){
 		hide(quoteMain);
 	}
@@ -287,8 +288,19 @@ const createUIController = function(){
 	quoteMainClose.addEventListener('mousedown', hideQuoteMain);
 	quoteMainClose.addEventListener('mousedown', function(){
 
+		hideQuoteMainInfo();
 		WORLD_CONTROLLER.executeAction(checkpointIndex);
 		paused = false;
+
+	});
+
+	quoteMainInfoOpen.addEventListener('mousedown', function(){
+
+		if(quoteMainInfo.style.opacity == 0){
+			showQuoteMainInfo();
+		} else{
+			hideQuoteMainInfo();
+		}
 
 	});
 

@@ -211,6 +211,15 @@ h1, h2, header, p, a, span{
 		}
 	}
 
+	#quoteMainInfo{
+		font-size: .83rem;
+		color: $gray;
+		margin: auto;
+		margin-top: 30px;
+		width: 70%;
+		transition: all .6s ease;
+	}
+
 	#quoteMainClose{
 		margin: auto;
 		margin-top: 35px;
