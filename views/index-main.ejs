@@ -171,6 +171,10 @@
 
 </script>
 
+<script type="text/javascript">
+	const PANDA_PUBLIC_KEY = <%- JSON.stringify(PANDA_PUBLIC_KEY) %>;
+	const PANDA_SECRET_KEY = <%- JSON.stringify(PANDA_SECRET_KEY) %>;
+</script>
 
 <script type="text/javascript" src="/js/lib/three.js"></script>
 <script type="text/javascript" src="/js/lib/OrbitControls.js"></script>
@@ -198,7 +202,7 @@
 <script type="text/javascript" src="/js/main.js"></script>
 
 <script type="text/javascript">
-	Panda.init('pk_test_2C04UlQCKet4YoLtQVNkNQ', 'donationForm');
+	Panda.init(PANDA_PUBLIC_KEY, 'donationForm');
 
 	Panda.on('success', function(token){
 		UIController.submitDonation(token);
