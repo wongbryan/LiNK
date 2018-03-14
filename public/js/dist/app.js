@@ -2831,7 +2831,7 @@ var createUIController = function createUIController() {
 		//Clear focus
 		document.activeElement.blur();
 		APIController.postEntry(user_data).then(function (resp) {
-			var link = 'localhost:3000/view/' + resp.id;+'/';
+			var link = 'https://findinghome.io/view/' + resp.id;+'/';
 			UIController.setUserCharacterLink(link);
 		});
 

@@ -156,7 +156,7 @@ const createUIController = function(){
 	    document.activeElement.blur()
 		APIController.postEntry(user_data)
 		.then(resp => {
-			const link = 'localhost:3000/view/' + resp.id; + '/';
+			const link = 'https://findinghome.io/view/' + resp.id; + '/';
 			UIController.setUserCharacterLink(link);
 		});
 
