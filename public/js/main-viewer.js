@@ -73,8 +73,10 @@ const init = () => {
 
     innerGlobe.add(testMesh);
 
-    globe = new Globe(GLOBE_RADIUS+2.5, new THREE.Color(0xffe877), testMesh.position);
-    scene.add(globe);
+    if(!isMobile){
+        globe = new Globe(GLOBE_RADIUS+2.5, new THREE.Color(0xffe877), testMesh.position);
+        scene.add(globe);
+    }
 
     characters = [];
     entry.avatar = testMesh;

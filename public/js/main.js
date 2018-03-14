@@ -89,7 +89,7 @@ const init = () => {
 
     const maxNumChars = isMobile ? 2 : 4;
     let numChars = 1;
-    APIController.getUniqueEntries(maxNumChars)
+    APIController.getUniqueEntries(4)
     .then( res => {
 
         entries = res;
@@ -142,10 +142,12 @@ const init = () => {
 
     });
 
-    globe = new Globe(GLOBE_RADIUS+2.5, new THREE.Color(0xffe877), testMesh.position);
-    // globe.position.y = -GLOBE_RADIUS;
-    // globe.receiveShadow = true;
-    scene.add(globe);
+    if(!isMobile){
+        globe = new Globe(GLOBE_RADIUS+2.5, new THREE.Color(0xffe877), testMesh.position);
+        // globe.position.y = -GLOBE_RADIUS;
+        // globe.receiveShadow = true;
+        scene.add(globe);
+    }
 
     // testMesh.position.add(testMesh.offset);
     // testMesh.position.y += GLOBE_RADIUS;
@@ -169,9 +171,12 @@ const init = () => {
     testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
 
     WORLD_CONTROLLER = createController(renderer, scene, camera, testMesh, globe);
-    WORLD_CONTROLLER.setWorldLights(1);
+    if(globe){
+        WORLD_CONTROLLER.setWorldLights(1);
+        WORLD_CONTROLLER.expandStarField(100);
+    }
+
     WORLD_CONTROLLER.setMainLightIntensity(.3);
-    WORLD_CONTROLLER.expandStarField(100);
     // WORLD_CONTROLLER.moveCamera('behind');
 
     UIController = createUIController();

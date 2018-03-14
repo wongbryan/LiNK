@@ -2265,8 +2265,10 @@ var init = function init() {
 
     innerGlobe.add(testMesh);
 
-    globe = new Globe(GLOBE_RADIUS + 2.5, new THREE.Color(0xffe877), testMesh.position);
-    scene.add(globe);
+    if (!isMobile) {
+        globe = new Globe(GLOBE_RADIUS + 2.5, new THREE.Color(0xffe877), testMesh.position);
+        scene.add(globe);
+    }
 
     characters = [];
     entry.avatar = testMesh;
@@ -2441,7 +2443,7 @@ var init = function init() {
 
     var maxNumChars = isMobile ? 2 : 4;
     var numChars = 1;
-    APIController.getUniqueEntries(maxNumChars).then(function (res) {
+    APIController.getUniqueEntries(4).then(function (res) {
 
         entries = res;
 
@@ -2490,10 +2492,12 @@ var init = function init() {
         });
     });
 
-    globe = new Globe(GLOBE_RADIUS + 2.5, new THREE.Color(0xffe877), testMesh.position);
-    // globe.position.y = -GLOBE_RADIUS;
-    // globe.receiveShadow = true;
-    scene.add(globe);
+    if (!isMobile) {
+        globe = new Globe(GLOBE_RADIUS + 2.5, new THREE.Color(0xffe877), testMesh.position);
+        // globe.position.y = -GLOBE_RADIUS;
+        // globe.receiveShadow = true;
+        scene.add(globe);
+    }
 
     // testMesh.position.add(testMesh.offset);
     // testMesh.position.y += GLOBE_RADIUS;
@@ -2519,9 +2523,12 @@ var init = function init() {
     testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
 
     WORLD_CONTROLLER = createController(renderer, scene, camera, testMesh, globe);
-    WORLD_CONTROLLER.setWorldLights(1);
+    if (globe) {
+        WORLD_CONTROLLER.setWorldLights(1);
+        WORLD_CONTROLLER.expandStarField(100);
+    }
+
     WORLD_CONTROLLER.setMainLightIntensity(.3);
-    WORLD_CONTROLLER.expandStarField(100);
     // WORLD_CONTROLLER.moveCamera('behind');
 
     UIController = createUIController();
@@ -2810,6 +2817,7 @@ var createUIController = function createUIController() {
 		ans = stylizeQuote(ans);
 		donationQuoteAnswer.innerHTML = ans;
 
+		console.log('submit answer');
 		showInstructions();
 		hideQuoteInput();
 		// WORLD_CONTROLLER.shrinkStarField(1200);
@@ -3166,6 +3174,8 @@ var createUIController = function createUIController() {
 			WORLD_CONTROLLER.setRotationFactor(0);
 		});
 
+		quoteInputButton.addEventListener('touchstart', onAnswerSubmit);
+
 		nameInputClose.addEventListener('touchstart', onNameInputSubmit);
 
 		quoteMainClose.addEventListener('touchstart', hideQuoteMain);
@@ -3191,8 +3201,6 @@ var createUIController = function createUIController() {
 		title.addEventListener("mouseout", mouseup);
 
 		quoteInputButton.addEventListener('mousedown', onAnswerSubmit);
-		quoteInputAnswer.addEventListener('keydown', ansKeyDown);
-		quoteInputAnswer.addEventListener('blur', keepBlur);
 
 		nameInputClose.addEventListener('mousedown', onNameInputSubmit);
 
@@ -3214,6 +3222,8 @@ var createUIController = function createUIController() {
 		// donationClose.addEventListener('mousedown', hideDonation);
 		donationClose.onmousedown = hideDonation;
 	}
+
+	quoteInputAnswer.addEventListener('keydown', ansKeyDown);
 
 	return {
 		showTitle: showTitle,
@@ -3652,7 +3662,7 @@ var createController = function createController(renderer, scene, camera, mainAv
 
 	function setWorldLights(appearAmt) {
 
-		globe.material.uniforms['appearAmt'].value = appearAmt;
+		if (globe) globe.material.uniforms['appearAmt'].value = appearAmt;
 	}
 
 	function setAvatarOpacity(n) {
@@ -3687,8 +3697,11 @@ var createController = function createController(renderer, scene, camera, mainAv
 		var d = clock.getDelta();
 		var globalTime = clock.elapsedTime;
 
-		globe.frustumCulled = false;
-		globe.rotation.x += .0001;
+		if (globe) {
+			globe.frustumCulled = false;
+			globe.rotation.x += .0001;
+		}
+
 		controls.update();
 
 		if (rot.val && !paused) {
@@ -3715,8 +3728,11 @@ var createController = function createController(renderer, scene, camera, mainAv
 	function updateSingleView() {
 
 		TWEEN.update();
-		globe.frustumCulled = false;
-		globe.rotation.x += .0001;
+		if (globe) {
+			globe.frustumCulled = false;
+			globe.rotation.x += .0001;
+		}
+
 		controls.update();
 	}
 
