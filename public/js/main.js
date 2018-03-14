@@ -127,18 +127,25 @@ const init = () => {
 
         /* start animations */
 
-        checkpoints.forEach( c => {
+        if( (isChrome || isFirefox) && !isMobile ){
+            checkpoints.forEach( c => {
 
-            const idleAnims = getIdleAnim(c.character)
-            
-            console.log(idleAnims);
+                const idleAnims = getIdleAnim(c.character)
+                
+                //Start animations
+                idleAnims.forEach( elem => {
+                   elem.start()
+                });
+
+            });
+        } else{
+            const idleAnims = getIdleAnim(testMesh)
+
             //Start animations
             idleAnims.forEach( elem => {
                elem.start()
             });
-
-        });
-
+        }
 
     });
 

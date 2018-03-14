@@ -2309,11 +2309,13 @@ var init = function init() {
             e.avatar = a;
             characters.push(e);
 
-            var idleAnims = getIdleAnim(e.avatar);
+            if ((isChrome || isFirefox) && !isMobile) {
+                var _idleAnims = getIdleAnim(e.avatar);
 
-            idleAnims.forEach(function (elem) {
-                elem.start();
-            });
+                _idleAnims.forEach(function (elem) {
+                    elem.start();
+                });
+            }
         }).catch(function (err) {
             console.log(err);
         });
@@ -2480,16 +2482,24 @@ var init = function init() {
 
         /* start animations */
 
-        checkpoints.forEach(function (c) {
+        if ((isChrome || isFirefox) && !isMobile) {
+            checkpoints.forEach(function (c) {
 
-            var idleAnims = getIdleAnim(c.character);
+                var idleAnims = getIdleAnim(c.character);
 
-            console.log(idleAnims);
+                //Start animations
+                idleAnims.forEach(function (elem) {
+                    elem.start();
+                });
+            });
+        } else {
+            var idleAnims = getIdleAnim(testMesh);
+
             //Start animations
             idleAnims.forEach(function (elem) {
                 elem.start();
             });
-        });
+        }
     });
 
     if (!isMobile) {

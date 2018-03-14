@@ -118,11 +118,13 @@ const init = () => {
             e.avatar = a;
             characters.push(e);
 
-            const idleAnims = getIdleAnim(e.avatar)
+            if( (isChrome || isFirefox) && !isMobile){
+                const idleAnims = getIdleAnim(e.avatar)
 
-            idleAnims.forEach( elem => {
-               elem.start()
-            });
+                idleAnims.forEach( elem => {
+                   elem.start()
+                });
+            }
 
         })
         .catch( err => {
