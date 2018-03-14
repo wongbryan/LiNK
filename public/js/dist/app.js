@@ -2159,7 +2159,7 @@ for (var _file in FONT_DATA) {
 
 (function (fetch) {
 
-	fetch("http://freegeoip.net/json/", function (data) {
+	fetch("https://freegeoip.net/json/", function (data) {
 		var country_code = data.country_code;
 		var country = data.country_name;
 		var ip = data.ip;

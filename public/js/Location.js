@@ -1,6 +1,6 @@
 (function(fetch){
 
-	fetch("http://freegeoip.net/json/", 
+	fetch("https://freegeoip.net/json/",  
 
 	function(data) {
 	    var country_code = data.country_code;
