@@ -518,3 +518,6 @@ h1, h2, header, p, a, span {
       width: 100%; }
       #donation .wrapper {
         overflow-y: scroll; } }
+
+textarea:focus::placholder {
+  content: ""; }

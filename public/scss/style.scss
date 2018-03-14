@@ -653,3 +653,8 @@ h1, h2, header, p, a, span{
 	}
 }
 
+textarea{
+	&:focus::placholder{
+		content: "";
+	}
+}

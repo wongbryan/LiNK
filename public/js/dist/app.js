@@ -240,7 +240,7 @@ var getIdleAnim = function getIdleAnim(mesh) {
 };
 'use strict';
 
-var apibase = 'http://159.203.117.240/api/';
+var apibase = 'https://magnacreativelabs.club/api/';
 
 var APIController = function (fetch) {
 
@@ -257,7 +257,7 @@ var APIController = function (fetch) {
 			if (status >= 200 && status < 300) {
 				var json = await response.json();
 				return json;
-				//console.log("This is your entry: ", json);
+				console.log("This is your entry: ", json);
 			} else {
 				throw new Error(status);
 			}
@@ -732,47 +732,63 @@ var Avatar = function Avatar(data) {
 
 	this.__proto__ = g;
 };
-"use strict";
+'use strict';
 
 var checkpoints = [];
 var checkpointIndex = 1;
 var paused = false;
 
-var checkpointActions = [0, function () {
+var checkpointActions = void 0;
 
-	AudioController.stopNight(0);
-	AudioController.playNight(1);
-	WORLD_CONTROLLER.sizeStarField(1, 1300, 100, .2, 300);
-	checkpointIndex++;
-}, function () {
+if (isMobile) {
 
-	AudioController.stopNight(1);
-	AudioController.playNight(2);
-	WORLD_CONTROLLER.sizeStarField(1, 800, 200, .3, 300);
-	checkpointIndex++;
-}, function () {
+	checkpointActions = [0, function () {
 
-	AudioController.stopNight(2);
-	AudioController.playDay();
-	WORLD_CONTROLLER.fadeToColor(1600);
-	WORLD_CONTROLLER.sizeStarField(1.5, 1200, 500, .4, 600);
-	WORLD_CONTROLLER.resetGlobe();
-	setTimeout(function () {
+		AudioController.stopNight(0);
+		AudioController.playDay();
+		WORLD_CONTROLLER.fadeToColor(1600);
+		WORLD_CONTROLLER.sizeStarField(1.5, 1200, 500, .4, 600);
+		WORLD_CONTROLLER.resetGlobe();
+		setTimeout(function () {
 
-		UIController.showDonation();
-		WORLD_CONTROLLER.moveCamera('front');
-	}, 800);
-	paused = true;
-	checkpointIndex = 1; //start over?
-}];
+			WORLD_CONTROLLER.moveCamera('front');
 
-var user_data = {
-	name: "",
-	id: 0,
-	text: "",
-	donation: 0,
-	character: null
-};
+			setTimeout(UIController.showDonation, 800);
+		}, 800);
+		paused = true;
+		checkpointIndex = 1;
+	}];
+} else {
+
+	checkpointActions = [0, function () {
+
+		AudioController.stopNight(0);
+		AudioController.playNight(1);
+		WORLD_CONTROLLER.sizeStarField(1, 1300, 100, .2, 300);
+		checkpointIndex++;
+	}, function () {
+
+		AudioController.stopNight(1);
+		AudioController.playNight(2);
+		WORLD_CONTROLLER.sizeStarField(1, 800, 200, .3, 300);
+		checkpointIndex++;
+	}, function () {
+
+		AudioController.stopNight(2);
+		AudioController.playDay();
+		WORLD_CONTROLLER.fadeToColor(1600);
+		WORLD_CONTROLLER.sizeStarField(1.5, 1200, 500, .4, 600);
+		WORLD_CONTROLLER.resetGlobe();
+		setTimeout(function () {
+
+			WORLD_CONTROLLER.moveCamera('front');
+
+			setTimeout(UIController.showDonation, 800);
+		}, 800);
+		paused = true;
+		checkpointIndex = 1; //start over?
+	}];
+}
 
 var other_users_data = [];
 
@@ -2071,6 +2087,12 @@ var Loader = function () {
             //let page render before calling init (push to event queue)
             initData();
             init();
+            if (!singleView) {
+                document.getElementById('loading').style.opacity = 0;
+                setTimeout(function () {
+                    document.getElementById('loading').style.display = "none";
+                }, 600);
+            }
         }, 0);
     };
 
@@ -2153,14 +2175,20 @@ for (var _file in FONT_DATA) {
 		alert("Longitude: " + longitude);
 	}).then(function (res) {
 
-		var json = res.json();
-		locationData = json;
+		res.json().then(function (d) {
+
+			locationData = d;
+			user_data.location = locationData['city'] || locationData['region_name'] || locationData['country_name'] || user_data.location;
+		}).catch(function (e) {
+
+			throw new Error(e);
+		});
 	}).catch(function (err) {
 
-		console.log(err);
+		throw new Error(err);
 	});
 })(window.fetch);
-'use strict';
+"use strict";
 
 //Main Script
 
@@ -2206,7 +2234,9 @@ var init = function init() {
     innerGlobe = new THREE.Mesh(sGeom, sMat);
     scene.add(innerGlobe);
 
-    setActiveBox(entry.text, "-" + entry.name);
+    var str = capitalizeWords(entry.name);
+    str = entry.location ? str + ", " + entry.location : str;
+    setActiveBox(entry.text, "-" + str);
 
     var data = entry.character;
     var a = new Avatar(data);
@@ -2250,7 +2280,7 @@ var init = function init() {
 
     /* Get similar quotes */
 
-    var maxNumChars = 4;
+    var maxNumChars = entry.sentiment_users.length < 3 ? entry.sentiment_users.length : 4;
     entry.sentiment_users.forEach(function (id) {
 
         APIController.getEntry(id).then(function (e) {
@@ -2258,6 +2288,7 @@ var init = function init() {
             var numChars = characters.length;
 
             if (numChars >= maxNumChars) {
+                console.log(numChars);
                 document.getElementById('loading').style.opacity = 0;
                 setTimeout(function () {
                     document.getElementById('loading').style.display = "none";
@@ -2303,14 +2334,18 @@ var init = function init() {
         moveLeft();
         activeCharacter = activeCharacter === 0 ? characters.length - 1 : activeCharacter - 1;
         var d = characters[activeCharacter];
-        setActiveBox(d.text, d.name);
+        var str = "-" + capitalizeWords(d.name);
+        str = d.location ? str + ", " + d.location : str;
+        setActiveBox(d.text, str);
     });
 
     document.getElementById('moveRight').addEventListener('mousedown', function () {
         moveRight();
         activeCharacter = activeCharacter === characters.length - 1 ? 0 : activeCharacter + 1;
         var d = characters[activeCharacter];
-        setActiveBox(d.text, d.name);
+        var str = "-" + capitalizeWords(d.name);
+        str = d.location ? str + ", " + d.location : str;
+        setActiveBox(d.text, str);
     });
 };
 'use strict';
@@ -2404,23 +2439,23 @@ var init = function init() {
     c.character = testMesh;
     checkpoints.push(c);
 
-    APIController.getUniqueEntries(4).then(function (res) {
+    var maxNumChars = isMobile ? 2 : 4;
+    var numChars = 1;
+    APIController.getUniqueEntries(maxNumChars).then(function (res) {
 
         entries = res;
 
-        var numPoints = 4;
-        var numcheckpoints = 0;
         entries.forEach(function (e, i) {
 
             var charData = e.character;
 
-            if (charData.name === testMesh.name || numcheckpoints === 3) {
+            if (charData.name === testMesh.name || numChars === maxNumChars) {
                 //do not exceed 3 other chars
                 return;
             }
 
             var a = new Avatar(charData);
-            var angle = 2 * Math.PI / numPoints * (numcheckpoints + 1);
+            var angle = 2 * Math.PI / maxNumChars * numChars;
             var pos = new THREE.Vector3(0, GLOBE_RADIUS * Math.cos(angle), GLOBE_RADIUS * Math.sin(angle));
             var box = new THREE.Box3().setFromObject(a);
             var height = Math.abs(box.max.y - box.min.y);
@@ -2434,14 +2469,11 @@ var init = function init() {
             a.rotation.x = angle;
             a.rotation.y += Math.PI;
 
-            var c = {};
-            c.name = e.name;
-            c.text = e.text;
-            c.character = a;
-            checkpoints.push(c);
+            e.character = a;
+            checkpoints.push(e);
 
             innerGlobe.add(a);
-            numcheckpoints++;
+            numChars++;
         });
 
         /* start animations */
@@ -2642,12 +2674,6 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var createUIController = function createUIController() {
 
-	//Mobile additions
-	document.addEventListener("touchmove", function (e) {
-		e.preventDefault();
-	});
-	//window.addEventListener("load", function() {window.scrollTo(0,0);});
-
 	//Attempt to go full screen
 	var body = document.documentElement;
 	if (body.requestFullscreen) {
@@ -2667,6 +2693,8 @@ var createUIController = function createUIController() {
 	    quoteInputButton = quoteInput.getElementsByClassName('submitButton')[0];
 
 	var quoteForm = document.getElementById('quoteForm');
+
+	//iphone sends submit for return key
 	quoteForm.onSubmit = onAnswerSubmit;
 
 	quoteInputAnswer = document.getElementById('userAnswer'), remaining = document.getElementById('userAnswerRemaining'), answerMax = 250;
@@ -2758,24 +2786,6 @@ var createUIController = function createUIController() {
 		opacity -= .01;
 		el.style.opacity = opacity;
 	}
-
-	title.addEventListener("mousedown", mousedown);
-	title.addEventListener("mouseup", mouseup);
-	title.addEventListener("mouseout", mouseup);
-
-	//Attempt to just use touch events and bind to mousedown...
-	//Not super elegant
-	title.addEventListener("touchstart", mousedown);
-	title.addEventListener("touchend", mouseup);
-
-	//Add event listener to the body to allow for movement along sphere
-	threejscanvas.addEventListener("touchstart", function () {
-		if (!paused) WORLD_CONTROLLER.setRotationFactor(-0.005);
-	});
-
-	threejscanvas.addEventListener("touchend", function () {
-		if (!paused) WORLD_CONTROLLER.setRotationFactor(0);
-	});
 
 	/* USER INPUT ANSWER SCREEN */
 
@@ -2870,13 +2880,6 @@ var createUIController = function createUIController() {
 		}
 	}
 
-	//quoteMobileButton = document.getElementById('submitName')
-	//quoteMobileButton.onclick = onAnswerSubmit
-
-	quoteInputButton.addEventListener('mousedown', onAnswerSubmit);
-	quoteInputAnswer.addEventListener('keydown', ansKeyDown);
-	quoteInputAnswer.addEventListener('blur', keepBlur);
-
 	/* NAME INPUT SCREEN */
 
 	function onNameInputSubmit(e) {
@@ -2900,7 +2903,6 @@ var createUIController = function createUIController() {
 		hideNameInput();
 		showQuoteInput();
 	}
-	nameInputClose.addEventListener('mousedown', onNameInputSubmit);
 
 	/* Util functions for navigation */
 
@@ -2936,7 +2938,11 @@ var createUIController = function createUIController() {
 			answer.innerHTML = data.text;
 		}
 		if (data && data.name) {
-			username.innerHTML = "-" + data.name;
+			var str = "-" + capitalizeWords(data.name);
+			if (data.location) {
+				str += ", " + data.location;
+			}
+			username.innerHTML = str;
 		}
 		show(quoteMain);
 	}
@@ -2965,11 +2971,12 @@ var createUIController = function createUIController() {
 		hide(quoteMain);
 	}
 
-	function showDonation() {
+	var showDonation = function showDonation() {
 		show(donation);
-	}
+	};
 
 	function hideDonation() {
+		console.log('hiding donation');
 		hide(donation);
 	}
 
@@ -3018,22 +3025,6 @@ var createUIController = function createUIController() {
 		elem.classList.remove('fadeOutBlur');
 		elem.classList.add('fadeInBlur');
 	}
-
-	quoteMainClose.addEventListener('mousedown', hideQuoteMain);
-	quoteMainClose.addEventListener('mousedown', function () {
-		hideQuoteMainInfo();
-		WORLD_CONTROLLER.executeAction(checkpointIndex);
-		paused = false;
-	});
-
-	quoteMainInfoOpen.addEventListener('mousedown', function () {
-
-		if (quoteMainInfo.style.opacity == 0) {
-			showQuoteMainInfo();
-		} else {
-			hideQuoteMainInfo();
-		}
-	});
 
 	/* DONATION BOX STUFF */
 	var card_token = "";
@@ -3154,7 +3145,75 @@ var createUIController = function createUIController() {
 		return false;
 	}
 
-	donationClose.addEventListener('mousedown', hideDonation);
+	if (isMobile) {
+		//Mobile additions
+		document.addEventListener("touchmove", function (e) {
+			e.preventDefault();
+		});
+		//window.addEventListener("load", function() {window.scrollTo(0,0);});
+
+		//Attempt to just use touch events and bind to mousedown...
+		//Not super elegant
+		title.addEventListener("touchstart", mousedown);
+		title.addEventListener("touchend", mouseup);
+
+		//Add event listener to the body to allow for movement along sphere
+		threejscanvas.addEventListener("touchstart", function () {
+			if (!paused) WORLD_CONTROLLER.setRotationFactor(-0.005);
+		});
+
+		threejscanvas.addEventListener("touchend", function () {
+			WORLD_CONTROLLER.setRotationFactor(0);
+		});
+
+		nameInputClose.addEventListener('touchstart', onNameInputSubmit);
+
+		quoteMainClose.addEventListener('touchstart', hideQuoteMain);
+		quoteMainClose.addEventListener('touchstart', function () {
+			hideQuoteMainInfo();
+			WORLD_CONTROLLER.executeAction(checkpointIndex);
+			paused = false;
+		});
+
+		quoteMainInfoOpen.addEventListener('touchstart', function () {
+
+			if (quoteMainInfo.style.opacity == 0) {
+				showQuoteMainInfo();
+			} else {
+				hideQuoteMainInfo();
+			}
+		});
+
+		donationClose.addEventListener('touchstart', hideDonation);
+	} else {
+		title.addEventListener("mousedown", mousedown);
+		title.addEventListener("mouseup", mouseup);
+		title.addEventListener("mouseout", mouseup);
+
+		quoteInputButton.addEventListener('mousedown', onAnswerSubmit);
+		quoteInputAnswer.addEventListener('keydown', ansKeyDown);
+		quoteInputAnswer.addEventListener('blur', keepBlur);
+
+		nameInputClose.addEventListener('mousedown', onNameInputSubmit);
+
+		quoteMainClose.addEventListener('mousedown', hideQuoteMain);
+		quoteMainClose.addEventListener('mousedown', function () {
+			hideQuoteMainInfo();
+			WORLD_CONTROLLER.executeAction(checkpointIndex);
+			paused = false;
+		});
+
+		quoteMainInfoOpen.addEventListener('mousedown', function () {
+			if (quoteMainInfo.style.opacity == 0) {
+				showQuoteMainInfo();
+			} else {
+				hideQuoteMainInfo();
+			}
+		});
+
+		// donationClose.addEventListener('mousedown', hideDonation);
+		donationClose.onmousedown = hideDonation;
+	}
 
 	return {
 		showTitle: showTitle,
@@ -3163,6 +3222,7 @@ var createUIController = function createUIController() {
 		hideQuoteMain: hideQuoteMain,
 		showQuoteMainInfo: showQuoteMainInfo,
 		showDonation: showDonation,
+		hideDonation: hideDonation,
 		showQuoteInput: showQuoteInput,
 		hideQuoteInput: hideQuoteInput,
 		handleKeyDown: handleKeyDown,
@@ -3410,6 +3470,21 @@ var MOUSE_POS = { x: 0.5, y: 0.5 };
 var mouse_monitor = function mouse_monitor(e) {
   MOUSE_POS.x = e.clientX / window.innerWidth * 2 - 1;
   MOUSE_POS.y = e.clientY / window.innerHeight * 2 - 1;
+};
+
+var capitalizeWords = function capitalizeWords(string) {
+  var str = "";
+  var words = string.split(" ");
+  words.forEach(function (n, i) {
+    //first and last
+    var cap = n.charAt(0).toUpperCase() + n.slice(1);
+    str += cap;
+
+    if (i !== words.length - 1) {
+      str += " ";
+    }
+  });
+  return str;
 };
 
 /* Single view mode */

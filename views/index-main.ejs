@@ -34,7 +34,8 @@
 		<div class="main">
 			<h1 class="glow">What's your name?</h1>
 			<form class="prompt" id="nameForm">
-			  <textarea maxlength="250" rows="3" spellcheck="false" id="nameInputAnswer" class="textinput" type="text" autofocus autocomplete="nope"></textarea>
+			  <textarea maxlength="250" rows="3" spellcheck="false" id="nameInputAnswer" class="textinput" type="text" autofocus autocomplete="nope" placeholder="type something..." onfocus="this.placeholder = ''"
+				onblur="this.placeholder = 'type something...'"></textarea>
 			</form>
 			<div class="submitButton glowBorder"></div>
 			<div id="nameInputErr" class="inputErr">&zwnj;</div>
@@ -44,7 +45,8 @@
 		<div class="main">
 			<h1 class="glow">Home is...</h1>
 			<form class="prompt" id="quoteForm">
-				<textarea maxlength="250" rows="3" spellcheck="false" id="userAnswer" class="textinput" type="text" autofocus autocomplete="nope"></textarea>
+				<textarea maxlength="250" rows="3" spellcheck="false" id="userAnswer" class="textinput" type="text"  autofocus autocomplete="nope" placeholder='ex: "the smell of freshly-cooked rice."' onfocus="this.placeholder = ''"
+				onblur="const str = 'ex: the smell of freshly-cooked rice'; this.placeholder = str;"></textarea>
 			</form>
 			<div class="remaining"><span id="userAnswerRemaining">250</span> characters remaining</div>
 			<div class="submitButton glowBorder"></div>
@@ -68,7 +70,7 @@
 			<div id="quoteMainInfoClose" class="submitButton glowBorder"></div>
 		</div>
 	</div> -->
-	<div id="donation" class="screen" style="visibility: visible;">
+	<div id="donation" class="screen">
 		<div class="wrapper" id="theWrapper">
 			<div class="main mobile-full">
 				<div id="donationClose" class="submitButton glowBorder"></div>
