@@ -4,7 +4,7 @@ var Globe = function(radius, color, avatarPos){
 
   /* Calculate offset (positions) of each instance */
 
-  const MAX_VERTICES = 4000;
+  const MAX_VERTICES = 3000;
 
   let sGeom = new THREE.SphereGeometry(radius, 32, 32);
   let g = new THREE.SphereBufferGeometry(1, 16, 16);

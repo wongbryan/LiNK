@@ -4,7 +4,7 @@ let paused = false;
 
 let checkpointActions;
 
-if(isMobile){
+if(reduced){
 
 	checkpointActions = [
 
@@ -21,7 +21,7 @@ if(isMobile){
 
 				WORLD_CONTROLLER.moveCamera('front');
 
-				setTimeout(UIController.showDonation, 800);
+				setTimeout(UIController.showDonation, 2000);
 
 			}, 800);
 			paused = true;
@@ -66,7 +66,7 @@ if(isMobile){
 
 				WORLD_CONTROLLER.moveCamera('front');
 
-				setTimeout(UIController.showDonation, 800);
+				setTimeout(UIController.showDonation, 2000);
 
 			}, 800);
 			paused = true;

@@ -740,7 +740,7 @@ var paused = false;
 
 var checkpointActions = void 0;
 
-if (isMobile) {
+if (reduced) {
 
 	checkpointActions = [0, function () {
 
@@ -753,7 +753,7 @@ if (isMobile) {
 
 			WORLD_CONTROLLER.moveCamera('front');
 
-			setTimeout(UIController.showDonation, 800);
+			setTimeout(UIController.showDonation, 2000);
 		}, 800);
 		paused = true;
 		checkpointIndex = 1;
@@ -783,7 +783,7 @@ if (isMobile) {
 
 			WORLD_CONTROLLER.moveCamera('front');
 
-			setTimeout(UIController.showDonation, 800);
+			setTimeout(UIController.showDonation, 2000);
 		}, 800);
 		paused = true;
 		checkpointIndex = 1; //start over?
@@ -1963,7 +1963,7 @@ var Globe = function Globe(radius, color, avatarPos) {
 
   /* Calculate offset (positions) of each instance */
 
-  var MAX_VERTICES = 4000;
+  var MAX_VERTICES = 3000;
 
   var sGeom = new THREE.SphereGeometry(radius, 32, 32);
   var g = new THREE.SphereBufferGeometry(1, 16, 16);
@@ -2265,7 +2265,7 @@ var init = function init() {
 
     innerGlobe.add(testMesh);
 
-    if (!isMobile) {
+    if (!reduced) {
         globe = new Globe(GLOBE_RADIUS + 2.5, new THREE.Color(0xffe877), testMesh.position);
         scene.add(globe);
     }
@@ -2309,7 +2309,7 @@ var init = function init() {
             e.avatar = a;
             characters.push(e);
 
-            if ((isChrome || isFirefox) && !isMobile) {
+            if (!reduced) {
                 var _idleAnims = getIdleAnim(e.avatar);
 
                 _idleAnims.forEach(function (elem) {
@@ -2443,7 +2443,7 @@ var init = function init() {
     c.character = testMesh;
     checkpoints.push(c);
 
-    var maxNumChars = isMobile ? 2 : 4;
+    var maxNumChars = reduced ? 2 : 4;
     var numChars = 1;
     APIController.getUniqueEntries(4).then(function (res) {
 
@@ -2482,7 +2482,7 @@ var init = function init() {
 
         /* start animations */
 
-        if ((isChrome || isFirefox) && !isMobile) {
+        if (!reduced) {
             checkpoints.forEach(function (c) {
 
                 var idleAnims = getIdleAnim(c.character);
@@ -2502,7 +2502,7 @@ var init = function init() {
         }
     });
 
-    if (!isMobile) {
+    if (!reduced) {
         globe = new Globe(GLOBE_RADIUS + 2.5, new THREE.Color(0xffe877), testMesh.position);
         // globe.position.y = -GLOBE_RADIUS;
         // globe.receiveShadow = true;
@@ -3635,6 +3635,10 @@ var createController = function createController(renderer, scene, camera, mainAv
 	}
 
 	function sizeStarField(s, delay, targetDist, targetSize, distTime) {
+
+		if (globe === undefined) {
+			return;
+		}
 
 		setTimeout(function () {
 

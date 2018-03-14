@@ -69,6 +69,10 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
     function sizeStarField(s, delay, targetDist, targetSize, distTime){
 
+    	if(globe === undefined){
+    		return;
+    	}
+    	
     	setTimeout(function(){
 
 	    	let t = new THREE.Vector3(s, s, s);

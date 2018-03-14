@@ -87,7 +87,7 @@ const init = () => {
     c.character = testMesh;
     checkpoints.push(c);
 
-    const maxNumChars = isMobile ? 2 : 4;
+    const maxNumChars = reduced ? 2 : 4;
     let numChars = 1;
     APIController.getUniqueEntries(4)
     .then( res => {
@@ -127,7 +127,7 @@ const init = () => {
 
         /* start animations */
 
-        if( (isChrome || isFirefox) && !isMobile ){
+        if( !reduced ){
             checkpoints.forEach( c => {
 
                 const idleAnims = getIdleAnim(c.character)
@@ -149,7 +149,7 @@ const init = () => {
 
     });
 
-    if(!isMobile){
+    if(!reduced){
         globe = new Globe(GLOBE_RADIUS+2.5, new THREE.Color(0xffe877), testMesh.position);
         // globe.position.y = -GLOBE_RADIUS;
         // globe.receiveShadow = true;

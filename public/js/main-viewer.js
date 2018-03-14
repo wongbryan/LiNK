@@ -73,7 +73,7 @@ const init = () => {
 
     innerGlobe.add(testMesh);
 
-    if(!isMobile){
+    if(!reduced){
         globe = new Globe(GLOBE_RADIUS+2.5, new THREE.Color(0xffe877), testMesh.position);
         scene.add(globe);
     }
@@ -118,7 +118,7 @@ const init = () => {
             e.avatar = a;
             characters.push(e);
 
-            if( (isChrome || isFirefox) && !isMobile){
+            if(!reduced){
                 const idleAnims = getIdleAnim(e.avatar)
 
                 idleAnims.forEach( elem => {
