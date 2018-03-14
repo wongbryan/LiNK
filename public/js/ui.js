@@ -141,6 +141,7 @@ const createUIController = function(){
 		ans = stylizeQuote(ans);
 		donationQuoteAnswer.innerHTML = ans;
 
+		console.log('submit answer');
 		showInstructions();
 		hideQuoteInput();
 		// WORLD_CONTROLLER.shrinkStarField(1200);
@@ -155,7 +156,7 @@ const createUIController = function(){
 	    document.activeElement.blur()
 		APIController.postEntry(user_data)
 		.then(resp => {
-			const link = 'localhost:3000/view/' + resp.id; + '/';
+			const link = 'https://findinghome.io/view/' + resp.id; + '/';
 			UIController.setUserCharacterLink(link);
 		});
 
@@ -487,6 +488,9 @@ const createUIController = function(){
 		WORLD_CONTROLLER.setRotationFactor(0)
 	    })
 
+	    quoteInputButton.addEventListener('touchstart', onAnswerSubmit);
+
+
 	    nameInputClose.addEventListener('touchstart', onNameInputSubmit);
 
 	    quoteMainClose.addEventListener('touchstart', hideQuoteMain);
@@ -514,8 +518,6 @@ const createUIController = function(){
 		title.addEventListener("mouseout", mouseup);
 
 		quoteInputButton.addEventListener('mousedown', onAnswerSubmit);
-		quoteInputAnswer.addEventListener('keydown', ansKeyDown);
-		quoteInputAnswer.addEventListener('blur', keepBlur);
 
 		nameInputClose.addEventListener('mousedown', onNameInputSubmit);
 
@@ -537,6 +539,8 @@ const createUIController = function(){
 		// donationClose.addEventListener('mousedown', hideDonation);
 		donationClose.onmousedown = hideDonation;
 	}
+
+	quoteInputAnswer.addEventListener('keydown', ansKeyDown);
 
 	return{
 		showTitle: showTitle,

@@ -73,8 +73,10 @@ const init = () => {
 
     innerGlobe.add(testMesh);
 
-    globe = new Globe(GLOBE_RADIUS+2.5, new THREE.Color(0xffe877), testMesh.position);
-    scene.add(globe);
+    if(!reduced){
+        globe = new Globe(GLOBE_RADIUS+2.5, new THREE.Color(0xffe877), testMesh.position);
+        scene.add(globe);
+    }
 
     characters = [];
     entry.avatar = testMesh;
@@ -116,11 +118,13 @@ const init = () => {
             e.avatar = a;
             characters.push(e);
 
-            const idleAnims = getIdleAnim(e.avatar)
+            if(!reduced){
+                const idleAnims = getIdleAnim(e.avatar)
 
-            idleAnims.forEach( elem => {
-               elem.start()
-            });
+                idleAnims.forEach( elem => {
+                   elem.start()
+                });
+            }
 
         })
         .catch( err => {

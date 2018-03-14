@@ -9,18 +9,21 @@ const babel = require('gulp-babel');
 const order = require("gulp-order");
 
 gulp.task('js', function(){
-	return gulp.src('js/*.js')
+	return gulp.src('/js/*.js')
 	.pipe(order([
 		"js/util.js",
+		"js/Shaders.js",
 		"js/data.js",
 		"js/Loader.js",
 		"js/Globe.js",
-		"js/glowMesh.js",
 		"js/Avatar.js",
-		"js/API.js",
+		"js/api.js",
 		"js/WorldController.js",
+		"js/Animations.js",
 		"js/ui.js",
+		"js/AudioController.js",
 		"js/main.js",
+		"js/Location.js",
 	]))
 	.pipe(babel({
       presets: ['es2015']
@@ -37,12 +40,12 @@ gulp.task('lib', function(){
 	return gulp.src([
 		"js/lib/three.js",
 		"js/lib/OrbitControls.js",
+		"js/lib/SubdivisionModifier.js",
+		"js/lib/GeometryUtils.js",
 		"js/lib/CopyShader.js",
 		"js/lib/EffectComposer.js",
 		"js/lib/RenderPass.js",
 		"js/lib/ShaderPass.js",
-		"js/lib/SubdivisionModifier.js",
-		"js/lib/GeometryUtils.js",
 		"js/lib/Tween.js",
 	])
 	.pipe(concat('lib.js'))

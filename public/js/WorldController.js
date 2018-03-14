@@ -69,6 +69,10 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
     function sizeStarField(s, delay, targetDist, targetSize, distTime){
 
+    	if(globe === undefined){
+    		return;
+    	}
+    	
     	setTimeout(function(){
 
 	    	let t = new THREE.Vector3(s, s, s);
@@ -109,7 +113,8 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 
 	function setWorldLights(appearAmt){
 
-		globe.material.uniforms['appearAmt'].value = appearAmt;
+		if(globe)
+			globe.material.uniforms['appearAmt'].value = appearAmt;
 
 	}
 
@@ -149,9 +154,14 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 	    const d = clock.getDelta();
 	    const globalTime = clock.elapsedTime;
 
-	    globe.frustumCulled = false;
-	    globe.rotation.x += .0001;
-	    controls.update();
+	    if(globe){
+	    	globe.frustumCulled = false;
+	    	globe.rotation.x += .0001;
+	    }
+
+	    if(controls){
+	    	controls.update();
+	    }
 
 	    if(rot.val && !paused){
 
@@ -179,9 +189,14 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 	function updateSingleView(){
 
 		TWEEN.update();
-		globe.frustumCulled = false;
-	    globe.rotation.x += .0001;
-	    controls.update();
+		if(globe){
+			globe.frustumCulled = false;
+	   		globe.rotation.x += .0001;
+		}
+		
+		if(controls){
+			controls.update();
+		}
 
 	}
 

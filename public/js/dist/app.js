@@ -740,7 +740,7 @@ var paused = false;
 
 var checkpointActions = void 0;
 
-if (isMobile) {
+if (reduced) {
 
 	checkpointActions = [0, function () {
 
@@ -753,7 +753,7 @@ if (isMobile) {
 
 			WORLD_CONTROLLER.moveCamera('front');
 
-			setTimeout(UIController.showDonation, 800);
+			setTimeout(UIController.showDonation, 2000);
 		}, 800);
 		paused = true;
 		checkpointIndex = 1;
@@ -783,7 +783,7 @@ if (isMobile) {
 
 			WORLD_CONTROLLER.moveCamera('front');
 
-			setTimeout(UIController.showDonation, 800);
+			setTimeout(UIController.showDonation, 2000);
 		}, 800);
 		paused = true;
 		checkpointIndex = 1; //start over?
@@ -1963,7 +1963,7 @@ var Globe = function Globe(radius, color, avatarPos) {
 
   /* Calculate offset (positions) of each instance */
 
-  var MAX_VERTICES = 4000;
+  var MAX_VERTICES = 3000;
 
   var sGeom = new THREE.SphereGeometry(radius, 32, 32);
   var g = new THREE.SphereBufferGeometry(1, 16, 16);
@@ -2265,8 +2265,10 @@ var init = function init() {
 
     innerGlobe.add(testMesh);
 
-    globe = new Globe(GLOBE_RADIUS + 2.5, new THREE.Color(0xffe877), testMesh.position);
-    scene.add(globe);
+    if (!reduced) {
+        globe = new Globe(GLOBE_RADIUS + 2.5, new THREE.Color(0xffe877), testMesh.position);
+        scene.add(globe);
+    }
 
     characters = [];
     entry.avatar = testMesh;
@@ -2307,11 +2309,13 @@ var init = function init() {
             e.avatar = a;
             characters.push(e);
 
-            var idleAnims = getIdleAnim(e.avatar);
+            if (!reduced) {
+                var _idleAnims = getIdleAnim(e.avatar);
 
-            idleAnims.forEach(function (elem) {
-                elem.start();
-            });
+                _idleAnims.forEach(function (elem) {
+                    elem.start();
+                });
+            }
         }).catch(function (err) {
             console.log(err);
         });
@@ -2439,9 +2443,9 @@ var init = function init() {
     c.character = testMesh;
     checkpoints.push(c);
 
-    var maxNumChars = isMobile ? 2 : 4;
+    var maxNumChars = reduced ? 2 : 4;
     var numChars = 1;
-    APIController.getUniqueEntries(maxNumChars).then(function (res) {
+    APIController.getUniqueEntries(4).then(function (res) {
 
         entries = res;
 
@@ -2478,22 +2482,32 @@ var init = function init() {
 
         /* start animations */
 
-        checkpoints.forEach(function (c) {
+        if (!reduced) {
+            checkpoints.forEach(function (c) {
 
-            var idleAnims = getIdleAnim(c.character);
+                var idleAnims = getIdleAnim(c.character);
 
-            console.log(idleAnims);
+                //Start animations
+                idleAnims.forEach(function (elem) {
+                    elem.start();
+                });
+            });
+        } else {
+            var idleAnims = getIdleAnim(testMesh);
+
             //Start animations
             idleAnims.forEach(function (elem) {
                 elem.start();
             });
-        });
+        }
     });
 
-    globe = new Globe(GLOBE_RADIUS + 2.5, new THREE.Color(0xffe877), testMesh.position);
-    // globe.position.y = -GLOBE_RADIUS;
-    // globe.receiveShadow = true;
-    scene.add(globe);
+    if (!reduced) {
+        globe = new Globe(GLOBE_RADIUS + 2.5, new THREE.Color(0xffe877), testMesh.position);
+        // globe.position.y = -GLOBE_RADIUS;
+        // globe.receiveShadow = true;
+        scene.add(globe);
+    }
 
     // testMesh.position.add(testMesh.offset);
     // testMesh.position.y += GLOBE_RADIUS;
@@ -2519,9 +2533,12 @@ var init = function init() {
     testMesh.movementFunc = genMoveAlongCurve(curve, 50, clock.elapsedTime);
 
     WORLD_CONTROLLER = createController(renderer, scene, camera, testMesh, globe);
-    WORLD_CONTROLLER.setWorldLights(1);
+    if (globe) {
+        WORLD_CONTROLLER.setWorldLights(1);
+        WORLD_CONTROLLER.expandStarField(100);
+    }
+
     WORLD_CONTROLLER.setMainLightIntensity(.3);
-    WORLD_CONTROLLER.expandStarField(100);
     // WORLD_CONTROLLER.moveCamera('behind');
 
     UIController = createUIController();
@@ -2810,6 +2827,7 @@ var createUIController = function createUIController() {
 		ans = stylizeQuote(ans);
 		donationQuoteAnswer.innerHTML = ans;
 
+		console.log('submit answer');
 		showInstructions();
 		hideQuoteInput();
 		// WORLD_CONTROLLER.shrinkStarField(1200);
@@ -2823,7 +2841,7 @@ var createUIController = function createUIController() {
 		//Clear focus
 		document.activeElement.blur();
 		APIController.postEntry(user_data).then(function (resp) {
-			var link = 'localhost:3000/view/' + resp.id;+'/';
+			var link = 'https://findinghome.io/view/' + resp.id;+'/';
 			UIController.setUserCharacterLink(link);
 		});
 
@@ -3166,6 +3184,8 @@ var createUIController = function createUIController() {
 			WORLD_CONTROLLER.setRotationFactor(0);
 		});
 
+		quoteInputButton.addEventListener('touchstart', onAnswerSubmit);
+
 		nameInputClose.addEventListener('touchstart', onNameInputSubmit);
 
 		quoteMainClose.addEventListener('touchstart', hideQuoteMain);
@@ -3191,8 +3211,6 @@ var createUIController = function createUIController() {
 		title.addEventListener("mouseout", mouseup);
 
 		quoteInputButton.addEventListener('mousedown', onAnswerSubmit);
-		quoteInputAnswer.addEventListener('keydown', ansKeyDown);
-		quoteInputAnswer.addEventListener('blur', keepBlur);
 
 		nameInputClose.addEventListener('mousedown', onNameInputSubmit);
 
@@ -3214,6 +3232,8 @@ var createUIController = function createUIController() {
 		// donationClose.addEventListener('mousedown', hideDonation);
 		donationClose.onmousedown = hideDonation;
 	}
+
+	quoteInputAnswer.addEventListener('keydown', ansKeyDown);
 
 	return {
 		showTitle: showTitle,
@@ -3616,6 +3636,10 @@ var createController = function createController(renderer, scene, camera, mainAv
 
 	function sizeStarField(s, delay, targetDist, targetSize, distTime) {
 
+		if (globe === undefined) {
+			return;
+		}
+
 		setTimeout(function () {
 
 			var t = new THREE.Vector3(s, s, s);
@@ -3652,7 +3676,7 @@ var createController = function createController(renderer, scene, camera, mainAv
 
 	function setWorldLights(appearAmt) {
 
-		globe.material.uniforms['appearAmt'].value = appearAmt;
+		if (globe) globe.material.uniforms['appearAmt'].value = appearAmt;
 	}
 
 	function setAvatarOpacity(n) {
@@ -3687,9 +3711,14 @@ var createController = function createController(renderer, scene, camera, mainAv
 		var d = clock.getDelta();
 		var globalTime = clock.elapsedTime;
 
-		globe.frustumCulled = false;
-		globe.rotation.x += .0001;
-		controls.update();
+		if (globe) {
+			globe.frustumCulled = false;
+			globe.rotation.x += .0001;
+		}
+
+		if (controls) {
+			controls.update();
+		}
 
 		if (rot.val && !paused) {
 
@@ -3715,9 +3744,14 @@ var createController = function createController(renderer, scene, camera, mainAv
 	function updateSingleView() {
 
 		TWEEN.update();
-		globe.frustumCulled = false;
-		globe.rotation.x += .0001;
-		controls.update();
+		if (globe) {
+			globe.frustumCulled = false;
+			globe.rotation.x += .0001;
+		}
+
+		if (controls) {
+			controls.update();
+		}
 	}
 
 	function executeAction(index) {
