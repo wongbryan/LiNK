@@ -3133,7 +3133,7 @@ var createUIController = function createUIController() {
 			};
 
 			try {
-				var response = await fetch("http://159.203.117.240/api/donation", {
+				var response = await fetch('https://magnacreativelabs.club/api/donation', {
 					method: 'POST',
 					headers: {
 						'Content-Type': "application/json; charset=utf-8"

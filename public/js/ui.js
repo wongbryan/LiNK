@@ -435,7 +435,7 @@ const createUIController = function(){
 			}
 
 			try {
-				const response = await fetch("http://159.203.117.240/api/donation", {
+				const response = await fetch('https://magnacreativelabs.club/api/donation', {
 					method: 'POST',
 					headers: {
 						'Content-Type': "application/json; charset=utf-8",
