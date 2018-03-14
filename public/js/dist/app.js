@@ -3702,7 +3702,9 @@ var createController = function createController(renderer, scene, camera, mainAv
 			globe.rotation.x += .0001;
 		}
 
-		controls.update();
+		if (controls) {
+			controls.update();
+		}
 
 		if (rot.val && !paused) {
 
@@ -3733,7 +3735,9 @@ var createController = function createController(renderer, scene, camera, mainAv
 			globe.rotation.x += .0001;
 		}
 
-		controls.update();
+		if (controls) {
+			controls.update();
+		}
 	}
 
 	function executeAction(index) {

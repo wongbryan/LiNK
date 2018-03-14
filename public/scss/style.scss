@@ -25,6 +25,19 @@ body{
 	overflow: hidden;
 }
 
+#MobileInstructions{
+    display:none;
+}
+
+@media only screen and (max-width: 600px) {
+    #MobileInstructions{
+	display:inline;
+    }
+    #WebInstructions{
+	display:none;
+    }
+}
+
 #activeQuoteBox{
 	position: absolute;
 	top: 60%;

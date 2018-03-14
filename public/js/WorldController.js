@@ -155,7 +155,9 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 	    	globe.rotation.x += .0001;
 	    }
 
-	    controls.update();
+	    if(controls){
+	    	controls.update();
+	    }
 
 	    if(rot.val && !paused){
 
@@ -187,8 +189,10 @@ const createController = function(renderer, scene, camera, mainAvatar, globe){
 			globe.frustumCulled = false;
 	   		globe.rotation.x += .0001;
 		}
-	
-	    controls.update();
+		
+		if(controls){
+			controls.update();
+		}
 
 	}
 
